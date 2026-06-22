@@ -13,7 +13,7 @@ int main(){
   for(int i=0;i<n;i++){
     int x;
     rd(x);
-    uf2[x]+=mint::raw(x);
+    uf2[i]+=mint::raw(x);
   }
   mint ans=0;
   while(q--){
