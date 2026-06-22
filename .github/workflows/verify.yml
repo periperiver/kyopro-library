@@ -22,4 +22,6 @@ jobs:
           pip install online-judge-verify-helper
 
       - name: Verify
+        env:
+          CXXFLAGS: -std=c++23
         run: oj-verify all
