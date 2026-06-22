@@ -1,7 +1,7 @@
 #pragma once
-#include "template.hpp"
+#include<vector>
 struct RangeUnionfind{
-  vector<int>par;
+  std::vector<int>par;
   int log2n,n;
   int root(int u,int k){
     if(par[k*n+u]<0)return u;
@@ -10,7 +10,7 @@ struct RangeUnionfind{
   bool same(int u,int v,int k){return root(u,k)==root(v,k);}
   void inmerge(int u,int v,int k){
     int ru=root(u,k),rv=root(v,k);
-    if(ru>rv)swap(ru,rv);
+    if(ru>rv)std::swap(ru,rv);
     par[k*n+ru]+=par[k*n+rv];
     par[k*n+rv]=ru;
   }
@@ -20,11 +20,11 @@ struct RangeUnionfind{
     n=1<<log2n;
     par.resize(n*log2n,-1);
   }
-  vector<pair<int,int>>merge(int u,int v,int k){
-    vector<pair<int,int>>ret;
+  std::vector<std::pair<int,int>>merge(int u,int v,int k){
+    std::vector<std::pair<int,int>>ret;
     if(u==v)return ret;
     if(k<=0)return ret;
-    if(u>v)swap(u,v);
+    if(u>v)std::swap(u,v);
     int d=v-u;
     auto dfs=[&](auto self,int u,int k) ->void {
       if(same(u,u+d,k))return;
