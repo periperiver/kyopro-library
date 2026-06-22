@@ -3,3 +3,6 @@ exclude = [
     "atcoder/**",
     "**/*.gch/**",
 ]
+[languages.cpp]
+compile = "g++ -std=c++23 -O2 -Wall -I ."
+execute = "./a.out"
