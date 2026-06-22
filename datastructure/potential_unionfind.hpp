@@ -18,7 +18,7 @@ public:
   bool merge(int u,int v,S x){
     int ru=root(u),rv=root(v);
     if(ru==rv)return false;
-    if(par[ru]<par[rv])swap(u,v),swap(ru,rv),x=M::inverse(x);
+    if(par[ru]<par[rv])std::swap(u,v),std::swap(ru,rv),x=M::inverse(x);
     par[rv]+=par[ru];
     par[ru]=rv;
     dat[ru]=M::op(M::op(M::inverse(dat[u]),x),dat[v]);
