@@ -1,6 +1,6 @@
 #pragma once
-#include "template.hpp"
-#include "string/rollinghash_base.hpp"
+#include "../template.hpp"
+#include "../string/rolling_hash_base.hpp"
 template<typename T,const ull base=10007>
 struct multihash{
 private:
