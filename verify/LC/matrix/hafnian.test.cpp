@@ -1,0 +1,11 @@
+#define PROBLEM "https://judge.yosupo.jp/problem/hafnian_of_matrix"
+#include "matrix/hafnian.hpp"
+#include "math/modint.hpp"
+using mint=mint998;
+int main(){
+  int n;
+  std::cin>>n;
+  std::vector<std::vector<mint>>a(n,std::vector<mint>(n));
+  for(int i=0;i<n;i++)for(int j=0;j<n;j++)std::cin>>a[i][j];
+  std::cout<<matrix_hafnian(a)<<std::endl;
+}
