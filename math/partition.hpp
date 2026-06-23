@@ -1,5 +1,5 @@
 #pragma once
-#include "../poly/fps.hpp"
+#include "../poly/fps_inv.hpp"
 template<typename T>
 std::vector<T>partition_number(int n){
   std::vector<T>f(n+1);
