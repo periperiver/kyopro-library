@@ -3,7 +3,7 @@
 #include<algorithm>
 struct StaticRangeSet{
 private:
-  WaveletMatrix<> wm;
+  WaveletMatrix<int> wm;
 public:
   StaticRangeSet(std::vector<int>init){
     std::vector<int>z(init);
@@ -14,7 +14,7 @@ public:
       init[i]=pre[v]+1;
       pre[v]=i;
     }
-    wm=WaveletMatrix<>(init);
+    wm=WaveletMatrix<int>(init);
   }
   int set(int l,int r)const{
     return l==r?0:wm.count(l,r,l+1);

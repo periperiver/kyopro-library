@@ -4,15 +4,15 @@
 #include "graph_base.hpp"
 #include "scc.hpp"
 template<typename T>
-vector<int>incremental_scc(const Graph<T>&g){
+std::vector<int>incremental_scc(const Graph<T>&g){
   assert(g.is_directed());
-  vector<Edge<T>>edge(g.edge_size());
+  std::vector<Edge<T>>edge(g.edge_size());
   for(int i=0;i<edge.size();i++)edge[i]=g.get_edge(i);
   int n=g.size();
-  vector<int>idx(n,-1);
-  using Itr=typename vector<Edge<T>>::iterator;
-  vector<int>ret(edge.size(),-1);
-  vector<int>reset(edge.size()*2);
+  std::vector<int>idx(n,-1);
+  using Itr=typename std::vector<Edge<T>>::iterator;
+  std::vector<int>ret(edge.size(),-1);
+  std::vector<int>reset(edge.size()*2);
   int rp=0;
   auto dfs=[&](auto self,int l,int r,Itr litr,Itr ritr)->void {
     if(litr==ritr)return;
@@ -32,7 +32,7 @@ vector<int>incremental_scc(const Graph<T>&g){
       g2.add_edge(idx[i->from],idx[i->to]);
     }
     g2.build();
-    vector<int>scc=strongly_connected_components(g2);
+    std::vector<int>scc=strongly_connected_components(g2);
     Itr nl=litr,nr=ritr;
     while(nl!=nr){
       if(nl->index<=mid&&scc[idx[nl->from]]==scc[idx[nl->to]])nl++;
