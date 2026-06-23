@@ -1,0 +1,19 @@
+#define PROBLEM "https://judge.yosupo.jp/problem/eulerian_trail_undirected"
+#include "graph/eulerian_trail.hpp"
+int main(){
+  int t;
+  std::cin>>t;
+  while(t--){
+    int n,m;
+    std::cin>>n>>m;
+    Graph g(n,false);
+    g.read<0,0>(m);
+    auto ans=eulerian_trail(g);
+    if(ans.empty())std::cout<<"No\n";
+    else{
+      std::cout<<"Yes\n";
+      for(int i=0;i<m;i++)std::cout<<ans[i].from<<" \n"[i+1==m];
+      for(int i=0;i<m;i++)std::cout<<ans[i].index<<" \n"[i+1==m];
+    }
+  }
+}
