@@ -4,7 +4,7 @@
 template<typename T>
 std::vector<T> berlekamp_massey(const std::vector<T>&s){
   const int n=s.size();
-  vector<T>b,c;
+  std::vector<T>b,c;
   b.reserve(n+1),c.reserve(n+1);
   b.emplace_back(1),c.emplace_back(1);
   T y=1;
