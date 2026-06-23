@@ -10,7 +10,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+      - name: Check verify filenames
+        run: |
+          bad=$(find verify -type f -name "*.cpp" ! -name "*.test.cpp")
+          if [ -n "$bad" ]; then
+            echo "The following files are not *.test.cpp:"
+            echo "$bad"
+            exit 1
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
