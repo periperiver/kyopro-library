@@ -28,7 +28,9 @@ jobs:
           pip install online-judge-tools
           pip install online-judge-verify-helper
 
+      - run: find . -name "*.test.cpp" | sort
       - name: Verify
         env:
+          CXX: g++
           CXXFLAGS: -std=c++23
         run: oj-verify all
