@@ -1,10 +1,11 @@
 #pragma once
-#include "template.hpp"
+#include<iostream>
+#include<numeric>
 template<typename T>
 struct fraction{
   T num,den;
   void simple(){
-    T g=gcd(num,den);
+    T g=std::gcd(num,den);
     this->num/=g;
     this->den/=g;
   }
@@ -71,7 +72,7 @@ struct fraction{
     if(this->num>=0)return fraction::raw(this->den,this->num);
     else return fraction::raw(-this->den,-this->num);
   }
-  friend ostream &operator<<(ostream &os,const fraction &a){
+  friend std::ostream &operator<<(std::ostream &os,const fraction &a){
     os<<a.num<<' '<<a.den;
     return os;
   }

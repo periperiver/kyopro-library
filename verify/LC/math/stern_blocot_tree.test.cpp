@@ -10,41 +10,41 @@ void solve(){
     SternBlocotTree<int>sbt(a,b);
     auto ans=sbt.path();
     std::cout<<ans.size();
-    rep(i,ans.size())cout<<' '<<ans[i];
-    cout<<endl;
+    for(int i=0;i<(int)ans.size();i++)std::cout<<' '<<ans[i].first<<' '<<ans[i].second;
+    std::cout<<'\n';
   }
   else if(s=="DECODE_PATH"){
     int k;
     std::cin>>k;
     std::vector<std::pair<char,int>>path(k);
-    std::cin>>path;
+    for(auto&[a,b]:path)std::cin>>a>>b;
     SternBlocotTree<int>sbt(path);
     auto lr=sbt.val();
-    cout<<lr.num<<' '<<lr.den<<endl;
+    std::cout<<lr.num<<' '<<lr.den<<'\n';
   }
   else if(s=="LCA"){
     int a,b,c,d;
-    cin>>a>>b>>c>>d;
+    std::cin>>a>>b>>c>>d;
     SternBlocotTree<int>sbt1(a,b),sbt2(c,d);
     auto ans=SternBlocotTree<int>::lca(sbt1,sbt2).val();
-    cout<<ans.num<<' '<<ans.den<<endl;
+    std::cout<<ans.num<<' '<<ans.den<<'\n';
   }
   else if(s=="ANCESTOR"){
     int k,a,b;
-    cin>>k>>a>>b;
+    std::cin>>k>>a>>b;
     SternBlocotTree<int>sbt(a,b);
-    if(sbt.dep()<k)cout<<-1<<endl;
+    if(sbt.dep()<k)std::cout<<"-1\n";
     else{
       sbt=sbt.up(sbt.dep()-k);
-      cout<<sbt.val().num<<' '<<sbt.val().den<<endl;
+      std::cout<<sbt.val().num<<' '<<sbt.val().den<<'\n';
     }
   }
   else if(s=="RANGE"){
     int a,b;
-    cin>>a>>b;
+    std::cin>>a>>b;
     SternBlocotTree<int>sbt(a,b);
     auto ans=sbt.range();
-    cout<<ans.first.num<<' '<<ans.first.den<<' '<<ans.second.num<<' '<<ans.second.den<<endl;
+    std::cout<<ans.first.num<<' '<<ans.first.den<<' '<<ans.second.num<<' '<<ans.second.den<<'\n';
   }
   else assert(false);
 }

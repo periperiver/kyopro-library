@@ -1,14 +1,16 @@
 #pragma once
-#include "template.hpp"
+#include<vector>
+#include<cassert>
+#include<functional>
 #include "math/fraction.hpp"
 template<typename T>
 struct SternBlocotTree{
   using frac=fraction<T>;
-  using pff=pair<frac,frac>;
+  using pff=std::pair<frac,frac>;
 private:
   frac left={0,1},right={1,0};
   T d=0;
-  vector<pair<char,T>>p;
+  std::vector<std::pair<char,T>>p;
   static constexpr char dir[2]={'L','R'};
   void indown(bool isright,T k){
     if(k==0)return;
@@ -40,7 +42,7 @@ private:
 public:
   SternBlocotTree(T a,T b){
     bool isright=a>b;
-    if(!isright)swap(a,b);
+    if(!isright)std::swap(a,b);
     while(b>0){
       T q=a/b,r=a-q*b;
       indown(isright,q-!r);
@@ -49,8 +51,8 @@ public:
     }
   }
   SternBlocotTree(frac f):SternBlocotTree(f.num,f.second){}
-  SternBlocotTree(vector<pair<char,T>>p):p(p){
-    rep(i,p.size()){
+  SternBlocotTree(std::vector<std::pair<char,T>>p):p(p){
+    for(int i=0;i<(int)p.size();i++){
       if(p[i].first=='L')right.num+=left.num*p[i].second,right.den+=left.den*p[i].second;
       else left.num+=right.num*p[i].second,left.den+=right.den*p[i].second;
     }
@@ -66,25 +68,25 @@ public:
     ret.inup(k);
     return ret;
   }
-  pff range()const{return make_pair(left,right);}
+  pff range()const{return std::make_pair(left,right);}
   frac val()const{return frac::raw(left.num+right.num,left.den+right.den);}
   T dep()const{return d;}
-  vector<pair<char,T>>path()const{return p;}
+  std::vector<std::pair<char,T>>path()const{return p;}
   static SternBlocotTree lca(SternBlocotTree &a,SternBlocotTree b){
     auto pa=a.path(),pb=b.path();
-    int sz=min(pa.size(),pb.size());
+    int sz=std::min(pa.size(),pb.size());
     SternBlocotTree ret;
-    rep(i,sz){
+    for(int i=0;i<sz;i++){
       if(pa[i]==pb[i])ret.indown(pa[i].first=='R',pa[i].second);
       else{
-        if(pa[i].first==pb[i].first)ret.indown(pa[i].first=='R',min(pa[i].second,pb[i].second));
+        if(pa[i].first==pb[i].first)ret.indown(pa[i].first=='R',std::min(pa[i].second,pb[i].second));
         break;
       }
     }
     return ret;
   }
   static pff binary_search(T n,const auto &f){
-    static_assert(is_convertible_v<decltype(f),function<bool(frac)>>);
+    static_assert(std::is_convertible_v<decltype(f),std::function<bool(frac)>>);
     assert(!f(frac(0)));
     frac l=frac::raw(0,1),r=frac::raw(1,0);
     if(!f(frac(1))){
@@ -107,11 +109,11 @@ public:
       if(r.den>n){
         r.num-=l.num;
         r.den-=l.den;
-        if(isright)swap(l,r);
+        if(isright)std::swap(l,r);
         break;
       }
-      swap(l,r);
+      std::swap(l,r);
     }
-    return make_pair(l,r);
+    return std::make_pair(l,r);
   }
 };

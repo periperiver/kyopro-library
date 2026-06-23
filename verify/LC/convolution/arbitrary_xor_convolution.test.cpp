@@ -19,7 +19,7 @@ struct mint{
     return res;
   }
   mint operator*(mint r)const{
-    return v*r.v%mod;
+    return (long long)v*r.v%mod;
   }
 };
 int main(){

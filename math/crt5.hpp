@@ -1,7 +1,7 @@
 #pragma once
 #include "pow_mod.hpp"
 template<int p1,int p2,int p3,int p4,int p5>
-unsigned long long crt5(int a1,int a2,int a3,int a4,int a5){
+unsigned long long crt5(unsigned long long a1,unsigned long long a2,unsigned long long a3,unsigned long long a4,unsigned long long a5){
   static constexpr unsigned long long x1=pow_mod<int>(p1,p2-2,p2);
   static constexpr unsigned long long x2=pow_mod<int>((unsigned long long)p1*p2%p3,p3-2,p3);
   static constexpr unsigned long long x3=pow_mod<int>((unsigned long long)p1*p2%p4*p3%p4,p4-2,p4);
