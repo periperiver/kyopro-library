@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/queue_operate_all_composite"
+#define PROBLEM "https://judge.yosupo.jp/problem/deque_operate_all_composite"
 #include "fastio.hpp"
 #include "datastructure/swag.hpp"
 #include "monoid/affine.hpp"

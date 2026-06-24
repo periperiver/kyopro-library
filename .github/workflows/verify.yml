@@ -30,9 +30,7 @@ jobs:
         pip3 install "setuptools<81"
 
     - name: Verify
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        oj-verify run
-        oj-verify run
-        oj-verify run
-        oj-verify run
         oj-verify run
