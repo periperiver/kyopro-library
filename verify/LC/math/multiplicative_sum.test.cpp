@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/sum_of_multiplicative_function"
 #include "math/multiplicative_sum.hpp"
 #include "math/modint.hpp"
-using mint=mint998;
+using mint=mod_int<469762049>;
 int main(){
   mint inv2=mint(2).inv();
   int t;

@@ -5,7 +5,7 @@ using mint=mint998;
 int main(){
   int n,m;
   std::cin>>n>>m;
-  std::vector<mint>f(n),p(n);
+  std::vector<mint>f(n),p(m);
   for(mint&x:f)std::cin>>x;
   for(mint&x:p)std::cin>>x;
   p=multipoint_evaluation(f,p);

@@ -10,6 +10,8 @@ int main(){
   for(mint&x:g)std::cin>>x;
   auto [q,r]=poly_div_mod(f,g);
   std::cout<<q.size()<<' '<<r.size()<<std::endl;
-  for(int i=0;i<(int)q.size();i++)std::cout<<q[i]<<" \n"[i+1==(int)q.size()];
-  for(int i=0;i<(int)r.size();i++)std::cout<<r[i]<<" \n"[i+1==(int)r.size()];
+  if(q.size())for(int i=0;i<(int)q.size();i++)std::cout<<q[i]<<" \n"[i+1==(int)q.size()];
+  else std::cout<<'\n';
+  if(r.size())for(int i=0;i<(int)r.size();i++)std::cout<<r[i]<<" \n"[i+1==(int)r.size()];
+  else std::cout<<'\n';
 }

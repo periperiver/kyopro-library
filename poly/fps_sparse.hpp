@@ -1,6 +1,7 @@
 #pragma once
 #include<vector>
 #include<cassert>
+#include "fps.hpp"
 #include "math/sqrt_mod.hpp"
 template<typename T>
 std::vector<T> fps_pow_sparse(const std::vector<T>&a,long long k,int deg=-1){

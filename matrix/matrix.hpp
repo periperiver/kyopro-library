@@ -63,7 +63,7 @@ std::vector<std::vector<T>>matrix_inv(std::vector<std::vector<T>>a){
         break;
       }
     }
-    if(id==-1)return std::vector<std::vector<T>>(n,std::vector<T>(n,0));
+    if(id==-1)return {};
     if(i!=id){
       std::swap(a[i],a[id]);
       std::swap(ret[i],ret[id]);
