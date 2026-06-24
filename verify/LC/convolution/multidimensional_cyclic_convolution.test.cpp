@@ -3,6 +3,7 @@
 #include "math/arbitrary_modint.hpp"
 using mint=arbitrary_modint<1>;
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int p;
   std::cin>>p;
   mint::set_mod(p);

@@ -23,6 +23,7 @@ struct mint{
   }
 };
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n;
   std::cin>>n;
   std::vector<mint>a(1<<n),b(1<<n);

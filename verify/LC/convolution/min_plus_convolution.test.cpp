@@ -2,6 +2,7 @@
 #include<iostream>
 #include "convolution/min_plus_convolution.hpp"
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n,m;
   std::cin>>n>>m;
   std::vector<int>a(n),b(m);

@@ -3,6 +3,7 @@
 #include "math/modint.hpp"
 using mint=mint107;
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n,m;
   std::cin>>n>>m;
   std::vector<mint>a(n),b(m);

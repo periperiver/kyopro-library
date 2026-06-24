@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/convolution_F_2_64"
 #include "convolution/nim_convolution.hpp"
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n,m;
   std::cin>>n>>m;
   std::vector<gf2>a(n),b(m);

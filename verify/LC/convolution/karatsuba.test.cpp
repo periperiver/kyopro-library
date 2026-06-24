@@ -2,6 +2,7 @@
 #include<iostream>
 #include "convolution/karatsuba.hpp"
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n,m;
   std::cin>>n>>m;
   std::vector<unsigned long long>a(n),b(m);

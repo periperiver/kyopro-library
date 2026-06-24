@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/convolution_mod_2_64"
 #include "convolution/convolution_mod64.hpp"
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n,m;
   std::cin>>n>>m;
   std::vector<unsigned long long>a(n),b(m);
