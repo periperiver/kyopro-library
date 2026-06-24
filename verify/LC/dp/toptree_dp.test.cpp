@@ -56,6 +56,8 @@ int main(){
   for(int i=0;i<n-1;i++){
     int u,v;
     std::cin>>u>>v>>bc[i].first>>bc[i].second;
+    dp.link(u,i+n);
+    dp.link(v,i+n);
   }
   for(auto[id,v]:bc|std::views::enumerate){
     dp.set(id+n,{v.first,v.second,0,0});

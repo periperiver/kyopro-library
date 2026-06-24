@@ -6,6 +6,8 @@
 int main(){
   int n,q;
   std::cin>>n>>q;
+  std::vector<long long>a(n);
+  for(int i=0;i<n;i++)std::cin>>a[i];
   OfflineDynamicConnectivity<MonoidAdd<long long>>odc(n,q);
   std::map<std::pair<int,int>,int>mp;
   std::vector<std::pair<int,int>>query(q,{-1,-1});
@@ -38,6 +40,7 @@ int main(){
     }
   }
   for(auto [uv,i]:mp)odc.add_edge(i,q,uv.first,uv.second);
+  for(int i=0;i<n;i++)odc.modify(i,a[i]);
   odc.build([&](int i){
     auto [a,b]=query[i];
     if(a==-1)return;

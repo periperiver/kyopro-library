@@ -5,6 +5,7 @@ int main(){
   int n,q;
   rd(n),rd(q);
   std::vector<int>a(n);
+  for(int&x:a)rd(x);
   WaveletMatrix wm(a);
   while(q--){
     int l,r,k;

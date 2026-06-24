@@ -8,7 +8,7 @@ int main(){
   PermutationTree pt(p);
   std::cout<<pt.size()<<'\n';
   for(int i=0;i<pt.size();i++){
-    std::cout<<pt[i].par<<' '<<pt[i].l<<' '<<pt[i].r<<' ';
+    std::cout<<pt[i].par<<' '<<pt[i].l<<' '<<pt[i].r-1<<' ';
     if(pt[i].type==pt.prime)std::cout<<"prime\n";
     else std::cout<<"linear\n";
   }

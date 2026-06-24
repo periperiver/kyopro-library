@@ -2,6 +2,7 @@
 #include "graph_base.hpp"
 template<typename T>
 std::vector<Edge<T>>eulerian_trail(const Graph<T>&g){
+  if(g.edge_size()==0)return {};
   int n=g.size();
   std::vector<int>deg(n,0);
   const bool dir=g.is_directed();
