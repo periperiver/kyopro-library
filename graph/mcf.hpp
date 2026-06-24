@@ -4,6 +4,7 @@
 #include<vector>
 #include<limits>
 #include<queue>
+#include<algorithm>
 template<typename Cap,typename Cost>
 struct MinCostFlow{
 private:

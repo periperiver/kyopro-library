@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/shortest_path"
 #include "fastio.hpp"
 #include "graph/dijkstra.hpp"
+#include<algorithm>
 int main(){
   int n,m,s,t;
   rd(n),rd(m),rd(s),rd(t);

@@ -36,7 +36,7 @@ std::vector<int>incremental_scc(const Graph<T>&g){
     Itr nl=litr,nr=ritr;
     while(nl!=nr){
       if(nl->index<=mid&&scc[idx[nl->from]]==scc[idx[nl->to]])nl++;
-      else swap(*nl,*prev(nr)),nr--;
+      else std::swap(*nl,*prev(nr)),nr--;
     }
     for(Itr i=nr;i!=ritr;i++){
       reset[rp++]=i->from;

@@ -3,6 +3,7 @@
 #include<queue>
 #include<numeric>
 #include<limits>
+#include<algorithm>
 #include "edge_base.hpp"
 template<typename T>
 std::vector<Edge<T>>general_weighted_matching(const int n,const std::vector<Edge<T>>&edge){

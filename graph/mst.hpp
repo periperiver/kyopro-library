@@ -7,9 +7,9 @@
 template<typename T>
 Tree<T>minimum_spanning_tree(const Graph<T>&g){
   assert(!g.is_directed());
-  vector<int>ord(g.edge_size());
-  iota(ord.begin(),ord.end(),0);
-  sort(ord.begin(),ord.end(),[&](int x,int y){return g.get_edge(x).weight<g.get_edge(y).weight;});
+  std::vector<int>ord(g.edge_size());
+  std::iota(ord.begin(),ord.end(),0);
+  std::sort(ord.begin(),ord.end(),[&](int x,int y){return g.get_edge(x).weight<g.get_edge(y).weight;});
   UnionFind uf(g.size());
   Tree<T>ret(g.size());
   for(int i:ord){

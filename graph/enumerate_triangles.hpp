@@ -14,7 +14,7 @@ void enumerate_triangles(const Graph<T>&g,const Func&f){
     else h.add_edge(e.to,e.from);
   }
   h.build();
-  vector<bool>out(n,false);
+  std::vector<bool>out(n,false);
   for(int i=0;i<n;i++){
     for(const Edge<>&e:h[i])out[e.to]=true;
     for(const Edge<>&e:h[i]){
