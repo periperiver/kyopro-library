@@ -5,4 +5,4 @@ exclude = [
 ]
 [[languages.cpp.environments]]
 CXX = "g++"
-CXXFLAGS = ["-std=c++23", "-Wall", "-g", "-fsanitize=undefined", "-D_GLIBCXX_DEBUG", "-O2"]
+CXXFLAGS = ["-std=c++23", "-O2"]
