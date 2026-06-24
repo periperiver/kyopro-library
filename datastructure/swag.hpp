@@ -37,8 +37,8 @@ public:
   void pop_back(){
     if(b.empty()){
       int mid=a.size()/2;
-      b=vector<S>(a.rbegin()+mid,a.rend());
-      a=vector<S>(a.end()-mid,a.end());
+      b=std::vector<S>(a.rbegin()+mid,a.rend());
+      a=std::vector<S>(a.end()-mid,a.end());
       eval();
     }
     b.pop_back();

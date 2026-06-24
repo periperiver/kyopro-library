@@ -12,7 +12,7 @@ int main(){
     rd(t),rd(l),rd(r);
     if(t==3)wt(seg.sum(l,r)),wt('\n');
     else{
-      int b;
+      long long b;
       rd(b);
       if(t==0)seg.chmin(l,r,b);
       else if(t==1)seg.chmax(l,r,b);

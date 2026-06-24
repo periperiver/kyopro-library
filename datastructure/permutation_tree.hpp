@@ -1,6 +1,7 @@
 #pragma once
 #include "lazy_segmenttree.hpp"
 #include "monoid/rangeadd_rangemin.hpp"
+#include<algorithm>
 struct PermutationTree{
   enum node_type{
     inc,dec,prime,leaf

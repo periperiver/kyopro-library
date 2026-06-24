@@ -15,7 +15,7 @@ int main(){
   auto ans=two_sat(n,a);
   if(ans.empty())std::cout<<"s UNSATISFIABLE\n";
   else{
-    std::cout<<"s SATISFIABLE\nv";
+    std::cout<<"s SATISFIABLE\nv ";
     for(int i=0;i<n;i++){
       int x=i+1;
       if(!ans[i])x=-x;
