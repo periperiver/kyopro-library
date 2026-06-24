@@ -30,4 +30,4 @@ jobs:
 
       - run: find . -name "*.test.cpp" | sort
       - name: Verify
-        run: oj-verify run
+        run: oj-verify all

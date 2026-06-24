@@ -1,3 +1,5 @@
+#define IGNORE
+//容量足りなくてfailになってカス
 #define PROBLEM "https://judge.yosupo.jp/problem/convolution_mod_large"
 #include "convolution/ntt_large.hpp"
 #include "math/modint.hpp"
