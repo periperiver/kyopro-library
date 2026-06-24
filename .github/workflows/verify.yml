@@ -15,13 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Check verify directory
-        run: |
-          bad=$(find verify -type f ! -name "*.test.cpp")
-          if [ -n "$bad" ]; then
-            echo "Unexpected files found:"
-            echo "$bad"
-            exit 1
-          fi
+      run: |
+        bad=$(find verify -type f ! -name "*.test.cpp")
+        if [ -n "$bad" ]; then
+          echo "Unexpected files found:"
+          echo "$bad"
+          exit 1
+        fi
     - name: Set up Python
       uses: actions/setup-python@v1
 
