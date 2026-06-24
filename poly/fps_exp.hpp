@@ -1,6 +1,7 @@
 #pragma once
 #include "../convolution/ntt.hpp"
 #include<algorithm>
+#include<cassert>
 template<typename T>
 std::vector<T> fps_exp(const std::vector<T>&a,int deg=-1){
   assert(a.empty()||a[0]==0);

@@ -13,5 +13,7 @@ std::pair<std::vector<T>,std::vector<T>>poly_div_mod(std::vector<T>f,std::vector
   for(int i=0;i<(int)f.size();i++)f[i]-=p[i];
   std::reverse(q.begin(),q.end());
   f.resize(g.size()-1);
+  while(!q.empty()&&q.back()==T())q.pop_back();
+  while(!f.empty()&&f.back()==T())f.pop_back();
   return std::make_pair(q,f);
 }
