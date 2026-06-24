@@ -5,6 +5,7 @@
 //0≤i≤n r^i*i^d
 template<typename T>
 T sum_of_exp(T r,int d,long long n){
+  if(n==0)return T();
   if(r.val()==0)return d==0;
   std::vector<T>a=enumerate_fully_multiplicative_function(d+1,[&](int x)->T {return T::raw(x).pow(d);});
   T rs=1;

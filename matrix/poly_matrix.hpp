@@ -27,6 +27,7 @@ void matrix_hessenberg(std::vector<std::vector<T>>&a){
 //det(xI-a)
 template<typename T>
 std::vector<T>matrix_charpoly(std::vector<std::vector<T>>a){
+  if(a.empty())return {1};
   matrix_hessenberg(a);
   int n=a.size();
   std::vector<std::vector<T>>ret(n+1);
