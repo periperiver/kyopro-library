@@ -9,25 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Check verify directory
-        run: |
-          bad=$(find verify -type f ! -name "*.test.cpp")
-          if [ -n "$bad" ]; then
-            echo "Unexpected files found:"
-            echo "$bad"
-            exit 1
-          fi
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    - uses: actions/checkout@v1
 
-      - name: Install dependencies
-        run: |
-          python -m pip install -U pip
-          pip install online-judge-tools
-          pip install online-judge-verify-helper
+    - name: Set up Python
+      uses: actions/setup-python@v1
+    - name: Check verify directory
+      run: |
+        bad=$(find verify -type f ! -name "*.test.cpp")
+        if [ -n "$bad" ]; then
+          echo "Unexpected files found:"
+          echo "$bad"
+          exit 1
+        fi
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
 
-      - run: find . -name "*.test.cpp" | sort
-      - name: Verify
-        run: oj-verify run
+    - name: Install dependencies
+      run: |
+        pip3 install -U online-judge-verify-helper
+        pip3 install "setuptools<81"
+
+    - run: find . -name "*.test.cpp" | sort
+    - name: Verify
+      run: oj-verify run
