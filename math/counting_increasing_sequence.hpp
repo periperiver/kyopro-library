@@ -65,18 +65,18 @@ T counting_increasing_sequence(std::vector<int>lower,std::vector<int>upper){
     T invs=T(s).inv();
     d[0]=0;
     {//下から上
-      vector<T>coef(x+1);
+      std::vector<T>coef(x+1);
       for(int i=0;i<=x;i++)coef[i]=F<T>::C(y+i,i);
       coef=ntt_convolution(coef,d);
       for(int i=0;i<=x;i++)red[i+lx]+=coef[i];
     }
     {//左から右
-      vector<T>coef(y+1);
+      std::vector<T>coef(y+1);
       for(int i=0;i<=y;i++)coef[i]=F<T>::C(x+i,i);
       coef=ntt_convolution(coef,l);
       for(int i=0;i<=y;i++)blue[i+ly]+=coef[i];
     }
-    vector<T>coef(s,0);
+    std::vector<T>coef(s,0);
     for(int i=0;i<=x+y;i++)coef[i]=F<T>::factorial(i);
     dft(coef);
     {//下から右

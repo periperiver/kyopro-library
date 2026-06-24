@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/two_edge_connected_components"
 #include "graph/two_edge_connected_components.hpp"
 #include "datastructure/csr_array.hpp"
+#include<algorithm>
 int main(){
   int n,m;
   std::cin>>n>>m;

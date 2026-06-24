@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/scc"
 #include "graph/scc.hpp"
 #include "datastructure/csr_array.hpp"
+#include<algorithm>
 int main(){
   int n,m;
   std::cin>>n>>m;

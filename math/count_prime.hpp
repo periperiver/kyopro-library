@@ -3,7 +3,7 @@
 #include<cmath>
 long long count_prime(long long n){
   if(n<=1)return 0;
-  int v=std::sqrtl(n);
+  int v=std::sqrt(n);
   int s=(v+1)/2;
   std::vector<int>smalls(s),roughs(s);
   std::vector<long long>larges(s);
