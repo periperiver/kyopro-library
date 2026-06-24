@@ -31,8 +31,8 @@ int main(){
   std::cin>>gomi>>gomi;
   int n,m;
   std::cin>>n>>m;
-  Graph<>g(n+1,false);
-  g.read<0,0>(m);
+  Graph<>g(n,false);
+  g.read<0,1>(m);
   UnionFind uf(n);
   for(auto e:g)uf.merge(e.from,e.to);
   for(int i=0;i<n;i++)if(uf.merge(i,0))g.add_edge(i,0);

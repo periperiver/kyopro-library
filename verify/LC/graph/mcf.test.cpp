@@ -1,9 +1,10 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/min_cost_b_flow"
 #include "graph/mcf.hpp"
+#include "io128.hpp"
 int main(){
   int n,m;
   std::cin>>n>>m;
-  MinCostFlow<long long,long long>mcf(n);
+  MinCostFlow<long long,__int128_t>mcf(n);
   for(int i=0;i<n;i++){
     long long b;
     std::cin>>b;
