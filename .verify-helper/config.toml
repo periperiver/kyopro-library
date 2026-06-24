@@ -3,3 +3,6 @@ exclude = [
     "atcoder/**",
     "**/*.gch/**",
 ]
+[[languages.cpp.environments]]
+CXX = "g++"
+CXXFLAGS = ["-std=c++23", "-Wall", "-g", "-fsanitize=undefined", "-D_GLIBCXX_DEBUG", "-O2"]
