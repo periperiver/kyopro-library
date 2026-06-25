@@ -287,6 +287,7 @@ struct MultiplicativeConvolutionSolver{
 };
 template<typename T>
 std::vector<T>multiplicative_convolution_modn(std::vector<T>a,std::vector<T>b){
+  assert(a.size()==b.size());
   int n=a.size();
   int c=carmichael(n);
   MultiplicativeConvolutionSolver solver(n);

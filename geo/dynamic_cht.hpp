@@ -3,6 +3,7 @@
 #include<cstdint>
 #include<limits>
 #include "math/util.hpp"
+//T2=a^2*bくらい
 template<typename T,typename T2>
 struct DynamicConvexHullTrick{
   static_assert(std::is_integral_v<T>);
