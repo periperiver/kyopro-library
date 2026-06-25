@@ -2,15 +2,15 @@
 #include "datastructure/unionfind.hpp"
 #include "tree_base.hpp"
 template<typename T>
-vector<int>offline_lca(const Tree<T>&t,const vector<pair<int,int>>&query,int root=0){
+std::vector<int>offline_lca(const Tree<T>&t,const std::vector<std::pair<int,int>>&query,int root=0){
   int n=t.size();
   UnionFind uf(n);
-  vector<int>st(n),mark(n),p(n),ret(query.size(),-1);
+  std::vector<int>st(n),mark(n),p(n),ret(query.size(),-1);
   int top=0;
   st[0]=root;
   for(const auto&[l,r]:query)mark[l]++,mark[r]++;
-  vector<int>ptr;
-  vector<pair<int,int>>q(query.size()*2);
+  std::vector<int>ptr;
+  std::vector<pair<int,int>>q(query.size()*2);
   {
     vector<int>cnt(n+1);
     cnt[0]=0;

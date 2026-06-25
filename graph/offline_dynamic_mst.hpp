@@ -2,6 +2,7 @@
 #include<cassert>
 #include <type_traits>
 #include<limits>
+#include<algorithm>
 #include "datastructure/unionfind.hpp"
 template<typename T>
 struct MSTEdge{
