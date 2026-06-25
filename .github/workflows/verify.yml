@@ -35,5 +35,6 @@ jobs:
     - name: Verify
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        YUKICODER_TOKEN: ${{ secrets.YUKICODER_TOKEN }}
       run: |
         oj-verify all
