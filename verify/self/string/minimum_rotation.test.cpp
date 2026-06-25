@@ -26,6 +26,7 @@ std::string gen(int alpha){
     return res;
   }
   for(int i=0;i<alpha;i++)res+='a'+Random::range(26);
+  return res;
 }
 void test(int n,int q,int alpha){
   assert(1<=alpha&&1<=alpha);
@@ -41,8 +42,8 @@ void test(int n,int q,int alpha){
 }
 int main(){
   for(int i=0;i<10;i++){
-    int n=Random::range(1,100);
-    int q=Random::range(1,100);
+    int n=Random::range(1,1000);
+    int q=Random::range(1,5000);
     test(n,q,2);
     test(n,q,3);
     test(n,q,26);

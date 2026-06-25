@@ -11,7 +11,7 @@ struct MSTEdge{
   T weight;
   MSTEdge(){}
   MSTEdge(int l_,int r_,int u_,int v_,T weight_):l(l_),r(r_),u(u_),v(v_),weight(weight_){}
-  MSTEdge(int u_,int v_,T weight_):l(0),r(numeric_limits<T>::max()),u(u_),v(v_),weight(weight_){}
+  MSTEdge(int u_,int v_,T weight_):l(0),r(std::numeric_limits<T>::max()),u(u_),v(v_),weight(weight_){}
   bool operator<(const MSTEdge<T>&rhs)const{
     return this->weight<rhs.weight;
   }

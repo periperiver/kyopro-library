@@ -59,7 +59,7 @@ void test(long long axmax,long long bmax){
       auto [na_a,na_b,na_id]=naive.min(x);
       assert(ans_a==na_a);
       assert(ans_b==na_b);
-      assert(ans_id=na_id);
+      assert(ans_id==na_id);
     }
   }
 }

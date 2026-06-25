@@ -2,6 +2,7 @@
 #include<vector>
 #include<limits>
 #include<cassert>
+#include<functional>
 #include "../math/util.hpp"
 template<typename T>
 struct KineticTournament{
