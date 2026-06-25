@@ -1,4 +1,5 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/aplusb"
+#include<cassert>
 #include "geo/count_lattice.hpp"
 #include "random/generator.hpp"
 long long naive(std::vector<std::tuple<long long,long long,long long>>lines,int lim){

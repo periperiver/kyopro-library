@@ -2,6 +2,7 @@
 #include<iostream>
 #include "datastructure/kinetic_tournament.hpp"
 #include "random/generator.hpp"
+#include<algorithm>
 using Solver=KineticTournament<long long>;
 struct Naive{
   std::vector<std::pair<long long,long long>>dat;

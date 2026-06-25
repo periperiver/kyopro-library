@@ -1,5 +1,6 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/aplusb"
 #include<iostream>
+#include<cassert>
 #include "datastructure/kth_bit.hpp"
 #include "random/generator.hpp"
 int solve(unsigned long long x,int k){return kth_bit(x,k);}

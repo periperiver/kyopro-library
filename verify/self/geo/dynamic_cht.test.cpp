@@ -1,5 +1,6 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/aplusb"
 #include<iostream>
+#include<algorithm>
 #include "geo/dynamic_cht.hpp"
 #include "random/generator.hpp"
 using Solver=DynamicConvexHullTrick<long long,__int128_t>;

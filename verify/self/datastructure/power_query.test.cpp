@@ -12,7 +12,7 @@ struct M1{
   static S e(){return S::E();}
   static S pow(S x,long long k){
     S res=e();
-    while(k&1){
+    while(k){
       if(k&1)res=op(res,x);
       x=op(x,x);
       k>>=1;
