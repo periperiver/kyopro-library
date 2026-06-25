@@ -1,5 +1,6 @@
 #pragma once
 #include "../../convolution/relaxed_convolution.hpp"
+#include<cassert>
 template<typename T>
 struct OnlineInv{
 private:
