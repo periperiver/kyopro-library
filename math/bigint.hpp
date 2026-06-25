@@ -31,7 +31,7 @@ private:
           break;
         }
         lhs[pos]++;
-        if(lhs[pos]==mod)pos++;
+        if(lhs[pos]==mod)lhs[pos++]=0;
         else break;
       }
     }
