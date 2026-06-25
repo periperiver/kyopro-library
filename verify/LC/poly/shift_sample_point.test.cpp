@@ -5,7 +5,7 @@ using mint=mint998;
 int main(){
   int n,m;
   mint c;
-  std::cin>>n>>m;
+  std::cin>>n>>m>>c;
   std::vector<mint>f(n);
   for(mint&x:f)std::cin>>x;
   f=shift_sample_point(f,c,m);
