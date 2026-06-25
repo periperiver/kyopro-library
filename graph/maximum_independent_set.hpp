@@ -1,73 +1,52 @@
 #pragma once
+#include<bitset>
 #include<numeric>
+#include "datastructure/unionfind.hpp"
 #include "graph_base.hpp"
-template<typename T>
-std::vector<int>maximum_independent_set(const Graph<T>&g){
+template<typename T,int N=1<<10>
+std::vector<int>maximum_independent_set(Graph<T>g){
+  if(g.size()==0)return {};
+  if(N/2>=g.size())return maximum_independent_set<T,N/2>(std::move(g));
+  using Bs=std::bitset<N>;
   int n=g.size();
-  std::vector<std::vector<bool>>edge(n,std::vector<bool>(n,false));
-  for(const Edge<T>&e:g)edge[e.from][e.to]=edge[e.to][e.from]=true;
-  std::vector<int>v(n);
-  std::iota(v.begin(),v.end(),0);
-  std::vector<int>cnt(n,0);
-  for(int i=0;i<n;i++)for(int j=0;j<n;j++)cnt[i]+=edge[i][j];
-  std::vector<int>ret,now(n);
-  int b=0;
-  auto dfs=[&](auto self,std::vector<int>::iterator itr,int s){
-    if(ret.size()>=n+s)return;
-    if(s==0){
-      if(ret.size()<b)ret=std::vector<int>(now.begin(),now.begin()+b);
-      return;
+  std::vector<Bs>edge(n);
+  for(int i=0;i<n;i++)for(int j=i+1;j<n;j++)edge[i][j]=edge[j][i]=1;
+  for(auto e:g)edge[e.from][e.to]=edge[e.to][e.from]=0;
+  std::vector<int>deg(n);
+  std::vector<std::vector<int>>col(n+1,std::vector<int>(n));
+  std::vector<int>res;
+  std::vector<Bs>buf(n+1);
+  std::vector<int>now;
+  auto dfs=[&](auto self,std::vector<int>rem,int d)->void {
+    if(res.size()<now.size())res=now;
+    std::sort(rem.begin(),rem.end(),[&](int lhs,int rhs){return deg[lhs]>deg[rhs];});
+    int p=0;
+    for(int v:rem){
+      int id=0;
+      while((buf[id]&edge[v]).any())id++;
+      if(p<id)p=id;
+      buf[id].set(v);
+      col[d][v]=id;
     }
-    int nv=0;
-    for(int i=0;i<s;i++)if(cnt[itr[i]]<=1){
-      std::swap(itr[0],itr[i]);
-      nv=1;
-      break;
-    }
-    if(nv==0){
-      for(int i=0;i<s;i++)if(cnt[itr[0]]<cnt[itr[i]])std::swap(itr[0],itr[i]);
-      if(cnt[itr[0]]>=3)nv=2;
-    }
-    if(nv!=0){
-      int p=itr[0],c=1;
-      for(int i=1;i<s;i++){
-        if(edge[p][itr[i]]){
-          std::swap(itr[c],itr[i]);
-          for(int j=c+1;j<s;j++){
-            cnt[itr[j]]-=edge[itr[c]][itr[j]];
-          }
-          ++c;
-        }
+    p++;
+    for(int i=0;i<p;i++)buf[i].reset();
+    std::sort(rem.begin(),rem.end(),[&](int lhs,int rhs){return col[d][lhs]>col[d][rhs];});
+    for(int v:rem){
+      if(now.size()+col[d][v]+1<=res.size())break;
+      std::vector<int>nrem;
+      Bs bs;
+      for(int u:rem)if(edge[u][v]){
+        nrem.push_back(u);
+        bs.set(u);
       }
-      now[b++]=p;
-      self(self,itr+c,s-c);
-      for(int j=c-1;j>=1;j--)for(int i=j+1;i<s;i++)cnt[itr[i]]+=edge[itr[j]][itr[i]];
-      b--;
-      if(nv!=1){
-        for(int i=0;i<s;i++)cnt[itr[i]]-=edge[p][itr[i]];
-        self(self,itr+1,s-1);
-        for(int i=0;i<s;i++)cnt[itr[i]]+=edge[p][itr[i]];
-      }
-      return;
+      for(int u:nrem)deg[u]=(bs&edge[u]).count();
+      now.push_back(v);
+      self(self,nrem,d+1);
+      now.pop_back();
     }
-    int r=0;
-    std::vector<bool>seen(s,false);
-    for(int i=0;i<s;i++)if(!seen[i]){
-      for(int u=i,ni=0;!seen[u];ni=1-ni){
-        int nxt=-1;
-        for(int j=0;j<s;j++)if(!seen[j]&&edge[itr[u]][itr[j]]){
-          nxt=j;
-          break;
-        }
-        if(nxt==-1)break;
-        if(ni)now[b++]=itr[u],r++;
-        seen[u]=true;
-        u=nxt;
-      }
-    }
-    if(ret.size()<b)ret=std::vector<int>(now.begin(),now.begin()+b);
-    b-=r;
   };
-  dfs(dfs,v.begin(),n);
-  return ret;
+  std::vector<int>init(n);
+  std::iota(init.begin(),init.end(),0);
+  dfs(dfs,init,0);
+  return res;
 }

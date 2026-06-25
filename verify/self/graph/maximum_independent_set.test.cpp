@@ -44,11 +44,13 @@ void test(int n){
   g.build();
   std::vector<int>ans=maximum_independent_set(g);
   assert(check(g,ans));
-  if(n<=20)assert((int)ans.size()==naive(g));
+  if(n<=20){
+    assert((int)ans.size()==naive(g));
+  }
 }
 int main(){
-  for(int i=0;i<100;i++)test(Random::range(1,20));
-  for(int i=0;i<5;i++)test(Random::range(20,120));
+  for(int i=0;i<1000;i++)test(Random::range(1,20));
+  for(int i=0;i<10;i++)test(Random::range(20,120));
   int a,b;
   std::cin>>a>>b;
   std::cout<<a+b<<std::endl;
