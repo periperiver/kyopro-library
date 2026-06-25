@@ -15,8 +15,8 @@ std::vector<mint>naive(std::vector<mint>f,std::vector<mint>g,int m){
   return res;
 }
 void test(){
-  int n=Random::range(1,1000);
-  int m=Random::range(1,1000);
+  int n=Random::range(1,3000);
+  int m=Random::range(1,3000);
   std::vector<mint>f(n),g(n);
   for(int i=0;i<n;i++)f[i]=Random::range(mint::mod());
   for(int i=0;i<n;i++)g[i]=Random::range(mint::mod());

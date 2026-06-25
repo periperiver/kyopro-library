@@ -114,7 +114,7 @@ std::vector<std::pair<std::vector<int>,unsigned long long>>count_exp_multiset(lo
     unsigned long long val=0;
     if(prod_shift(1)>=2){
       if((int)now.size()==1)ds=pc;
-      else ds=ms.dirichlet_convolution_sparse<unsigned long long,1.5>(ds,pc);
+      else ds=ms.dirichlet_convolution_sparse<unsigned long long,2>(ds,pc);
       val=ds.back();
     }
     else{
@@ -134,7 +134,7 @@ std::vector<std::pair<std::vector<int>,unsigned long long>>count_exp_multiset(lo
       auto [key,value]=res[i];
       if(key.empty())continue;
       key.pop_back();
-      ptr.emplace_back(std::lower_bound(res.begin(),res.end(),std::make_pair(key,0))-res.begin(),i);
+      ptr.emplace_back(std::lower_bound(res.begin(),res.end(),std::make_pair(key,0ull))-res.begin(),i);
     }
     return csr_array<int>(res.size(),ptr);
   }();

@@ -187,12 +187,12 @@ struct MultiplicativeSum{
       a[i]*=invb;
     }
   }
-  template<typename U,double c=3.0>
+  template<typename U,int c=3>
   std::vector<U>dirichlet_convolution_sparse(const std::vector<U>&f,const std::vector<U>&g){
     static std::vector<std::pair<int,U>>fbuf,gbuf;
     fbuf.clear(),gbuf.clear();
     int k=kth_root(quo.n,3);
-    int k2=std::max<int>(kth_root(quo.n,2),k*k*c);
+    int k2=std::max<int>(kth_root(quo.n,2),k*k*2);
     int b=std::prev(std::upper_bound(quo.dat.begin(),quo.dat.end(),k2))-quo.dat.begin();
     if(f[0]!=U(0))fbuf.emplace_back(1,f[0]);
     if(g[0]!=U(0))gbuf.emplace_back(1,g[0]);
