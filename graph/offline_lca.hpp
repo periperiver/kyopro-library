@@ -10,15 +10,15 @@ std::vector<int>offline_lca(const Tree<T>&t,const std::vector<std::pair<int,int>
   st[0]=root;
   for(const auto&[l,r]:query)mark[l]++,mark[r]++;
   std::vector<int>ptr;
-  std::vector<pair<int,int>>q(query.size()*2);
+  std::vector<std::pair<int,int>>q(query.size()*2);
   {
-    vector<int>cnt(n+1);
+    std::vector<int>cnt(n+1);
     cnt[0]=0;
     for(int i=1;i<=n;i++)cnt[i]=cnt[i-1]+mark[i-1];
     ptr=cnt;
     for(int i=0;i<query.size();i++){
-      q[cnt[query[i].first]++]=make_pair(query[i].second,i);
-      q[cnt[query[i].second]++]=make_pair(query[i].first,i);
+      q[cnt[query[i].first]++]=std::make_pair(query[i].second,i);
+      q[cnt[query[i].second]++]=std::make_pair(query[i].first,i);
     }
   }
   for(int i=0;i<n;i++){

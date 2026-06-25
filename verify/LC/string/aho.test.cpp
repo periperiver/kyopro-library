@@ -2,6 +2,7 @@
 #include<iostream>
 #include "string/aho.hpp"
 int main(){
+  std::cin.tie(nullptr)->sync_with_stdio(false);
   int n;
   std::cin>>n;
   AhoCorasick<26>aho;
@@ -17,6 +18,7 @@ int main(){
   for(int i=0;i<aho.size();i++){
     for(int j=0;j<26;j++)if(aho[i][j]!=-1)par[aho[i][j]]=i;
   }
+  std::cout<<aho.size()<<'\n';
   for(int i=1;i<aho.size();i++)std::cout<<par[i]<<' '<<aho[i].failure<<'\n';
   for(int i=0;i<n;i++)std::cout<<v[i]<<" \n"[i+1==n];
 }
