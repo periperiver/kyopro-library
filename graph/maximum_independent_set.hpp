@@ -3,7 +3,6 @@
 #include "graph_base.hpp"
 template<typename T>
 std::vector<int>maximum_independent_set(const Graph<T>&g){
-  assert(false);
   int n=g.size();
   std::vector<std::vector<bool>>edge(n,std::vector<bool>(n,false));
   for(const Edge<T>&e:g)edge[e.from][e.to]=edge[e.to][e.from]=true;
