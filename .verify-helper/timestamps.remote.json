@@ -58,7 +58,6 @@
 "verify/LC/geo/convex_layers.test.cpp": "2026-06-23 21:58:10 +0900",
 "verify/LC/geo/count_points_in_triangles.test.cpp": "2026-06-24 23:39:33 +0900",
 "verify/LC/geo/dynamic_cht.test.cpp": "2026-06-25 12:57:04 +0900",
-"verify/LC/geo/euclidean_mst.test.cpp": "2026-06-27 13:48:03 +0900",
 "verify/LC/geo/furthest_pair_points.test.cpp": "2026-06-23 21:58:10 +0900",
 "verify/LC/geo/li_chao_tree.test.cpp": "2026-06-23 14:36:20 +0900",
 "verify/LC/geo/manhattan_mst.test.cpp": "2026-06-27 13:48:03 +0900",
