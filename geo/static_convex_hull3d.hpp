@@ -3,14 +3,12 @@
 #include<array>
 #include<algorithm>
 #include<numeric>
-#include "../datastructure/memory_pool.hpp"
 #include "point3d.hpp"
 namespace static_convex_hull3d_impl{
 struct face{
   std::array<int,3>vs;
   std::array<face*,3>es;
   int head=-2;
-  face(){}
   inline void change(int v,face*f){
     for(int i=0;i<3;i++)if(vs[i]==v)es[i]=f;
   }
@@ -19,10 +17,8 @@ template<typename T,typename T3>
 inline T3 dotT3(const Point3d<T>&a,const Point3d<T>&b){
   return T3(a.x)*T3(b.x)+T3(a.y)*T3(b.y)+T3(a.z)*T3(b.z);
 }
-MemoryPool<face>pool;
 template<typename T,typename T3>
 std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point3d<T>>&a){
-  pool.clear();
   int n=a.size();
   if(n==0)return {};
   std::vector<int>ord(n);
@@ -108,8 +104,12 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     }
     return res;
   }
+  std::vector<std::vector<face>>fpool;
+  fpool.emplace_back(n);
+  int fp=0;
   auto newface=[&](int p,int q,int r)->face* {
-    face*res=pool.allocate();
+    if(fp==n)fpool.emplace_back(n),fp=0;
+    face*res=&fpool.back()[fp++];
     res->vs[0]=p,res->vs[1]=q,res->vs[2]=r;
     res->es.fill(nullptr);
     res->head=-1;
@@ -199,15 +199,8 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     }while(v!=start);
   }
   std::vector<std::tuple<int,int,int>>res;
-  for(int i=0;i<pool.pool.size();i++){
-    for(auto&ptr:(*pool.pool[i])){
-      face*f=reinterpret_cast<face*>(ptr.storage);
-      if(f->head!=-2)res.emplace_back(f->vs[0],f->vs[1],f->vs[2]);
-      else{
-        i=pool.pool.size();
-        break;
-      }
-    }
+  for(const std::vector<face>&fv:fpool){
+    for(const face&f:fv)if(f.head!=-2)res.emplace_back(f.vs[0],f.vs[1],f.vs[2]);
   }
   return res;
 }
