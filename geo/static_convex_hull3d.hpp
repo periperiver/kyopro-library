@@ -3,22 +3,29 @@
 #include<array>
 #include<algorithm>
 #include<numeric>
+#include<cassert>
 #include "point3d.hpp"
 namespace static_convex_hull3d_impl{
-struct face{
+struct face_p{
   std::array<int,3>vs;
-  std::array<face*,3>es;
+  std::array<face_p*,3>es;
   int head=-2;
-  inline void change(int v,face*f){
+  inline void change(int v,face_p*f){
     for(int i=0;i<3;i++)if(vs[i]==v)es[i]=f;
   }
+};
+struct face{
+  std::array<int,3>vs;
+  std::array<int,3>es;
 };
 template<typename T,typename T3>
 inline T3 dotT3(const Point3d<T>&a,const Point3d<T>&b){
   return T3(a.x)*T3(b.x)+T3(a.y)*T3(b.y)+T3(a.z)*T3(b.z);
 }
+//T3=abs(x)*abs(y)*abs(z)*24くらい
+//10^6だとint128が必要
 template<typename T,typename T3>
-std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point3d<T>>&a){
+std::vector<face>static_convex_hull3d(const std::vector<Point3d<T>>&a){
   int n=a.size();
   if(n==0)return {};
   std::vector<int>ord(n);
@@ -97,19 +104,33 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     }
     lower.insert(lower.end(),upper.rbegin()+1,upper.rend()-1);
     assert((int)lower.size()>=3);
-    std::vector<std::tuple<int,int,int>>res;
-    for(int i=1;i<(int)lower.size()-1;i++){
-      res.emplace_back(lower[0],lower[i],lower[i+1]);
-      res.emplace_back(lower[0],lower[i+1],lower[i]);
+    int cnt=lower.size()-2;
+    std::vector<face>res(cnt*2);
+    for(int i=0;i<cnt;i++){
+      face f,g;
+      f.vs[0]=lower[0];
+      f.vs[1]=lower[i+1];
+      f.vs[2]=lower[i+2];
+      g.vs[0]=lower[0];
+      g.vs[1]=lower[i+2];
+      g.vs[2]=lower[i+1];
+      f.es[0]=i==0?cnt:i-1;
+      f.es[1]=cnt+i;
+      f.es[2]=i+1==cnt?cnt*2-1:i+1;
+      g.es[0]=i+1==cnt?cnt-1:cnt+i+1;
+      g.es[1]=i;
+      g.es[2]=i==0?0:cnt+i-1;
+      res[i]=f;
+      res[cnt+i]=g;
     }
     return res;
   }
-  std::vector<std::vector<face>>fpool;
+  std::vector<std::vector<face_p>>fpool;
   fpool.emplace_back(n);
   int fp=0;
-  auto newface=[&](int p,int q,int r)->face* {
+  auto newface_p=[&](int p,int q,int r)->face_p* {
     if(fp==n)fpool.emplace_back(n),fp=0;
-    face*res=&fpool.back()[fp++];
+    face_p*res=&fpool.back()[fp++];
     res->vs[0]=p,res->vs[1]=q,res->vs[2]=r;
     res->es.fill(nullptr);
     res->head=-1;
@@ -118,15 +139,15 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
   std::vector<int>link(n);
   std::iota(link.begin(),link.end(),0);
   if(dotT3<T,T3>(a[D]-a[A],c)>0)std::swap(B,C);
-  face*f1=newface(A,B,C),*f2=newface(B,A,D),*f3=newface(C,B,D),*f4=newface(A,C,D);
+  face_p*f1=newface_p(A,B,C),*f2=newface_p(B,A,D),*f3=newface_p(C,B,D),*f4=newface_p(A,C,D);
   f1->es[0]=f2,f1->es[1]=f3,f1->es[2]=f4;
   f2->es[0]=f1,f2->es[1]=f4,f2->es[2]=f3;
   f3->es[0]=f1,f3->es[1]=f2,f3->es[2]=f4;
   f4->es[0]=f1,f4->es[1]=f3,f4->es[2]=f2;
-  std::vector<face*>st,st2,nface(n,nullptr);
+  std::vector<face_p*>st,st2,nface_p(n,nullptr);
   st.push_back(f1),st.push_back(f2),st.push_back(f3),st.push_back(f4);
   for(int i=0;i<n;i++){
-    for(face*f:st){
+    for(face_p*f:st){
       if(dotT3<T,T3>(a[i]-a[f->vs[0]],cross(a[f->vs[1]]-a[f->vs[0]],a[f->vs[2]]-a[f->vs[0]]))>0){
         if(f->head!=-1)std::swap(link[f->head],link[i]);
         else f->head=i;
@@ -135,7 +156,7 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     }
   }
   while(!st.empty()){
-    face*f=st.back();st.pop_back();
+    face_p*f=st.back();st.pop_back();
     if(f->head<0)continue;
     int mx=f->head;
     Point3d<T>c=cross(a[f->vs[1]]-a[f->vs[0]],a[f->vs[2]]-a[f->vs[0]]);
@@ -150,22 +171,22 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     int start=-1;
     int nvs=-1;
     for(int i=0;i<(int)st2.size();i++){
-      face*g=st2[i];
+      face_p*g=st2[i];
       if(g->head==-2)continue;
       if(nvs==-1)nvs=g->head;
       else if(g->head!=-1)std::swap(link[nvs],link[g->head]);
       g->head=-2;
       for(int j=0;j<3;j++){
-        face*adj=g->es[j];
+        face_p*adj=g->es[j];
         if(adj->head==-2)continue;
         T3 d=dotT3<T,T3>(p-a[adj->vs[0]],cross(a[adj->vs[1]]-a[adj->vs[0]],a[adj->vs[2]]-a[adj->vs[0]]));
         if(d>0)st2.push_back(adj);
         else{
-          face*g2=newface(mx,g->vs[j],g->vs[(j+1)%3]);
+          face_p*g2=newface_p(mx,g->vs[j],g->vs[(j+1)%3]);
           start=g->vs[j];
           adj->change(g->vs[(j+1)%3],g2);
           g2->es[1]=adj;
-          nface[g->vs[j]]=g2;
+          nface_p[g->vs[j]]=g2;
         }
       }
     }
@@ -177,7 +198,7 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
         link[u]=u;
         int v=start;
         do{
-          face*now=nface[v];
+          face_p*now=nface_p[v];
           if(dotT3<T,T3>(a[u]-a[now->vs[0]],cross(a[now->vs[1]]-a[now->vs[0]],a[now->vs[2]]-a[now->vs[0]]))>0){
             if(now->head==-1)now->head=u;
             else std::swap(link[now->head],link[u]);
@@ -190,17 +211,26 @@ std::vector<std::tuple<int,int,int>>static_convex_hull3d(const std::vector<Point
     }
     int v=start;
     do{
-      face*now=nface[v];
-      face*nxt=nface[now->vs[2]];
+      face_p*now=nface_p[v];
+      face_p*nxt=nface_p[now->vs[2]];
       now->es[2]=nxt;
       nxt->es[0]=now;
       v=now->vs[2];
       st.push_back(now);
     }while(v!=start);
   }
-  std::vector<std::tuple<int,int,int>>res;
-  for(const std::vector<face>&fv:fpool){
-    for(const face&f:fv)if(f.head!=-2)res.emplace_back(f.vs[0],f.vs[1],f.vs[2]);
+  std::vector<face_p*>ptrs;
+  for(int i=0;i<(int)fpool.size();i++)for(int j=0;j<n;j++)if(fpool[i][j].head!=-2)ptrs.push_back(&fpool[i][j]);
+  std::sort(ptrs.begin(),ptrs.end());
+  std::vector<face>res(ptrs.size());
+  for(const std::vector<face_p>&fv:fpool){
+    for(const face_p&f:fv)if(f.head!=-2){
+      int id=std::lower_bound(ptrs.begin(),ptrs.end(),&f)-ptrs.begin();
+      res[id].vs=f.vs;
+      for(int i=0;i<3;i++){
+        res[id].es[i]=std::lower_bound(ptrs.begin(),ptrs.end(),f.es[i])-ptrs.begin();
+      }
+    }
   }
   return res;
 }

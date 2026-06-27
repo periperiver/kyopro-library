@@ -12,12 +12,10 @@ Tree<T>euclidean_mst(const std::vector<Point<T>>&points){
     points2.emplace_back(x,y,x*x+y*y);
   }
   std::vector<std::tuple<T,int,int>>edges;
-  for(auto [i,j,k]:static_convex_hull3d<T,T4>(points2)){
-    Point3d<T>l=points2[j]-points2[i],r=points2[k]-points2[i];
+  for(auto f:static_convex_hull3d<T,T4>(points2)){
+    Point3d<T>l=points2[f.vs[1]]-points2[f.vs[0]],r=points2[f.vs[2]]-points2[f.vs[0]];
     if(T4(l.x)*T4(r.y)<T4(l.y)*T4(r.x)){
-      edges.emplace_back((points[i]-points[j]).norm(),i,j);
-      edges.emplace_back((points[j]-points[k]).norm(),j,k);
-      edges.emplace_back((points[k]-points[i]).norm(),k,i);
+      for(int i=0;i<3;i++)edges.emplace_back((points[f.vs[i]]-points[f.vs[(i+1)%3]]).norm(),f.vs[i],f.vs[(i+1)%3]);
     }
   }
   std::vector<int>ord(n);
