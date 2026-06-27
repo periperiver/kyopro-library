@@ -1,6 +1,6 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/unionfind_with_potential_non_commutative_group"
 #include "fastio.hpp"
-#include "datastructure/potential_unionfind.hpp"
+#include "datastructure/persistent/potential_unionfind.hpp"
 #include "matrix/constant.hpp"
 #include "math/modint.hpp"
 using mint=mint998;
@@ -19,7 +19,7 @@ struct M{
 int main(){
   int n,q;
   rd(n),rd(q);
-  PotentialUnionFind<M>uf(n);
+  PersistentPotentialUnionFind<M>uf(n);
   while(q--){
     int t;
     rd(t);
@@ -33,7 +33,9 @@ int main(){
       mat[0][1]=mint::raw(b);
       mat[1][0]=mint::raw(c);
       mat[1][1]=mint::raw(d);
-      wt(uf.merge(v,u,mat)),wt('\n');
+      auto nuf=uf.merge(v,u,mat);
+      if(nuf)wt("1\n"),uf=*nuf;
+      else wt("0\n");
     }
     else{
       int u,v;

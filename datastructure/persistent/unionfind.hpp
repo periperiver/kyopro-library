@@ -8,7 +8,11 @@ public:
   PersistentUnionFind():n(0),p(){}
   explicit PersistentUnionFind(int n):n(n),p(n,-1){}
   int root(int u)const{
-    while(p.get(u)>=0)u=p.get(u);
+    while(true){
+      int pu=p.get(u);
+      if(pu<0)break;
+      u=pu;
+    }
     return u;
   }
   bool same(int u,int v)const{return root(u)==root(v);}
@@ -25,4 +29,5 @@ public:
     res.p=np;
     return res;
   }
+  int size(int u)const{return -p.get(root(u));}
 };

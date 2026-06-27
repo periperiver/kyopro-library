@@ -12,6 +12,7 @@ public:
     if(par[u]<0)return u;
     return par[u]=root(par[u]);
   }
+  bool same(int u,int v){return root(u)==root(v);}
   bool merge(int u,int v){
     int ru=root(u),rv=root(v);
     if(ru==rv)return false;
@@ -21,7 +22,6 @@ public:
     cs--;
     return true;
   }
-  bool same(int u,int v){return root(u)==root(v);}
   int size(int u=-1){return u==-1?cs:-par[root(u)];}
   void reset(int n){
     cs=n;
