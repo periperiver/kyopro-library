@@ -42,6 +42,14 @@ struct Point3d{
   friend Point3d operator/(const Point3d&lhs,const T&rhs){return Point3d(lhs)/=rhs;}
   friend bool operator==(const Point3d&lhs,const Point3d&rhs){return T_abs(lhs.x-rhs.x)<=eps&&T_abs(lhs.y-rhs.y)<=eps&&T_abs(lhs.z-rhs.z)<=eps;}
   friend bool operator!=(const Point3d&lhs,const Point3d&rhs){return !(lhs==rhs);}
+  friend bool operator<(const Point3d&lhs,const Point3d&rhs){
+    if(lhs.x!=rhs.x)return lhs.x<rhs.x;
+    if(lhs.y!=rhs.y)return lhs.y<rhs.y;
+    return lhs.z<rhs.z;
+  }
+  friend bool operator>(const Point3d&lhs,const Point3d&rhs){return rhs<lhs;}
+  friend bool operator<=(const Point3d&lhs,const Point3d&rhs){return !(rhs<lhs);}
+  friend bool operator>=(const Point3d&lhs,const Point3d&rhs){return !(lhs<rhs);}
   friend std::istream &operator>>(std::istream&is,Point3d&p){
     is>>p.x>>p.y>>p.z;
     return is;

@@ -34,7 +34,7 @@ struct Matrix{
     return res;
   }
 };
-constexpr long long max_xyz=50;//0000;
+constexpr long long max_xyz=500000;
 Point3d<long long>single(int lim){
   Point3d<long long>res;
   res.x=Random::range(-lim,lim+1);
