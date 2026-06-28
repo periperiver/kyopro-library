@@ -17,8 +17,6 @@ std::vector<int>arg_sort(const std::vector<Point<T>>&points){
   std::iota(ord.begin(),ord.end(),0);
   std::sort(ord.begin(),ord.end(),[&](int x,int y){
     return arg_comp(points[x],points[y]);
-    if(sign[x]!=sign[y])return sign[x]<sign[y];
-    else return cross(points[x],points[y])>0;
   });
   return ord;
 }

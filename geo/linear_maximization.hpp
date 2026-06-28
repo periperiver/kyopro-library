@@ -60,13 +60,16 @@ std::vector<T>linear_maximization(std::vector<Point3d<T>>points,std::vector<Poin
         assert(start!=-1);
         int u=start;
         int sig=sign(d.x);
+        auto aux_2d=[&](int u,int v)->Point<T> {
+          const Point3d<T>&up=points[u],&vp=points[v];
+          return Point<T>(vp.z-up.z,vp.y-up.y);
+        };
         do{
           int v=link[u];
           int w=link[v];
-          const Point3d<T>&up=points[u],&vp=points[v];
-          diryz.emplace_back(vp.z-up.z,vp.y-up.y)*=sig;
+          diryz.emplace_back(aux2d(u,v))*=sig;
           if(sig>0){
-            
+
           }
           else{
 
