@@ -6,7 +6,6 @@
 #include "epsilon.hpp"
 template<typename T>
 struct Point3d{
-  static_assert(std::is_arithmetic_v<T>);
   static constexpr T eps=epsilon<T>();
   static constexpr T T_abs(T x){return x<T(0)?-x:x;}
   T x,y,z;

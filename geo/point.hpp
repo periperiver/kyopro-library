@@ -6,8 +6,8 @@
 #include "epsilon.hpp"
 template<typename T>
 struct Point{
-  static_assert(std::is_arithmetic_v<T>);
   static constexpr T eps=epsilon<T>();
+  static constexpr T T_abs(T x){return x<T(0)?-x:x;}
   T x,y;
   constexpr Point():x(0),y(0){}
   constexpr Point(T x_,T y_):x(x_),y(y_){}
@@ -35,7 +35,7 @@ struct Point{
   friend Point operator-(const Point&lhs,const Point&rhs){return Point(lhs)-=rhs;}
   friend Point operator*(const Point&lhs,const T&rhs){return Point(lhs)*=rhs;}
   friend Point operator/(const Point&lhs,const T&rhs){return Point(lhs)/=rhs;}
-  friend bool operator==(const Point&lhs,const Point&rhs){return std::abs(lhs.x-rhs.x)<=eps&&std::abs(lhs.y-rhs.y)<=eps;}
+  friend bool operator==(const Point&lhs,const Point&rhs){return T_abs(lhs.x-rhs.x)<=eps&&T_abs(lhs.y-rhs.y)<=eps;}
   friend bool operator!=(const Point&lhs,const Point&rhs){return !(lhs==rhs);}
   friend std::istream &operator>>(std::istream&is,Point&p){
     is>>p.x>>p.y;
@@ -73,12 +73,12 @@ template<typename T>
 std::conditional_t<std::is_floating_point_v<T>,std::optional<Point<T>>,bool>intersect(const Point<T>&a,const Point<T>&b,const Point<T>&c,const Point<T>&d){
   T ac=cross(d-c,a-c),bc=cross(d-c,b-c),cc=cross(b-a,c-a),dc=cross(b-a,d-a);
   T ab=(b-a).norm(),cd=(d-c).norm();
-  if(std::abs(ac)<=epsilon<T>()){
+  if(T_abs(ac)<=epsilon<T>()){
     if((c-a).norm()<=cd+epsilon<T>()&&(d-a).norm()<=cd+epsilon<T>()){
       if constexpr(std::is_floating_point_v<T>)return std::make_optional(a);
       else return true;
     }
-    else if(std::abs(bc)<=epsilon<T>()){
+    else if(T_abs(bc)<=epsilon<T>()){
       if((c-b).norm()<=cd+epsilon<T>()&&(d-b).norm()<=cd+epsilon<T>()){
         if constexpr(std::is_floating_point_v<T>)return std::make_optional(b);
         else return true;
@@ -91,7 +91,7 @@ std::conditional_t<std::is_floating_point_v<T>,std::optional<Point<T>>,bool>inte
     if constexpr(std::is_floating_point_v<T>)return std::nullopt;
     else return false;
   }
-  if(std::abs(bc)<=epsilon<T>()){
+  if(T_abs(bc)<=epsilon<T>()){
     if((c-b).norm()<=cd+epsilon<T>()&&(d-b).norm()<=cd+epsilon<T>()){
       if constexpr(std::is_floating_point_v<T>)return std::make_optional(b);
       else return true;
@@ -99,7 +99,7 @@ std::conditional_t<std::is_floating_point_v<T>,std::optional<Point<T>>,bool>inte
     if constexpr(std::is_floating_point_v<T>)return std::nullopt;
     else return false;
   }
-  if(std::abs(cc)<=epsilon<T>()){
+  if(T_abs(cc)<=epsilon<T>()){
     if((a-c).norm()<=ab+epsilon<T>()&&(b-c).norm()<=ab+epsilon<T>()){
       if constexpr(std::is_floating_point_v<T>)return std::make_optional(c);
       else return true;
@@ -107,7 +107,7 @@ std::conditional_t<std::is_floating_point_v<T>,std::optional<Point<T>>,bool>inte
     if constexpr(std::is_floating_point_v<T>)return std::nullopt;
     else return false;
   }
-  if(std::abs(dc)<=epsilon<T>()){
+  if(T_abs(dc)<=epsilon<T>()){
     if((a-d).norm()<=ab+epsilon<T>()&&(b-d).norm()<=ab+epsilon<T>()){
       if constexpr(std::is_floating_point_v<T>)return std::make_optional(d);
       else return true;
