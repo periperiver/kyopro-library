@@ -61,7 +61,7 @@ struct Point{
     T s=sin(theta),c=cos(theta);
     return Point(c*x-s*y,s*x+c*y);
   }
-  Point<T>rot90(){
+  Point<T>rot90()const{
     return Point(-y,x);
   }
   T norm()const{return x*x+y*y;}

@@ -133,23 +133,64 @@ std::vector<Point3d<long long>>dense(int n){
   }
   return res;
 }
+std::vector<Point3d<long long>>axis_parallel(int n){
+  std::vector<Point3d<long long>>res(n);
+  int d=Random::range(3);
+  for(int i=0;i<n;i++){
+    res[i]=single(max_xyz);
+    if(d==0)res[i].x=0;
+    else if(d==1)res[i].y=0;
+    else res[i].z=0;
+  }
+  return res;
+}
+std::vector<Point3d<long long>>x_axis_parallelx2(int n){
+  std::vector<Point3d<long long>>res(n);
+  long long xmin=Random::range(-max_xyz,max_xyz+1);
+  long long xmax=Random::range(-max_xyz,max_xyz+1);
+  for(int i=0;i<n;i++){
+    res[i]=single(max_xyz);
+    if(Random::range(2))res[i].x=xmin;
+    else res[i].x=xmax;
+  }
+  return res;
+}
 }
 std::vector<long long>naive(std::vector<Point3d<long long>>points,std::vector<Point3d<long long>>query){
   std::vector<long long>res(query.size(),-9e18);
   for(int i=0;i<(int)points.size();i++)for(int j=0;j<(int)query.size();j++){
     long long now=dot(points[i],query[j]);
-    if(res[j]>now)res[j]=now;
+    if(res[j]<now)res[j]=now;
   }
   return res;
 }
 void test(std::vector<Point3d<long long>>points,std::vector<Point3d<long long>>query){
   auto ans=linear_maximization<long long,__int128_t>(points,query);
   auto na=naive(points,query);
+  if(ans!=na){
+    std::cerr<<points.size()<<' '<<query.size()<<std::endl;
+    for(auto p:points)std::cerr<<p<<std::endl;
+    for(auto p:query)std::cerr<<p<<std::endl;
+  }
   assert(ans==na);
 }
+constexpr int loop=100;
 int main(){
-  for(int n:{1,2,3,5,10,100,200}){
-    test(gen::random(n),gen::dense(n));
+  for(int n:{1,2,3,5,10,100,500,1000}){
+    for(int q:{1,2,3,n,n*2}){
+      for(int i=0;i<loop;i++){
+        test(gen::random(n),gen::dense(q));
+        test(gen::line(n),gen::random(q));
+        test(gen::plane(n),gen::random(q));
+        test(gen::many_line(n,3),gen::random(q));
+        test(gen::many_plane(n,3),gen::random(q));
+        test(gen::parallel(n),gen::random(q));
+        test(gen::axis_parallel(n),gen::random(q));
+        test(gen::dense(n),gen::dense(q));
+        test(gen::x_axis_parallelx2(n),gen::random(q));
+        test(gen::axis_parallel(n),gen::dense(q));
+      }
+    }
   }
   int a,b;
   std::cin>>a>>b;
