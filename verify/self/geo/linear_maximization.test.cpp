@@ -155,6 +155,18 @@ std::vector<Point3d<long long>>x_axis_parallelx2(int n){
   }
   return res;
 }
+std::vector<Point3d<long long>>z_axis_parallel_same(int n){
+  std::vector<Point3d<long long>>res(n*2);
+  long long zmin=Random::range(-max_xyz,max_xyz+1);
+  long long zmax=Random::range(-max_xyz,max_xyz+1);
+  for(int i=0;i<n;i++){
+    res[i]=res[i+n]=single(max_xyz);
+    res[i].z=zmin;
+    res[i].z=zmax;
+  }
+  std::shuffle(res.begin(),res.end(),Random::mt);
+  return res;
+}
 }
 std::vector<long long>naive(std::vector<Point3d<long long>>points,std::vector<Point3d<long long>>query){
   std::vector<long long>res(query.size(),-9e18);
@@ -189,6 +201,8 @@ int main(){
         test(gen::dense(n),gen::dense(q));
         test(gen::x_axis_parallelx2(n),gen::random(q));
         test(gen::axis_parallel(n),gen::dense(q));
+        test(gen::z_axis_parallel_same(n),gen::random(q));
+        test(gen::z_axis_parallel_same(n),gen::dense(q));
       }
     }
   }
