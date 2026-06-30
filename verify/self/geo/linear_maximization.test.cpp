@@ -167,6 +167,19 @@ std::vector<Point3d<long long>>z_axis_parallel_same(int n){
   std::shuffle(res.begin(),res.end(),Random::mt);
   return res;
 }
+std::vector<Point3d<long long>>sphere(int n){
+  std::vector<Point3d<long long>>res(n);
+  for(int i=0;i<n;i++){
+    Point3d<long long>a;
+    for(int j=0;j<10;j++){
+      Point3d<long long>b;
+      do b=single(max_xyz);while(b.norm()>(long long)1e18);
+      if(a.norm()<b.norm())a=b;
+    }
+    res[i]=a;
+  }
+  return res;
+}
 }
 std::vector<long long>naive(std::vector<Point3d<long long>>points,std::vector<Point3d<long long>>query){
   std::vector<long long>res(query.size(),-9e18);
@@ -203,6 +216,7 @@ int main(){
         test(gen::axis_parallel(n),gen::dense(q));
         test(gen::z_axis_parallel_same(n),gen::random(q));
         test(gen::z_axis_parallel_same(n),gen::dense(q));
+        test(gen::sphere(n),gen::random(q));
       }
     }
   }
