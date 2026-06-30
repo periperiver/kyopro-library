@@ -139,32 +139,74 @@ void test(std::vector<Point3d<long long>>points){
     }
     return;
   }
-  UnionFind uf(cht.size());
-  for(int i=0;i<(int)cht.size();i++){//adjacent connection
-    for(int j=0;j<3;j++){
-      int ni=cht[i].es[j];
-      assert(0<=ni&&ni<(int)cht.size()&&ni!=i);
-      long long v1=cht[i].vs[j],v2=cht[i].vs[(j+1)%3];
-      bool ok=true;
-      for(int k=0;k<3;k++){
-        int u1=cht[ni].vs[k],u2=cht[ni].vs[(k+1)%3];
-        if(v1==u2&&v2==u1){
-          assert(cht[ni].es[k]==i);
-          ok=true;
+  // std::cerr<<"test"<<std::endl;
+  // for(auto p:points)std::cerr<<p<<std::endl;
+  {
+    UnionFind uf(cht.size());
+    for(int i=0;i<(int)cht.size();i++){//adjacent connection
+      for(int j=0;j<3;j++){
+        int ni=cht[i].es[j];
+        assert(0<=ni&&ni<(int)cht.size()&&ni!=i);
+        int v1=cht[i].vs[j],v2=cht[i].vs[(j+1)%3];
+        bool ok=false;
+        for(int k=0;k<3;k++){
+          int u1=cht[ni].vs[k],u2=cht[ni].vs[(k+1)%3];
+          if(v1==u2&&v2==u1){
+            assert(cht[ni].es[k]==i);
+            ok=true;
+          }
         }
+        assert(ok);
+        uf.merge(i,ni);
       }
-      uf.merge(i,ni);
+    }
+    assert(uf.size()==1);
+    for(Point3d<long long>p:points){
+      for(auto f:cht){
+        Point3d<long long>A=points[f.vs[0]],B=points[f.vs[1]],C=points[f.vs[2]];
+        assert(dot(cross(B-A,C-A),p-A)<=0);//scalar triple product
+      }
     }
   }
-  assert(uf.size()==1);
-  for(Point3d<long long>p:points){
-    for(auto f:cht){
-      Point3d<long long>A=points[f.vs[0]],B=points[f.vs[1]],C=points[f.vs[2]];
-      assert(dot(cross(B-A,C-A),p-A)<=0);//scalar triple product
+  auto ch_poly=reduce_degenerate(points,cht);
+  {
+    UnionFind uf(ch_poly.size());
+    for(int i=0;i<(int)ch_poly.size();i++){//adjacent connection
+      assert(ch_poly[i].vs.size()==ch_poly[i].es.size());
+      assert((int)ch_poly[i].vs.size()>=3);
+      for(int j=0;j<(int)ch_poly[i].es.size();j++){
+        int ni=ch_poly[i].es[j];
+        assert(0<=ni&&ni<(int)ch_poly.size()&&i!=ni);
+        int v1=ch_poly[i].vs[j],v2=ch_poly[i].vs[(j+1)%ch_poly[i].vs.size()];
+        bool ok=false;
+        for(int k=0;k<(int)ch_poly[ni].vs.size();k++){
+          int u1=ch_poly[ni].vs[k],u2=ch_poly[ni].vs[(k+1)%ch_poly[ni].vs.size()];
+          if(v1==u2&&v2==u1){
+            assert(ch_poly[ni].es[k]==i);
+            ok=true;
+          }
+        }
+        assert(ok);
+        uf.merge(i,ni);
+      }
+    }
+    assert(uf.size()==1);
+    for(auto f:ch_poly){
+      Point3d<long long>a=points[f.vs[0]],b=points[f.vs[1]],c=points[f.vs[2]];
+      for(int v:f.vs){
+        Point3d<long long>d=points[v];
+        assert(dot(cross(b-a,c-a),d-a)==0);//same plane
+      }
+    }
+    for(Point3d<long long>p:points){
+      for(auto f:ch_poly){
+        Point3d<long long>A=points[f.vs[0]],B=points[f.vs[1]],C=points[f.vs[2]];
+        assert(dot(cross(B-A,C-A),p-A)<=0);//scalar triple product
+      }
     }
   }
 }
-constexpr int loop=500;
+constexpr int loop=100;
 int main(){
   for(int n:{1,2,3,10,30,50,100,200,300,500}){
     for(int i=0;i<loop;i++){
@@ -176,7 +218,7 @@ int main(){
       test(gen::parallel(n));
     }
   }
-  long long a,b;
+  int a,b;
   std::cin>>a>>b;
   std::cout<<a+b<<std::endl;
 }

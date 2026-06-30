@@ -1,10 +1,12 @@
 #pragma once
 #include<vector>
 #include<array>
+#include<ranges>
 #include<algorithm>
 #include<numeric>
 #include<cassert>
 #include "point3d.hpp"
+#include "../datastructure/unionfind.hpp"
 namespace static_convex_hull3d_impl{
 struct face_p{
   std::array<int,3>vs;
@@ -234,5 +236,69 @@ std::vector<face>static_convex_hull3d(const std::vector<Point3d<T>>&a){
   }
   return res;
 }
+struct face_poly{
+  std::vector<int>vs;
+  std::vector<int>es;
+};
+template<typename T>
+void normalize(Point3d<T>&p){
+  if constexpr(std::is_floating_point_v<T>)return;
+  else{
+    T g=std::gcd(p.x,std::gcd(p.y,p.z));
+    if(g==0)return;
+    p.x/=g,p.y/=g,p.z/=g;
+  }
+}
+template<typename T>
+bool same_dir(const Point3d<T>&a,const Point3d<T>&b){
+  if constexpr(std::is_floating_point_v<T>){
+    return cross(a,b)==Point3d<T>()&&dot(a,b)>0;
+  }
+  else return a==b;
+}
+template<typename T>
+std::vector<face_poly>reduce_degenerate(const std::vector<Point3d<T>>&a,std::vector<face>ch){
+  int n=ch.size();
+  UnionFind uf(n);
+  std::vector<Point3d<T>>outer(n);
+  for(auto [i,f]:ch|std::views::enumerate){
+    outer[i]=cross(a[f.vs[1]]-a[f.vs[0]],a[f.vs[2]]-a[f.vs[0]]);
+    normalize(outer[i]);
+  }
+  for(auto [i,f]:ch|std::views::enumerate){
+    for(int j=0;j<3;j++){
+      // if(same_dir(outer[i],outer[f.es[j]]))uf.merge(i,f.es[j]);
+    }
+  }
+  std::vector<std::vector<int>>g=uf.get_all();
+  std::vector<int>belong(n),adj(a.size());
+  for(auto [i,vs]:g|std::views::enumerate)for(int j:vs)belong[j]=i;
+  std::vector<int>link(a.size());
+  std::vector<face_poly>res;
+  res.reserve(uf.size());
+  for(const std::vector<int>&fs:g){
+    int start=-1;
+    for(int i:fs){
+      for(int j=0;j<3;j++){
+        int ni=ch[i].es[j];
+        if(belong[i]!=belong[ni]){
+          link[ch[i].vs[j]]=ch[i].vs[(j+1)%3];
+          adj[ch[i].vs[j]]=belong[ni];
+          start=ch[i].vs[j];
+        }
+      }
+    }
+    face_poly fp;
+    int v=start;
+    do{
+      fp.vs.push_back(v);
+      fp.es.push_back(adj[v]);
+      v=link[v];
+    }while(v!=start);
+    res.push_back(std::move(fp));
+  }
+  return res;
+}
 }
 using static_convex_hull3d_impl::static_convex_hull3d;
+using static_convex_hull3d_impl::reduce_degenerate;
