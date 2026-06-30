@@ -37,6 +37,13 @@ struct Point{
   friend Point operator/(const Point&lhs,const T&rhs){return Point(lhs)/=rhs;}
   friend bool operator==(const Point&lhs,const Point&rhs){return T_abs(lhs.x-rhs.x)<=eps&&T_abs(lhs.y-rhs.y)<=eps;}
   friend bool operator!=(const Point&lhs,const Point&rhs){return !(lhs==rhs);}
+  friend bool operator<(const Point&lhs,const Point&rhs){
+    if(lhs.x!=rhs.x)return lhs.x<rhs.x;
+    return lhs.y<rhs.y;
+  }
+  friend bool operator>(const Point&lhs,const Point&rhs){return rhs<lhs;}
+  friend bool operator<=(const Point&lhs,const Point&rhs){return !(rhs<lhs);}
+  friend bool operator>=(const Point&lhs,const Point&rhs){return !(lhs<rhs);}
   friend std::istream &operator>>(std::istream&is,Point&p){
     is>>p.x>>p.y;
     return is;

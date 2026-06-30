@@ -137,7 +137,7 @@ std::vector<Point3d<long long>>dense(int n){
 std::vector<long long>naive(std::vector<Point3d<long long>>points,std::vector<Point3d<long long>>query){
   std::vector<long long>res(query.size(),-9e18);
   for(int i=0;i<(int)points.size();i++)for(int j=0;j<(int)query.size();j++){
-    long long now=dot(points[i],query[i]);
+    long long now=dot(points[i],query[j]);
     if(res[j]>now)res[j]=now;
   }
   return res;
