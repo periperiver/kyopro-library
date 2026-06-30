@@ -127,6 +127,24 @@ std::vector<Point3d<long long>>parallel(int n){
   for(int i=0;i<n;i++)a[i]+=d;
   return a;
 }
+std::vector<Point3d<long long>>axis_parallel(int n){
+  std::vector<Point3d<long long>>res(n);
+  int d=Random::range(3);
+  for(int i=0;i<n;i++){
+    res[i]=single(max_xyz);
+    if(d==0)res[i].x=0;
+    else if(d==1)res[i].y=0;
+    else res[i].z=0;
+  }
+  return res;
+}
+std::vector<Point3d<long long>>small(int n){
+  std::vector<Point3d<long long>>res(n);
+  for(int i=0;i<n;i++){
+    res[i]=single(10);
+  }
+  return res;
+}
 }
 void test(std::vector<Point3d<long long>>points){
   int n=points.size();
@@ -139,8 +157,6 @@ void test(std::vector<Point3d<long long>>points){
     }
     return;
   }
-  // std::cerr<<"test"<<std::endl;
-  // for(auto p:points)std::cerr<<p<<std::endl;
   {
     UnionFind uf(cht.size());
     for(int i=0;i<(int)cht.size();i++){//adjacent connection
@@ -171,7 +187,7 @@ void test(std::vector<Point3d<long long>>points){
   auto ch_poly=reduce_degenerate(points,cht);
   {
     UnionFind uf(ch_poly.size());
-    for(int i=0;i<(int)ch_poly.size();i++){//adjacent connection
+    for(int i=0;i<(int)ch_poly.size();i++){
       assert(ch_poly[i].vs.size()==ch_poly[i].es.size());
       assert((int)ch_poly[i].vs.size()>=3);
       for(int j=0;j<(int)ch_poly[i].es.size();j++){
@@ -191,11 +207,29 @@ void test(std::vector<Point3d<long long>>points){
       }
     }
     assert(uf.size()==1);
+    std::vector<bool>use(n);
+    for(auto f:ch_poly){
+      for(int v:f.vs)use[v]=true;
+    }
+    for(auto f:ch_poly){
+      for(int v:f.vs)use[v]=false;
+      Point3d<long long>a=points[f.vs[0]],b=points[f.vs[1]],c=points[f.vs[2]];
+      for(int i=0;i<n;i++)if(use[i]){
+        assert(dot(cross(b-a,c-a),points[i]-a)!=0);
+      }
+      for(int v:f.vs)use[v]=true;
+    }
     for(auto f:ch_poly){
       Point3d<long long>a=points[f.vs[0]],b=points[f.vs[1]],c=points[f.vs[2]];
       for(int v:f.vs){
         Point3d<long long>d=points[v];
         assert(dot(cross(b-a,c-a),d-a)==0);//same plane
+      }
+    }
+    for(auto f:ch_poly){
+      for(int i=0;i<(int)f.vs.size();i++){
+        Point3d<long long>a=points[f.vs[i]],b=points[f.vs[(i+1)%f.vs.size()]],c=points[f.vs[(i+2)%f.vs.size()]];
+        assert(cross(b-a,c-a)!=Point3d<long long>());
       }
     }
     for(Point3d<long long>p:points){
@@ -216,6 +250,8 @@ int main(){
       test(gen::many_line(n,3));
       test(gen::many_plane(n,3));
       test(gen::parallel(n));
+      test(gen::axis_parallel(n));
+      test(gen::small(n));
     }
   }
   int a,b;

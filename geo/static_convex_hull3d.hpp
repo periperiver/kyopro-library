@@ -258,6 +258,7 @@ bool same_dir(const Point3d<T>&a,const Point3d<T>&b){
 }
 template<typename T>
 std::vector<face_poly>reduce_degenerate(const std::vector<Point3d<T>>&a,std::vector<face>ch){
+  if(ch.empty())return {};
   int n=ch.size();
   UnionFind uf(n);
   std::vector<Point3d<T>>outer(n);
@@ -267,9 +268,10 @@ std::vector<face_poly>reduce_degenerate(const std::vector<Point3d<T>>&a,std::vec
   }
   for(auto [i,f]:ch|std::views::enumerate){
     for(int j=0;j<3;j++){
-      // if(same_dir(outer[i],outer[f.es[j]]))uf.merge(i,f.es[j]);
+      if(same_dir(outer[i],outer[f.es[j]]))uf.merge(i,f.es[j]);
     }
   }
+  bool coplanar=uf.size()==2;
   std::vector<std::vector<int>>g=uf.get_all();
   std::vector<int>belong(n),adj(a.size());
   for(auto [i,vs]:g|std::views::enumerate)for(int j:vs)belong[j]=i;
@@ -291,10 +293,16 @@ std::vector<face_poly>reduce_degenerate(const std::vector<Point3d<T>>&a,std::vec
     face_poly fp;
     int v=start;
     do{
-      fp.vs.push_back(v);
-      fp.es.push_back(adj[v]);
+      if(coplanar||(fp.es.empty()||fp.es.back()!=adj[v])){
+        fp.vs.push_back(v);
+        fp.es.push_back(adj[v]);
+      }
       v=link[v];
     }while(v!=start);
+    if(!coplanar&&fp.es[0]==fp.es.back()){
+      fp.vs.erase(fp.vs.begin());
+      fp.es.erase(fp.es.begin());
+    }
     res.push_back(std::move(fp));
   }
   return res;
