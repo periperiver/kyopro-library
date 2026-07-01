@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<algorithm>
 #include<type_traits>
 #include "binary_gcd.hpp"
 #include "primality_test.hpp"
