@@ -37,6 +37,7 @@ private:
     return res;
   }
 public:
+  PrimePowerBinomial(){}
   PrimePowerBinomial(int p_,int e_):p(p_),e(e_),fac{1,1},ifac{1,1},bp(p_){
     mod=1;
     while(e_--)mod*=p;
