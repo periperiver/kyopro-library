@@ -40,13 +40,13 @@ std::pair<T,std::vector<std::pair<T,T>>>ap_decomposition(T n,T m,T a,T b){
     T n2=n/d;
     if(n2*d+i<n)n2++;
     if(diff==0){
-      res.emplace_back(i,n2);
+      if(n2>0)res.emplace_back(i,n2);
       continue;
     }
     for(T f=0;f*d+i<n;){
       T val=(a*(f*d+i)+b)%m;
       T c=std::min((m-val+diff-1)/diff,(n-i+d-1)/d-f);
-      res.emplace_back(f*d+i,c);
+      if(c>0)res.emplace_back(f*d+i,c);
       f+=c;
     }
   }
