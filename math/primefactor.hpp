@@ -1,10 +1,11 @@
 #pragma once
-#include<stack>
 #include<vector>
+#include<type_traits>
 #include "binary_gcd.hpp"
 #include "primality_test.hpp"
-std::vector<unsigned long long>factorize(unsigned long long n)noexcept{
-  std::vector<unsigned long long>ret;
+template<std::integral T>
+std::vector<std::pair<T,int>>factorize(T n)noexcept{
+  std::vector<unsigned long long>fs;
   auto div=[](unsigned long long x)noexcept->unsigned long long {
     unsigned long long r=x;
     for(int i=0;i<5;i++)r*=2-r*x;
@@ -52,14 +53,13 @@ std::vector<unsigned long long>factorize(unsigned long long n)noexcept{
   int p=0;
   while(!(n&1)){
     n>>=1;
-    ret.push_back(2);
+    fs.push_back(2);
   }
-  if(n==1)return ret;
-  st[p++]=n;
+  if(n>1)st[p++]=n;
   while(p){
     unsigned long long now=st[--p];
     if(isprime(now)){
-      ret.push_back(now);
+      fs.push_back(now);
       continue;
     }
     unsigned long long d=div(now);
@@ -67,5 +67,13 @@ std::vector<unsigned long long>factorize(unsigned long long n)noexcept{
     now/=d;
     if(now!=1)st[p++]=now;
   }
-  return ret;
+  std::sort(fs.begin(),fs.end());
+  std::vector<std::pair<T,int>>res;
+  for(int i=0;i<(int)fs.size();){
+    int j=i;
+    while(j<(int)fs.size()&&fs[i]==fs[j])j++;
+    res.emplace_back(fs[i],j-i);
+    i=j;
+  }
+  return res;
 }

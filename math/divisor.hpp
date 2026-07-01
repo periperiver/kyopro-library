@@ -7,7 +7,7 @@
 template<typename T>
 std::vector<T>divisor(T n){
   assert(n>0);
-  std::vector<unsigned long long>f;
+  std::vector<std::pair<T,int>>f;
   static std::vector<int>pf{-1,-1};
   if(n>=(1<<21))f=factorize(n);
   else{
@@ -20,24 +20,18 @@ std::vector<T>divisor(T n){
       }
     }
     while(n!=1){
-      f.push_back(pf[n]);
-      n/=pf[n];
+      T p=pf[n];
+      int e=0;
+      do n/=p,e++;while(n%p==0);
+      f.emplace_back(p,e);
     }
-  }
-  std::sort(f.begin(),f.end());
-  std::vector<std::pair<T,int>>c;
-  for(int i=0;i<f.size();){
-    int j=i;
-    while(j<f.size()&&f[i]==f[j])j++;
-    c.emplace_back(f[i],j-i);
-    i=j;
   }
   std::vector<T>res;
   auto dfs=[&](auto self,int id,T now)->void {
-    if(id==c.size())res.push_back(now);
+    if(id==(int)f.size())res.push_back(now);
     else{
       self(self,id+1,now);
-      for(int i=0;i<c[id].second;i++)self(self,id+1,now*=c[id].first);
+      for(int i=0;i<f[id].second;i++)self(self,id+1,now*=f[id].first);
     }
   };
   dfs(dfs,0,1);

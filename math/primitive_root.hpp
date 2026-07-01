@@ -4,17 +4,7 @@
 #include "../random/generator.hpp"
 #include "primefactor.hpp"
 long long primitive_root(long long n){
-  std::vector<std::pair<long long,int>>f;
-  {
-    auto pf=factorize(n-1);
-    std::sort(pf.begin(),pf.end());
-    for(int i=0;i<(int)pf.size();){
-      int j=i;
-      while(j<(int)pf.size()&&pf[i]==pf[j])j++;
-      f.push_back(std::make_pair(pf[i],j-i));
-      i=j;
-    }
-  }
+  std::vector<std::pair<long long,int>>f=factorize(n);
   using u128=__uint128_t;
   auto pow64=[](long long a,long long p,long long mod)->long long {
     long long res=1;

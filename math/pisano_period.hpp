@@ -13,14 +13,10 @@ unsigned long long pisano_period(unsigned long long n){
     static inline S op(const S&x,const S&y){return x*y;}
     static inline S e(){return Matrix::E();}
   };
-  std::vector<unsigned long long>f=factorize(n);
-  std::sort(f.begin(),f.end());
   unsigned long long res=1;
-  for(int i=0;i<(int)f.size();){
-    int j=i;
-    unsigned long long p=f[i],pe=1;
-    while(j<(int)f.size()&&f[i]==f[j])j++,pe*=p;
-    i=j;
+  for(auto [p,e]:factorize(n)){
+    unsigned long long pe=1;
+    for(int i=0;i<e;i++)pe*=p;
     mint::set_mod(p);
     Matrix mat;
     mat[0][0]=mat[0][1]=mat[1][0]=1;

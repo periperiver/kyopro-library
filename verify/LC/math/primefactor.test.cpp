@@ -9,9 +9,8 @@ int main(){
     long long n;
     std::cin>>n;
     auto ans=factorize(n);
-    std::sort(ans.begin(),ans.end());
     std::cout<<ans.size();
-    for(auto p:ans)std::cout<<' '<<p;
+    for(auto [p,e]:ans)for(int i=0;i<e;i++)std::cout<<' '<<p;
     std::cout<<std::endl;
   }
 }

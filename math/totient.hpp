@@ -7,9 +7,7 @@
 #include "util.hpp"
 template<typename T,std::enable_if_t<(std::numeric_limits<T>::digits>32),std::nullptr_t> =nullptr>
 T totient(T n){
-  std::vector<unsigned long long>f=factorize(n);
-  std::sort(f.begin(),f.end()),f.erase(std::unique(f.begin(),f.end()),f.end());
-  for(unsigned long long i:f)n=n/i*(i-1);
+  for(auto [p,e]:factorize(n))n=n/p*(p-1);
   return n;
 }
 template<typename T,std::enable_if_t<(std::numeric_limits<T>::digits<=32),std::nullptr_t> =nullptr>
