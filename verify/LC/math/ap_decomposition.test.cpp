@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/sum_of_floor_of_linear"
+#define PROBLEM "https://judge.yosupo.jp/problem/min_of_mod_of_linear"
 #include<iostream>
 #include "math/ap_decomposition.hpp"
 int main(){
