@@ -16,7 +16,6 @@ std::vector<T>reeds_sloane(const std::vector<T>a,std::pair<int,int>pe){
     for(int j=0;j<pe.second;j++){
       T x=0;
       for(int k=0;k<(int)Q[j].size();k++){
-        assert(i-k>=0);
         x+=Q[j][k]*a[i-k];
       }
       if(x.val()==0)tu[j]=std::make_pair(1,pe.second);
