@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/q_binomial_coefficient_prime_mod"
 #include "math/q_binom.hpp"
 #include "math/arbitrary_modint.hpp"
-using mint=arbitrary_modint<1>;
+using mint=arbitrary_modint<int,1>;
 int main(){
   int t,m,q;
   std::cin>>t>>m>>q;

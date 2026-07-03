@@ -4,6 +4,7 @@
 #include<type_traits>
 #include<optional>
 #include<limits>
+#include<cstdint>
 #include "ext_gcd.hpp"
 template<typename T,int id>
 struct arbitrary_modint{
@@ -113,7 +114,7 @@ public:
   }
   mint inv()const{
     mint res;
-    res.v=inv_mod<std::make_signed<value_type>>(this->v,umod);
+    res.v=inv_mod<std::make_signed_t<value_type>>(this->v,umod);
     return res;
   }
   std::optional<mint>sqrt()const{

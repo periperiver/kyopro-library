@@ -4,8 +4,9 @@
 #include<type_traits>
 #include "primefactor.hpp"
 #include "pow_mod.hpp"
-template<std::signed_integral T>
+template<typename Ts>
 struct CRT{
+  using T=std::make_signed_t<Ts>;
   std::vector<std::pair<T,int>>f;
   std::vector<T>pe;
   std::vector<T>invs;
@@ -24,7 +25,7 @@ struct CRT{
       prod*=pe[i];
     }
   }
-  T operator()(std::vector<T>v){
+  Ts operator()(std::vector<Ts>v){
     assert(v.size()==pe.size());
     T res=0,prod=1;
     for(int i=0;i<(int)pe.size();i++){

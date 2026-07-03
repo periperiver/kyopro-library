@@ -8,9 +8,9 @@ template<typename T>
 std::vector<T>find_linear_recurrence(std::vector<T>a){
   static_assert(is_modint_v<T>);
   if(T::mod()==1)return {0};
-  using mint=arbitrary_modint<20260702>;
-  CRT<int>crt(T::mod());
-  std::vector<std::vector<int>>f(crt.f.size());
+  using mint=arbitrary_modint<typename T::value_type,20260702>;
+  CRT<typename T::value_type>crt(T::mod());
+  std::vector<std::vector<typename T::value_type>>f(crt.f.size());
   int l=0;
   for(int i=0;i<(int)crt.f.size();i++){
     mint::set_mod(crt.pe[i]);
@@ -24,7 +24,7 @@ std::vector<T>find_linear_recurrence(std::vector<T>a){
   }
   std::vector<T>res(l);
   for(int i=0;i<l;i++){
-    std::vector<int>now(f.size());
+    std::vector<typename T::value_type>now(f.size());
     for(int j=0;j<(int)f.size();j++){
       now[j]=i<(int)f[j].size()?f[j][i]:0;
     }

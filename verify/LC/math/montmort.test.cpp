@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/montmort_number_mod"
 #include "math/montmort.hpp"
 #include "math/arbitrary_modint.hpp"
-using mint=arbitrary_modint<2>;
+using mint=arbitrary_modint<int,2>;
 int main(){
   int n,m;
   std::cin>>n>>m;

@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/matrix_det_arbitrary_mod"
 #include "matrix/arbitrary_matrix_det.hpp"
 #include "math/arbitrary_modint.hpp"
-using mint=arbitrary_modint<1>;
+using mint=arbitrary_modint<int,1>;
 int main(){
   int n,m;
   std::cin>>n>>m;

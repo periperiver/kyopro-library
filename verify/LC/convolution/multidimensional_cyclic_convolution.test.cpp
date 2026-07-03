@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/multivariate_convolution_cyclic"
 #include "convolution/multidimensional_cyclic_convolution.hpp"
 #include "math/arbitrary_modint.hpp"
-using mint=arbitrary_modint<1>;
+using mint=arbitrary_modint<int,1>;
 int main(){
   std::cin.tie(nullptr)->sync_with_stdio(false);
   int p;

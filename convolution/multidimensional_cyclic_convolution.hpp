@@ -31,9 +31,9 @@ std::vector<T>multidimensional_cyclic_convolution(std::vector<int>ns,std::vector
   }
   assert(n==std::ssize(a)&&n==std::ssize(b));
   if(use_crt){
-    using mint1=arbitrary_modint<20250909>;
-    using mint2=arbitrary_modint<20250910>;
-    using mint3=arbitrary_modint<20250911>;
+    using mint1=arbitrary_modint<int,20250909>;
+    using mint2=arbitrary_modint<int,20250910>;
+    using mint3=arbitrary_modint<int,20250911>;
     std::vector<int>mods;
     int z=1000000000/n;
     while(std::ssize(mods)<3){
