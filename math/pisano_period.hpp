@@ -2,11 +2,12 @@
 #include "../matrix/constant.hpp"
 #include "primefactor.hpp"
 #include "../datastructure/power_query.hpp"
-#include "arbitrary_modint64.hpp"
+#include "arbitrary_modint.hpp"
 #include "divisor.hpp"
 #include<algorithm>
+#include<numeric>
 unsigned long long pisano_period(unsigned long long n){
-  using mint=arbitrary_modint64<20251009>;
+  using mint=arbitrary_modint<unsigned long long,20251009>;
   using Matrix=ConstantMatrix<mint,2>;
   struct M{
     using S=Matrix;

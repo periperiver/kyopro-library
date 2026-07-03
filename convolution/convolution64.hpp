@@ -1,9 +1,9 @@
 #pragma once
-#include "../math/arbitrary_montgomery_modint64.hpp"
+#include "../math/arbitrary_modint.hpp"
 #include "../math/primitive_root.hpp"
 template<int id>
 struct Convolution64{
-  using mint=arbitrary_montgomery_modint64<id>;
+  using mint=arbitrary_montgomery_modint64<long long,id>;
   int rank2;
   std::vector<mint>root,invroot;
   std::vector<mint>rate2,invrate2;

@@ -305,8 +305,8 @@ std::vector<T>multiplicative_convolution_modn(std::vector<T>a,std::vector<T>b){
     if(isprime(k*z+1))mods.push_back(k*z+1);
     z++;
   }
-  using mint1=arbitrary_montgomery_modint64<20250912>;
-  using mint2=arbitrary_montgomery_modint64<20250913>;
+  using mint1=arbitrary_modint<long long,20250912>;
+  using mint2=arbitrary_modint<long long,20250913>;
   mint1::set_mod(mods[0]);
   mint2::set_mod(mods[1]);
   std::vector<mint1>a1(n),b1(n);
