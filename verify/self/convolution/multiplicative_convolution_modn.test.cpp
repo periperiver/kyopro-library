@@ -2,7 +2,7 @@
 #include "convolution/multiplicative_convolution_modn.hpp"
 #include "random/generator.hpp"
 #include "math/arbitrary_modint.hpp"
-using mint=arbitrary_modint<1>;
+using mint=arbitrary_modint<int,1>;
 std::vector<mint>naive(const std::vector<mint>&a,const std::vector<mint>&b){
   assert(a.size()==b.size());
   int n=a.size();
