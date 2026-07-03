@@ -182,6 +182,7 @@
 "verify/LC/string/suffix_array.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/wildcard_matching.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/self/convolution/bitwise_convolution.test.cpp": "2026-06-30 14:23:27 +0900",
+"verify/self/convolution/multiplicative_convolution_modn.test.cpp": "2026-07-03 22:59:16 +0900",
 "verify/self/datastructure/kinetic_tournament.test.cpp": "2026-06-25 14:12:30 +0900",
 "verify/self/datastructure/kth_bit.test.cpp": "2026-06-25 13:10:43 +0900",
 "verify/self/datastructure/power_query.test.cpp": "2026-06-25 13:10:43 +0900",
