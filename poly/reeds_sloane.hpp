@@ -20,7 +20,7 @@ std::vector<T>reeds_sloane(const std::vector<T>a,std::pair<int,int>pe){
       }
       if(x.val()==0)tu[j]=std::make_pair(1,pe.second);
       else{
-        int x2=x.val();
+        auto x2=x.val();
         int ne=tu[j].second;
         while(x2%pe.first==0)x2/=pe.first,ne++;
         tu[j]=std::make_pair(x2,ne);

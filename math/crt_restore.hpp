@@ -30,8 +30,10 @@ struct CRT{
     T res=0,prod=1;
     for(int i=0;i<(int)pe.size();i++){
       v[i]%=pe[i];
-      if(v[i]<0)v[i]+=pe[i];
-      T x=T2(v[i]-res)*T2(invs[i])%pe[i];
+      if constexpr(std::is_signed_v<Ts>){
+        if(v[i]<0)v[i]+=pe[i];
+      }
+      T x=T2(T(v[i])-res)*T2(invs[i])%pe[i];
       res+=x*prod;
       prod*=pe[i];
       if(res<0)res+=prod;

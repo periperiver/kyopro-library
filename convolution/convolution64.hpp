@@ -3,7 +3,7 @@
 #include "../math/primitive_root.hpp"
 template<int id>
 struct Convolution64{
-  using mint=arbitrary_montgomery_modint64<long long,id>;
+  using mint=arbitrary_modint<long long,id>;
   int rank2;
   std::vector<mint>root,invroot;
   std::vector<mint>rate2,invrate2;
@@ -19,7 +19,7 @@ struct Convolution64{
       root[i]=root[i+1]*root[i+1];
       invroot[i]=invroot[i+1]*invroot[i+1];
     }
-    mint prod=mint::one(),invprod=mint::one();
+    mint prod=mint::raw(1),invprod=mint::raw(1);
     rate2.resize(std::max(0,rank2-1)),invrate2.resize(std::max(0,rank2-1));
     for(int i=0;i<rank2-1;i++){
       rate2[i]=root[i+2]*prod;
@@ -28,7 +28,7 @@ struct Convolution64{
       invprod*=root[i+2];
     }
     rate3.resize(std::max(0,rank2-2)),invrate3.resize(std::max(0,rank2-2));
-    prod=mint::one(),invprod=mint::one();
+    prod=mint::raw(1),invprod=mint::raw(1);
     for(int i=0;i<rank2-2;i++){
       rate3[i]=root[i+3]*prod;
       invrate3[i]=invroot[i+3]*invprod;
@@ -42,7 +42,7 @@ struct Convolution64{
     int len=0;
     while(len<h){
       if(h-len==1){
-        mint rot=mint::one();
+        mint rot=mint::raw(1);
         for(int s=0;s<(1<<len);s++){
           int of=s*2;
           mint u=a[of],v=a[of+1]*rot;
@@ -54,7 +54,7 @@ struct Convolution64{
       }
       else{
         int p=1<<(h-len-2);
-        mint rot=mint::one(),imag=root[2];
+        mint rot=mint::raw(1),imag=root[2];
         for(int s=0;s<(1<<len);s++){
           mint rot2=rot*rot,rot3=rot*rot2;
           int of=s<<(h-len);
@@ -88,7 +88,7 @@ struct Convolution64{
       }
       else{
         int p=1<<(h-len);
-        mint rot=mint::one(),imag=invroot[2];
+        mint rot=mint::raw(1),imag=invroot[2];
         for(int s=0;s<(1<<(len-2));s++){
           mint rot2=rot*rot,rot3=rot*rot2;
           int of=s<<(h-len+2);
