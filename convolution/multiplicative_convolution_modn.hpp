@@ -130,7 +130,7 @@ struct MultiplicativeConvolutionSolver{
       mods_sprod.push_back(1);
       std::vector<int>invs(mods.size());
       for(int j=mods.size();j--;){
-        invs[j]=inv_mod(mods_sprod[j+1],mods[j]);
+        invs[j]=inv_mod(mods_sprod[j+1],mods[j]).second;
         mods_sprod[j]*=mods_sprod[j+1];
       }
       int sz=1;
@@ -249,7 +249,7 @@ struct MultiplicativeConvolutionSolver{
       mods_sprod.push_back(1);
       std::vector<int>invs(mods.size());
       for(int j=mods.size();j--;){
-        invs[j]=inv_mod(mods_sprod[j+1],mods[j]);
+        invs[j]=inv_mod(mods_sprod[j+1],mods[j]).second;
         mods_sprod[j]*=mods_sprod[j+1];
       }
       int sz=1;

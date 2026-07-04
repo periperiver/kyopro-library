@@ -309,4 +309,4 @@ std::vector<face_poly>remove_degenerate(const std::vector<Point3d<T>>&a,std::vec
 }
 }
 using static_convex_hull3d_impl::static_convex_hull3d;
-using static_convex_hull3d_impl::reduce_degenerate;
+using static_convex_hull3d_impl::remove_degenerate;
