@@ -43,7 +43,16 @@ int main(){
     std::vector<std::pair<long long,long long>>a;
     int cnt=Random::range(2,8);
     for(int j=0;j<cnt;j++){
-      int mod=Random::range(1,1000);
+      int mod=Random::range(1,400);
+      a.emplace_back(t%mod,mod);
+    }
+    test<long long,false>(a);
+  }
+  for(int i=0;i<10000;i++){
+    long long t=Random::range(100000000000000000ll);
+    std::vector<std::pair<long long,long long>>a;
+    for(int j=0;j<2;j++){
+      int mod=Random::range(1,1000000000);
       a.emplace_back(t%mod,mod);
     }
     test<long long,false>(a);

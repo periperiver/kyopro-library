@@ -318,7 +318,7 @@ std::vector<T>multiplicative_convolution_modn(std::vector<T>a,std::vector<T>b){
   }
   a1=solver.solve(a1,b1,Convolution64<20250912>());
   a2=solver.solve(a2,b2,Convolution64<20250913>());
-  long long inv=inv_mod<long long>(mods[0],mods[1]);
+  long long inv=inv_mod<long long>(mods[0],mods[1]).second;
   T mod1t=mint1::mod();
   for(int i=0;i<n;i++){
     long long r1=a1[i].val(),r2=a2[i].val();
