@@ -257,7 +257,7 @@ bool same_dir(const Point3d<T>&a,const Point3d<T>&b){
   else return a==b;
 }
 template<typename T>
-std::vector<face_poly>reduce_degenerate(const std::vector<Point3d<T>>&a,std::vector<face>ch){
+std::vector<face_poly>remove_degenerate(const std::vector<Point3d<T>>&a,std::vector<face>ch){
   if(ch.empty())return {};
   int n=ch.size();
   UnionFind uf(n);

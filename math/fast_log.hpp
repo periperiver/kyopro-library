@@ -35,7 +35,7 @@ public:
     if(logb%gcd_am!=0)return -1;
     loga/=gcd_am;
     logb/=gcd_am;
-    return (long long)logb*inv_mod(loga,(mod-1)/gcd_am)%((mod-1)/gcd_am);
+    return (long long)logb*inv_mod(loga,(mod-1)/gcd_am).second%((mod-1)/gcd_am);
   }
 };
 template<int mod>std::vector<int>fast_log<mod>::small_log=[](){

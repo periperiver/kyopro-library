@@ -36,7 +36,7 @@ std::vector<T>linear_maximization(std::vector<Point3d<T>>points,std::vector<Poin
     }
     return res;
   }
-  auto chp=reduce_degenerate<T>(points,ch);
+  auto chp=remove_degenerate<T>(points,ch);
   std::vector<Event<T4>>events;
   auto boundary_hull=[&](std::vector<int>idx,int aux)->void {
     if((int)idx.size()==1)return;

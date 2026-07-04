@@ -1,16 +1,21 @@
 #pragma once
-#include<cmath>
+#include<type_traits>
 #include<cassert>
-#include "other/bsgs.hpp"
+#include "../matrix/arbitrary_linear_equations.hpp"
+#include "prime_sieve.hpp"
+#include "primefactor.hpp"
 #include "arbitrary_modint.hpp"
-template<std::integral T>
-T discrete_logarithm(T a,T b,T p){
-  using mint=arbitrary_modint<T,20241123>;
-  mint::set_mod(p);
-  int m=sqrtl(p);
-  mint a2=a,b2=b;
-  mint am=a2.pow(m);
-  auto f=[&](mint x)->mint {return x*a2;};
-  auto fm=[&](mint x)->mint {return x*am;};
-  return babystep_giantstep(mint(1),b2,p,m,f,fm);
+namespace discrete_logarithm_impl{
+template<std::signed_integral T>
+T discrete_logarithm(T a,T b,T m){
+  assert(1<=m);
+  a%=m,b%=m;
+  if(a<0)a+=m;
+  if(b<0)b+=m;
+  if(m==1)return 0;
+  if(a==0)return b==0;
+  if(b==0)return -1;
+  std::vector<std::pair<T,int>>f=factorize(m);
 }
+}
+using discrete_logarithm_impl::discrete_logarithm;

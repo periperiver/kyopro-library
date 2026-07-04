@@ -8,16 +8,19 @@ constexpr std::pair<long long,long long>ext_gcd(long long a,long long b){
   return std::make_pair(x,y-a/b*x);
 }
 template<std::signed_integral T>
-constexpr T inv_mod(T a,T p){
-  T b=p,u=1,v=0;
-  while(b){
-    T t=a/b;
-    a-=t*b;
-    u-=t*v;
-    std::swap(a,b);
-    std::swap(u,v);
+constexpr std::pair<T,T> inv_mod(T a,T b){
+  a%=b;
+  if(a<0)a+=b;
+  if(a==0)return std::make_pair(b,0);
+  T s=b,t=a;
+  T m0=0,m1=1;
+  while(t){
+    T u=s/t;
+    s-=t*u;
+    m0-=m1*u;
+    std::swap(s,t);
+    std::swap(m0,m1);
   }
-  u%=p;
-  if(u<0)u+=p;
-  return u;
+  if(m0<0)m0+=b/s;
+  return std::make_pair(s,m0);
 }

@@ -17,7 +17,7 @@ private:
       if(bp.rem(i)==0)fac[i]=fac[i-1];
       else fac[i]=bm.rem((long long)fac[i-1]*i);
     }
-    ifac[n]=inv_mod(fac[n],mod);
+    ifac[n]=inv_mod(fac[n],mod).second;
     for(int i=n-1;i>=pre;i--){
       if((bp.rem(i+1)==0))ifac[i]=ifac[i+1];
       else ifac[i]=bm.rem((long long)ifac[i+1]*(i+1));

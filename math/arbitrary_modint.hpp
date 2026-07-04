@@ -114,7 +114,9 @@ public:
   }
   mint inv()const{
     mint res;
-    res.v=inv_mod<std::make_signed_t<value_type>>(this->v,umod);
+    auto [g,x]=inv_mod<std::make_signed_t<value_type>>(this->v,umod);
+    assert(g==1);
+    res.v=x;
     return res;
   }
   std::optional<mint>sqrt()const{
