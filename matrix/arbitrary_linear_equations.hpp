@@ -41,6 +41,14 @@ public:
         if(pv==n)return;
       }
     }
+    for(int i=0;i<(int)mat.size();i++){
+      auto coef=euclid(mat[i][pv].val(),v[pv].val());
+      T a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
+      for(int j=0;j<=n;j++){
+        T x=mat[i][j],y=v[j];
+        mat[i][j]=c*x+d*y;
+      }
+    }
     pos[mat.size()]=pv;
     mat.push_back(v);
   }
@@ -48,12 +56,12 @@ public:
   std::optional<std::vector<T>>solve(){
     std::vector<T>res(n);
     for(int i=n;i--;){
+      if(binary_gcd(mat[i][i].val(),T::mod())!=1)return std::nullopt;
       T c=0;
       for(int j=i+1;j<n;j++){
         c+=mat[i][j]*res[j];
       }
-      if(binary_gcd(mat[i][i].val(),T::mod())!=1)return std::nullopt;
-      res[i]=mat[i][i]/(mat[i][n]-c);
+      res[i]=(mat[i][n]-c)/mat[i][i];
     }
     return std::make_optional(res);
   }

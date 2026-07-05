@@ -2,7 +2,13 @@
 #include<random>
 #include<type_traits>
 namespace Random{
-  std::mt19937_64 mt(std::random_device{}());
+  std::mt19937_64 mt(
+    #ifdef FIX
+    0715
+    #else
+    std::random_device{}()
+    #endif
+  );
   template<typename T>inline std::enable_if_t<std::is_integral_v<T>,T> get(){return mt();}
   template<typename T>inline std::enable_if_t<std::is_floating_point_v<T>,T> get(){return T(mt())/T(-1ull);}
   template<typename T>inline std::enable_if_t<std::is_integral_v<T>,T>range(T n){return mt()%n;}

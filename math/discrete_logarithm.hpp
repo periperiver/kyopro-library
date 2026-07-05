@@ -1,4 +1,5 @@
 #pragma once
+#include<ranges>
 #include<type_traits>
 #include<cassert>
 #include<numeric>
@@ -7,10 +8,11 @@
 #include "primefactor.hpp"
 #include "arbitrary_modint.hpp"
 #include "crt.hpp"
-#include "../other/bsgs.hpp"
+#include "primitive_root.hpp"
+#include "../random/generator.hpp"
 namespace discrete_logarithm_impl{
-template<std::signed_integral T,typename U>
-T order(T a_,T p,const std::vector<std::pair<U,int>>&pf){
+template<std::signed_integral T>
+T order(T a_,T p,const std::vector<std::pair<T,int>>&pf){
   using mint=arbitrary_modint<T,20260704>;
   mint::set_mod(p);
   mint a=a_;
@@ -20,12 +22,9 @@ T order(T a_,T p,const std::vector<std::pair<U,int>>&pf){
   }
   return res;
 }
-template<std::signed_integral T,typename U>
-T order(T a,T p,int e,const std::vector<std::pair<U,int>>&pf){
+template<std::signed_integral T>
+T lifting_order(T a,T p,int e,T r){
   using mint=arbitrary_modint<T,20260704>;
-  T r;
-  if(p<1<<30)r=order<int>(a%p,p,pf);
-  else r=order<T>(a,p,pf);
   T m=p;
   for(int i=2;i<=e;i++){
     m*=p;
@@ -35,15 +34,61 @@ T order(T a,T p,int e,const std::vector<std::pair<U,int>>&pf){
   return r;
 }
 template<std::signed_integral T>
-T index_calculus(T a,T b,T p,const std::vector<std::pair<T,int>>&pf){
-  using mint=arbitrary_modint<T,20260704>;
-  mint::set_mod(p);
-  int m=std::sqrt(p);
-  mint a2=a,b2=b;
-  mint am=a2.pow(m);
-  auto f=[&](mint x){return x*a2;};
-  auto fm=[&](mint x){return x*am;};
-  return babystep_giantstep<mint>(1,b2,p,m,f,fm);
+std::pair<T,T> index_calculus(T a,T b,T p){
+  if(b==0)return std::make_pair(-1,-1);
+  using mint1=arbitrary_modint<T,20260704>;
+  using mint2=arbitrary_modint<T,20260705>;
+  mint1::set_mod(p);
+  mint2::set_mod(p-1);
+  std::vector<std::pair<T,int>>pf=factorize(p-1);
+  if(p<20){
+    mint1 powx=1,x=mint1::raw(a),y=mint1::raw(b);
+    for(int i=0;i<p;i++){
+      if(powx==y)return std::make_pair(i,order(a,p,pf));
+      powx*=x;
+    }
+    return std::make_pair(-1,-1);
+  }
+  std::vector<int>small=prime_sieve(std::exp(std::sqrt(std::log(p)*std::log(std::log(p))/2)));
+  mint1 g=primitive_root(p,pf);
+  ArbitraryLinearEquations<mint2>eq(small.size());
+  std::vector<mint2>logs;
+  while(true){
+    T k=Random::range(mint2::mod());
+    std::vector<mint2>now(small.size()+1);
+    T gk=g.pow(k).val();
+    for(auto [i,j]:small|std::views::enumerate){
+      while(gk%j==0)now[i]++,gk/=j;
+    }
+    if(gk!=1)continue;
+    now.back()=k;
+    eq.add(now);
+    if(eq.rank()!=(int)small.size())continue;
+    auto ans=eq.solve();
+    if(ans){
+      logs=std::move(*ans);
+      break;
+    }
+  }
+  auto calc=[&](T v)->T {
+    mint2 res;
+    while(true){
+      T k=Random::range(mint2::mod());
+      T gkh=(mint1(v)*g.pow(k)).val();
+      res=-k;
+      for(auto [i,j]:small|std::views::enumerate){
+        while(gkh%j==0)res+=logs[i],gkh/=j;
+      }
+      if(gkh==1)break;
+    }
+    return res.val();
+  };
+  T loga=calc(a),logb=calc(b);
+  auto [r,inv]=inv_mod<T>(loga,mint2::mod());
+  if(logb%r!=0)return std::make_pair(-1,-1);
+  logb/=r;
+  mint2::set_mod((p-1)/r);
+  return std::make_pair((mint2(inv)*mint2(logb)).val(),mint2::mod());
 }
 template<std::signed_integral T>
 T lifting_log(T a,T b,T p,int e,T z){
@@ -121,19 +166,12 @@ T discrete_logarithm(T a,T b,T m){
   for(auto [p,e]:factorize(m)){
     T v;
     T md;
-    if(p<1<<30){
-      std::vector<std::pair<int,int>>pf=factorize<int>(p-1);
-      v=index_calculus<int>(a%p,b%p,p,pf);
-      md=order(a,p,e,pf);
-    }
-    else{
-      std::vector<std::pair<T,int>>pf=factorize(p-1);
-      v=index_calculus<T>(a%p,b%p,p,pf);
-      md=order(a,p,e,pf);
-    }
+    if(p<1<<30)std::tie(v,md)=index_calculus<int>(a%p,b%p,p);
+    else std::tie(v,md)=index_calculus<T>(a%p,b%p,p);
     if(v==-1)return -1;
     if(e>1)v=lifting_log<T>(a,b,p,e,v);
     if(v==-1)return -1;
+    md=lifting_order<T>(a,p,e,md);
     std::tie(r0,m0)=crt<T>({{r0,m0},{v,md}});
     if(r0==-1)return -1;
   }
