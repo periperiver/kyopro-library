@@ -184,7 +184,7 @@ void test(std::vector<Point3d<long long>>points){
       }
     }
   }
-  auto ch_poly=reduce_degenerate(points,cht);
+  auto ch_poly=remove_degenerate(points,cht);
   {
     UnionFind uf(ch_poly.size());
     for(int i=0;i<(int)ch_poly.size();i++){
