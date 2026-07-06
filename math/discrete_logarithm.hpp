@@ -50,40 +50,35 @@ std::pair<T,T> index_calculus(T a,T b,T p){
     return std::make_pair(-1,-1);
   }
   std::vector<int>small=prime_sieve(std::exp(std::sqrt(std::log(p)*std::log(std::log(p))/2)));
+  int n=small.size();
   mint1 g=primitive_root(p,pf);
-  ArbitraryLinearEquations<mint2>eq(small.size());
-  std::vector<mint2>logs;
+  ArbitraryLinearEquations<mint2>eq(small.size()+2);
+  T loga,logb;
   while(true){
     T k=Random::range(mint2::mod());
-    std::vector<mint2>now(small.size()+1);
-    T gk=g.pow(k).val();
+    std::vector<mint2>now(small.size()+3);
+    mint1 val=g.pow(k);
+    if(Random::range(2))val*=a,now[n]--;
+    if(Random::range(2))val*=b,now[n+1]--;
+    T gk=val.val();
     for(auto [i,j]:small|std::views::enumerate){
       while(gk%j==0)now[i]++,gk/=j;
     }
     if(gk!=1)continue;
     now.back()=k;
     eq.add(now);
-    if(eq.rank()!=(int)small.size())continue;
-    auto ans=eq.solve();
-    if(ans){
-      logs=std::move(*ans);
-      break;
+    if((int)eq.pos.size()>=2){
+      if(eq.pos.back()==n+1&&eq.pos[eq.pos.size()-2]==n){
+        auto [ga,inva]=inv_mod<T>(eq.mat[n][n].val(),mint2::mod());
+        if(ga!=1)continue;
+        auto [gb,invb]=inv_mod<T>(eq.mat[n+1][n+1].val(),mint2::mod());
+        if(gb!=1)continue;
+        logb=(eq.mat[n+1][n+2]*invb).val();
+        loga=((eq.mat[n][n+2]-eq.mat[n][n+1]*logb)*inva).val();
+        break;
+      }
     }
   }
-  auto calc=[&](T v)->T {
-    mint2 res;
-    while(true){
-      T k=Random::range(mint2::mod());
-      T gkh=(mint1(v)*g.pow(k)).val();
-      res=-k;
-      for(auto [i,j]:small|std::views::enumerate){
-        while(gkh%j==0)res+=logs[i],gkh/=j;
-      }
-      if(gkh==1)break;
-    }
-    return res.val();
-  };
-  T loga=calc(a),logb=calc(b);
   auto [r,inv]=inv_mod<T>(loga,mint2::mod());
   if(logb%r!=0)return std::make_pair(-1,-1);
   logb/=r;

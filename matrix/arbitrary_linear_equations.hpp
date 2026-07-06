@@ -8,12 +8,9 @@
 #include "math/euclid.hpp"
 template<typename T,std::enable_if_t<is_modint_v<T>,std::nullptr_t> =nullptr>
 struct ArbitraryLinearEquations{
-// private:
-  using I=typename T::value_type;
   int n;
   std::vector<std::vector<T>>mat;
   std::vector<int>pos;
-public:
   ArbitraryLinearEquations(int n_):n(n_),pos(n_){
     mat.reserve(n);
   }
@@ -29,7 +26,7 @@ public:
           std::swap(mat[i],v);
         }
       }
-      else{
+      else if(mat[i][pv].val()!=0){
         auto coef=euclid(mat[i][pv].val(),v[pv].val());
         T a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
         for(int j=pv;j<=n;j++){
@@ -39,14 +36,6 @@ public:
         }
         while(pv<n&&v[pv].val()==0)pv++;
         if(pv==n)return;
-      }
-    }
-    for(int i=0;i<(int)mat.size();i++){
-      auto coef=euclid(mat[i][pv].val(),v[pv].val());
-      T a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
-      for(int j=0;j<=n;j++){
-        T x=mat[i][j],y=v[j];
-        mat[i][j]=c*x+d*y;
       }
     }
     pos[mat.size()]=pv;
