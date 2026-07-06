@@ -5,6 +5,7 @@
 #include<optional>
 #include<limits>
 #include<cstdint>
+#include<variant>
 #include "barrett_reduction.hpp"
 #include "ext_gcd.hpp"
 template<typename T,int id>
