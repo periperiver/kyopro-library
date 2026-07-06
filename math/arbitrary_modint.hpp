@@ -5,6 +5,7 @@
 #include<optional>
 #include<limits>
 #include<cstdint>
+#include "barrett_reduction.hpp"
 #include "ext_gcd.hpp"
 template<typename T,int id>
 struct arbitrary_modint{
@@ -14,6 +15,7 @@ private:
   using mint=arbitrary_modint;
   value_type v;
   static value_type umod;
+  static std::conditional_t<(std::numeric_limits<T>::digits<=32),BarrettReduction,std::monostate>br;
   mint sqrt_impl()const{
     if(this->val()<=1)return *this;
     if(umod%8==1){
@@ -57,6 +59,7 @@ public:
   static void set_mod(T m){
     assert(1<=m);
     umod=m;
+    if constexpr(std::numeric_limits<T>::digits<=32)br=BarrettReduction(umod);
   }
   static T mod(){return umod;}
   static mint raw(T x){
@@ -76,7 +79,9 @@ public:
     return *this;
   }
   inline mint &operator*=(const mint&b){
-    this->v=mul_type(this->v)*mul_type(b.v)%umod;
+    mul_type v=mul_type(this->v)*mul_type(b.v);
+    if constexpr(std::numeric_limits<T>::digits<=32)this->v=br.rem(v);
+    else this->v=v%umod;
     return *this;
   }
   inline mint &operator/=(const mint&b){return *this*=b.inv();}
@@ -135,6 +140,7 @@ public:
   }
 };
 template<typename T,int id>typename arbitrary_modint<T,id>::value_type arbitrary_modint<T,id>::umod=2;
+template<typename T,int id>std::conditional_t<(std::numeric_limits<T>::digits<=32),BarrettReduction,std::monostate>arbitrary_modint<T,id>::br;
 template<typename T,int id>
 struct std::hash<arbitrary_modint<T,id>>{
   std::size_t operator()(arbitrary_modint<T,id>x)const{
