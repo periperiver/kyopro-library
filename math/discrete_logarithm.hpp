@@ -7,7 +7,6 @@
 #include "primefactor.hpp"
 #include "arbitrary_modint.hpp"
 #include "crt.hpp"
-#include "primitive_root.hpp"
 #include "../random/generator.hpp"
 namespace discrete_logarithm_impl{
 struct Primes{
@@ -59,41 +58,38 @@ std::pair<T,T> index_calculus(T a,T b,T p){
     }
     return std::make_pair(-1,-1);
   }
+  T orda=order(a,p,pf);
+  T ordb=order(b,p,pf);
+  if(orda%ordb!=0)return std::make_pair(-1,-1);
   int n=0;
   int np=std::exp(std::sqrt(std::log(p)*std::log(std::log(p))/2));
   while(n<small.m&&small.p[n]<=np)n++;
-  mint1 g=primitive_root(p,pf);
-  ArbitraryLinearEquations<mint2>eq(n+2);
-  T loga,logb;
+  ArbitraryLinearEquations<mint2>eq(n+1);
+  T res;
+  int loop=0,fail=0;
   while(true){
-    T k=Random::range(mint2::mod()),k2=Random::range(mint2::mod()),k3=Random::range(mint2::mod());
-    std::vector<mint2>now(n+3);
-    T gk=(g.pow(k)*mint1(a).pow(k2)*mint1(b).pow(k3)).val();
-    now[n]-=k2;
-    now[n+1]-=k3;
+    T k=Random::range(mint2::mod());
+    std::vector<mint2>now(n+2);
+    T gk=(mint1(a).pow(k)*b).val();
+    now[n]--;
     for(int i=0;i<n;i++){
       while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
     }
-    if(gk!=1)continue;
+    loop++;
+    if(gk!=1){
+      fail++;
+      continue;
+    }
     now.back()=k;
     eq.add(now);
-    if((int)eq.pos.size()>=2){
-      if(eq.pos.back()==n+1&&eq.pos[eq.pos.size()-2]==n){
-        auto [ga,inva]=inv_mod<T>(eq.mat[n][n].val(),mint2::mod());
-        if(ga!=1)continue;
-        auto [gb,invb]=inv_mod<T>(eq.mat[n+1][n+1].val(),mint2::mod());
-        if(gb!=1)continue;
-        logb=(eq.mat[n+1][n+2]*invb).val();
-        loga=((eq.mat[n][n+2]-eq.mat[n][n+1]*logb)*inva).val();
-        break;
-      }
+    if(eq.pos.back()==n){
+      auto [g,inv]=inv_mod<T>(eq.mat[n][n].val(),mint2::mod());
+      if(g!=1)continue;
+      res=(eq.mat[n][n+1]*inv).val();
+      break;
     }
   }
-  auto [r,inv]=inv_mod<T>(loga,mint2::mod());
-  if(logb%r!=0)return std::make_pair(-1,-1);
-  logb/=r;
-  mint2::set_mod((p-1)/r);
-  return std::make_pair((mint2(inv)*mint2(logb)).val(),mint2::mod());
+  return std::make_pair(res,orda);
 }
 template<std::signed_integral T>
 T lifting_log(T a,T b,T p,int e,T z){
