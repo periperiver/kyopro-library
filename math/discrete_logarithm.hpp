@@ -66,7 +66,6 @@ std::pair<T,T> index_calculus(T a,T b,T p){
   while(n<small.m&&small.p[n]<=np)n++;
   ArbitraryLinearEquations<mint2>eq(n+1);
   T res;
-  int loop=0,fail=0;
   while(true){
     T k=Random::range(mint2::mod());
     std::vector<mint2>now(n+2);
@@ -75,17 +74,13 @@ std::pair<T,T> index_calculus(T a,T b,T p){
     for(int i=0;i<n;i++){
       while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
     }
-    loop++;
-    if(gk!=1){
-      fail++;
-      continue;
-    }
+    if(gk!=1)continue;
     now.back()=k;
     eq.add(now);
     if(eq.pos.back()==n){
-      auto [g,inv]=inv_mod<T>(eq.mat[n][n].val(),mint2::mod());
+      auto [g,inv]=inv_mod<T>(eq.mat.back()[n].val(),mint2::mod());
       if(g!=1)continue;
-      res=(eq.mat[n][n+1]*inv).val();
+      res=(eq.mat.back()[n+1]*inv).val();
       break;
     }
   }
