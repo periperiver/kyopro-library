@@ -55,12 +55,11 @@ std::pair<T,T> index_calculus(T a,T b,T p){
   ArbitraryLinearEquations<mint2>eq(small.size()+2);
   T loga,logb;
   while(true){
-    T k=Random::range(mint2::mod());
+    T k=Random::range(mint2::mod()),k2=Random::range(mint2::mod()),k3=Random::range(mint2::mod());
     std::vector<mint2>now(small.size()+3);
-    mint1 val=g.pow(k);
-    if(Random::range(2))val*=a,now[n]--;
-    if(Random::range(2))val*=b,now[n+1]--;
-    T gk=val.val();
+    T gk=(g.pow(k)*mint1(a).pow(k2)*mint1(b).pow(k3)).val();
+    now[n]-=k2;
+    now[n+1]-=k3;
     for(auto [i,j]:small|std::views::enumerate){
       while(gk%j==0)now[i]++,gk/=j;
     }
