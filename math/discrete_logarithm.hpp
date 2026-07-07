@@ -22,7 +22,7 @@ struct Primes{
 }constexpr small;
 template<std::signed_integral T>
 T order(T a_,T p,const std::vector<std::pair<T,int>>&pf){
-  using mint=arbitrary_modint<T,20260704>;
+  using mint=arbitrary_modint<T,20260701>;
   mint::set_mod(p);
   mint a=a_;
   T res=p-1;
@@ -33,7 +33,7 @@ T order(T a_,T p,const std::vector<std::pair<T,int>>&pf){
 }
 template<std::signed_integral T>
 T lifting_order(T a,T p,int e,T r){
-  using mint=arbitrary_modint<T,20260704>;
+  using mint=arbitrary_modint<T,20260702>;
   T m=p;
   for(int i=2;i<=e;i++){
     m*=p;
@@ -42,49 +42,76 @@ T lifting_order(T a,T p,int e,T r){
   }
   return r;
 }
+template<std::integral T>
+struct IndexCalculus{
+private:
+  using mint1=arbitrary_modint<T,20260703>;
+  using mint2=arbitrary_modint<T,20260704>;
+  int n;
+  mint1 g;
+  ArbitraryLinearEquations<mint2>eq;
+  std::vector<std::pair<T,int>>pf;
+public:
+  IndexCalculus(){}
+  IndexCalculus(T g,T p):pf(factorize(p-1)){
+    mint1::set_mod(p);
+    mint2::set_mod(p-1);
+    this->g=g;
+    int np=std::exp(std::sqrt(std::log(mint1::mod())*std::log(std::log(mint1::mod()))/2));
+    n=0;
+    while(n<small.m&&small.p[n]<=np)n++;
+    eq=ArbitraryLinearEquations<mint2>(n+1);
+  }
+  //ans,orda,ordb
+  std::tuple<T,T,T>solve(mint1 b){
+    if(b.val()==0)return std::make_tuple(-1,-1,-1);
+    if(mint1::mod()<20){
+      mint1 powx=1;
+      for(int i=0;i<mint1::mod();i++){
+        if(powx==b)return std::make_tuple(i,order(g.val(),mint1::mod(),pf),order(b.val(),mint1::mod(),pf));
+        powx*=g;
+      }
+      return std::make_tuple(-1,-1,-1);
+    }
+    T orda=order(g.val(),mint1::mod(),pf);
+    T ordb=order(b.val(),mint1::mod(),pf);
+    if(orda%ordb!=0)return std::make_tuple(-1,-1,-1);
+    if(!eq.mat.empty()){
+      for(int i=0;i<(int)eq.mat.size()-1;i++)if(eq.mat[i][n].val()!=0){
+        auto coef=euclid(eq.mat[i][n].val(),eq.mat.back()[n].val());
+        T c=coef[1][0],d=coef[1][1];
+        for(int j=0;j<n;j++)eq.mat[i][j]*=c;
+        for(int j=n;j<=n+1;j++)eq.mat[i][j]=eq.mat[i][j]*c+eq.mat.back()[j]*d;
+      }
+      eq.mat.pop_back();
+      eq.pos.pop_back();
+    }
+    T res;
+    while(true){
+      T k=Random::range(mint2::mod());
+      std::vector<mint2>now(n+2);
+      T gk=(g.pow(k)*b).val();
+      now[n]--;
+      for(int i=0;i<n;i++){
+        while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
+      }
+      if(gk!=1)continue;
+      now.back()=k;
+      eq.add(now);
+      if(eq.pos.back()==n){
+        auto [w,inv]=inv_mod<T>(eq.mat.back()[n].val(),mint2::mod());
+        if(w!=1)continue;
+        res=(eq.mat.back()[n+1]*inv).val();
+        break;
+      }
+    }
+    return std::make_tuple(res,orda,ordb);
+  }
+};
 template<std::signed_integral T>
 std::pair<T,T> index_calculus(T a,T b,T p){
-  if(b==0)return std::make_pair(-1,-1);
-  using mint1=arbitrary_modint<T,20260704>;
-  using mint2=arbitrary_modint<T,20260705>;
-  mint1::set_mod(p);
-  mint2::set_mod(p-1);
-  std::vector<std::pair<T,int>>pf=factorize(p-1);
-  if(p<20){
-    mint1 powx=1,x=mint1::raw(a),y=mint1::raw(b);
-    for(int i=0;i<p;i++){
-      if(powx==y)return std::make_pair(i,order(a,p,pf));
-      powx*=x;
-    }
-    return std::make_pair(-1,-1);
-  }
-  T orda=order(a,p,pf);
-  T ordb=order(b,p,pf);
-  if(orda%ordb!=0)return std::make_pair(-1,-1);
-  int n=0;
-  int np=std::exp(std::sqrt(std::log(p)*std::log(std::log(p))/2));
-  while(n<small.m&&small.p[n]<=np)n++;
-  ArbitraryLinearEquations<mint2>eq(n+1);
-  T res;
-  while(true){
-    T k=Random::range(mint2::mod());
-    std::vector<mint2>now(n+2);
-    T gk=(mint1(a).pow(k)*b).val();
-    now[n]--;
-    for(int i=0;i<n;i++){
-      while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
-    }
-    if(gk!=1)continue;
-    now.back()=k;
-    eq.add(now);
-    if(eq.pos.back()==n){
-      auto [g,inv]=inv_mod<T>(eq.mat.back()[n].val(),mint2::mod());
-      if(g!=1)continue;
-      res=(eq.mat.back()[n+1]*inv).val();
-      break;
-    }
-  }
-  return std::make_pair(res,orda);
+  auto [lg,orda,ordb]=IndexCalculus<T>(a,p).solve(b);
+  return std::make_pair(lg,orda);
 }
 template<std::signed_integral T>
 T lifting_log(T a,T b,T p,int e,T z){
@@ -145,7 +172,7 @@ T lifting_log(T a,T b,T p,int e,T z){
 template<std::signed_integral T>
 T discrete_logarithm(T a,T b,T m){
   assert(1<=m);
-  using mint=arbitrary_modint<T,20260705>;
+  using mint=arbitrary_modint<T,20260707>;
   int lg=msb(m)+1;
   mint::set_mod(m);
   mint x=a,y=b,powx=1;

@@ -11,16 +11,17 @@ struct ArbitraryLinearEquations{
   int n;
   std::vector<std::vector<T>>mat;
   std::vector<int>pos;
+  ArbitraryLinearEquations(){}
   ArbitraryLinearEquations(int n_):n(n_){
     pos.reserve(n);
     mat.reserve(n);
   }
   void add(std::vector<T>v){
-    assert(v.size()==n+1);
+    assert((int)v.size()==n+1);
     int pv=0;
     while(pv<n&&v[pv].val()==0)pv++;
     if(pv==n)return;
-    for(int i=0;i<mat.size();i++){
+    for(int i=0;i<(int)mat.size();i++){
       if(pv!=pos[i]){
         if(pv<pos[i]){
           std::swap(pv,pos[i]);
