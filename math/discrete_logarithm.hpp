@@ -9,17 +9,20 @@
 #include "crt.hpp"
 #include "../random/generator.hpp"
 namespace discrete_logarithm_impl{
+template<typename T>
 struct Primes{
   static constexpr int n=2357,m=350;
   int p[m]{};
+  T inv[m]{};
   constexpr Primes(){
     bool f[n+1]{};
     for(int i=2,k=0;i<=n;i++)if(f[i]==0){
-      p[k++]=i;
+      p[k]=i;
+      inv[k++]=T(-1)/i+1;
       for(int j=2;i*j<=n;j++)f[i*j]=1;
     }
   }
-}constexpr small;
+};
 template<std::signed_integral T>
 T order(T a_,T p,const std::vector<std::pair<T,int>>&pf){
   using mint=arbitrary_modint<T,20260701>;
@@ -45,12 +48,14 @@ T lifting_order(T a,T p,int e,T r){
 template<std::integral T>
 struct IndexCalculus{
 private:
+  static_assert(std::numeric_limits<T>::digits<=64);
   using mint1=arbitrary_modint<T,20260703>;
   using mint2=arbitrary_modint<T,20260704>;
   int n;
   mint1 g;
   ArbitraryLinearEquations<mint2>eq;
   std::vector<std::pair<T,int>>pf;
+  static constexpr Primes<typename mint1::mul_type>small{};
 public:
   IndexCalculus(){}
   IndexCalculus(T g,T p):pf(factorize(p-1)){
@@ -92,7 +97,14 @@ public:
       std::vector<mint2>now(n+2);
       T gk=(g.pow(k)*b).val();
       now[n]--;
-      for(int i=0;i<n;i++){
+      {
+        int ls=lsb(gk);
+        gk>>=ls;
+        now[0]=mint2::raw(ls);
+      }
+      for(int i=1;i<n;i++)if(gk*small.inv[i]<small.inv[i]){
+        now[i]++;
+        gk/=small.p[i];
         while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
       }
       if(gk!=1)continue;
