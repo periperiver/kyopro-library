@@ -28,6 +28,15 @@ struct ArbitraryLinearEquations{
           std::swap(mat[i],v);
         }
       }
+      else if(mat[i][pv].val()==1){
+        T coef=-v[pv];
+        v[pv]=T();
+        for(int j=pv+1;j<=n;j++){
+          v[j]+=coef*mat[i][j];
+        }
+        while(pv<n&&v[pv].val()==0)pv++;
+        if(pv==n)return;
+      }  
       else{
         auto coef=euclid(mat[i][pv].val(),v[pv].val());
         typename T::mul_type a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
