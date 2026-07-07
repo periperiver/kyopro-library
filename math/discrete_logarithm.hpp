@@ -82,14 +82,21 @@ public:
     T ordb=order(b.val(),mint1::mod(),pf);
     if(orda%ordb!=0)return std::make_tuple(-1,-1,-1);
     if(!eq.mat.empty()){
+      bool f=false;
       for(int i=0;i<(int)eq.mat.size()-1;i++)if(eq.mat[i][n].val()!=0){
         auto coef=euclid(eq.mat[i][n].val(),eq.mat.back()[n].val());
         T c=coef[1][0],d=coef[1][1];
         for(int j=0;j<n;j++)eq.mat[i][j]*=c;
         for(int j=n;j<=n+1;j++)eq.mat[i][j]=eq.mat[i][j]*c+eq.mat.back()[j]*d;
+        f|=eq.mat[i][eq.pos[i]].val()==0;
       }
       eq.mat.pop_back();
       eq.pos.pop_back();
+      if(f){
+        std::vector<std::vector<mint2>>mat(eq.mat);
+        eq=ArbitraryLinearEquations<mint2>(n+1);
+        for(const std::vector<mint2>&v:mat)eq.add(v);
+      }
     }
     T res;
     while(true){
@@ -103,9 +110,7 @@ public:
         now[0]=mint2::raw(ls);
       }
       for(int i=1;i<n;i++)if(gk*small.inv[i]<small.inv[i]){
-        now[i]++;
-        gk/=small.p[i];
-        while(gk%small.p[i]==0)now[i]++,gk/=small.p[i];
+        do now[i]++,gk/=small.p[i];while(gk*small.inv[i]<small.inv[i]);
       }
       if(gk!=1)continue;
       now.back()=k;

@@ -1,5 +1,4 @@
 #pragma once
-#include "io128.hpp"
 #include<queue>
 #include<cassert>
 #include "static_convex_hull3d.hpp"

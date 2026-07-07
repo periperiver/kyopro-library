@@ -28,7 +28,7 @@ struct ArbitraryLinearEquations{
           std::swap(mat[i],v);
         }
       }
-      else if(mat[i][pv].val()!=0){
+      else{
         auto coef=euclid(mat[i][pv].val(),v[pv].val());
         typename T::mul_type a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
         if(a>=(typename T::mul_type)T::mod())a+=T::mod();
