@@ -30,11 +30,15 @@ struct ArbitraryLinearEquations{
       }
       else if(mat[i][pv].val()!=0){
         auto coef=euclid(mat[i][pv].val(),v[pv].val());
-        T a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
+        typename T::mul_type a=coef[0][0],b=coef[0][1],c=coef[1][0],d=coef[1][1];
+        if(a>=(typename T::mul_type)T::mod())a+=T::mod();
+        if(b>=(typename T::mul_type)T::mod())b+=T::mod();
+        if(c>=(typename T::mul_type)T::mod())c+=T::mod();
+        if(d>=(typename T::mul_type)T::mod())d+=T::mod();
         for(int j=pv;j<=n;j++){
-          T x=mat[i][j],y=v[j];
-          mat[i][j]=a*x+b*y;
-          v[j]=c*x+d*y;
+          typename T::mul_type x=mat[i][j].val(),y=v[j].val();
+          mat[i][j]=T::raw((a*x+b*y)%T::mod());
+          v[j]=T::raw((c*x+d*y)%T::mod());//int128がintegralじゃないのが悪い
         }
         while(pv<n&&v[pv].val()==0)pv++;
         if(pv==n)return;
