@@ -65,9 +65,10 @@ private:
   PowerQuery<MonoidMul,std::numeric_limits<typename mint1::value_type>::digits*4>powg;
 public:
   IndexCalculus(){}
-  IndexCalculus(T g,T p):pf(factorize(p-1)),powg(g){
+  IndexCalculus(T g,T p):pf(factorize(p-1)){
     mint1::set_mod(p);
     mint2::set_mod(p-1);
+    powg=PowerQuery<MonoidMul,std::numeric_limits<typename mint1::value_type>::digits*4>(g);
     this->g=g;
     int np=std::exp(std::sqrt(std::log(mint1::mod())*std::log(std::log(mint1::mod()))/2));
     n=0;
