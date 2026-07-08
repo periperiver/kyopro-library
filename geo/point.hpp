@@ -1,6 +1,7 @@
 #pragma once
 #include<type_traits>
 #include<numeric>
+#include<cmath>
 #include<iostream>
 #include<optional>
 #include "epsilon.hpp"
