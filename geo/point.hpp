@@ -65,7 +65,10 @@ struct Point{
     return Point(-y,x);
   }
   T norm()const{return x*x+y*y;}
-  std::enable_if_t<std::is_floating_point_v<T>,T>abs()const{return std::sqrt(norm());}
+  T abs()const{
+    static_assert(std::is_floating_point_v<T>);
+    return std::sqrt(norm());
+  }
   template<typename T2=double>
   Point<T2>convert()const{
     Point<T2>res(this->x,this->y);
