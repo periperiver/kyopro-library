@@ -19,7 +19,7 @@ public:
     dat[0][0]=M::e();
     for(int i=1;i<B;i++)dat[0][i]=M::op(dat[0][i-1],x);
   }
-  template<std::integral T>
+  template<typename T>
   S operator()(T k){
     S res=M::e();
     int p=0;

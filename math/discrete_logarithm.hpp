@@ -8,6 +8,7 @@
 #include "arbitrary_modint.hpp"
 #include "crt.hpp"
 #include "../random/generator.hpp"
+#include "../datastructure/power_query.hpp"
 namespace discrete_logarithm_impl{
 template<typename T>
 struct Primes{
@@ -56,9 +57,15 @@ private:
   ArbitraryLinearEquations<mint2>eq;
   std::vector<std::pair<T,int>>pf;
   static constexpr Primes<typename mint1::mul_type>small{};
+  struct MonoidMul{
+    using S=mint1;
+    static inline S op(const S&x,const S&y){return x*y;}
+    static inline S e(){return mint1::raw(1);}
+  };
+  PowerQuery<MonoidMul,std::numeric_limits<typename mint1::value_type>::digits*4>powg;
 public:
   IndexCalculus(){}
-  IndexCalculus(T g,T p):pf(factorize(p-1)){
+  IndexCalculus(T g,T p):pf(factorize(p-1)),powg(g){
     mint1::set_mod(p);
     mint2::set_mod(p-1);
     this->g=g;
@@ -102,7 +109,7 @@ public:
     while(true){
       T k=Random::range(mint2::mod());
       std::vector<mint2>now(n+2);
-      T gk=(g.pow(k)*b).val();
+      T gk=(powg(k)*b).val();
       now[n]--;
       {
         int ls=lsb(gk);
