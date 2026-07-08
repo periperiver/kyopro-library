@@ -181,6 +181,7 @@
 "verify/self/datastructure/kth_bit.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/datastructure/power_query.test.cpp": "2026-07-08 20:41:32 +0900",
 "verify/self/dp/egz.test.cpp": "2026-07-05 16:19:01 +0900",
+"verify/self/geo/count_lattice.test.cpp": "2026-07-08 22:03:31 +0900",
 "verify/self/geo/dynamic_cht.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/geo/static_convex_hull3d.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/graph/maximum_independent_set.test.cpp": "2026-07-05 16:19:01 +0900",
