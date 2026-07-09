@@ -21,8 +21,9 @@ public:
   }
   template<typename T>
   S operator()(T k){
-    S res=M::e();
-    int p=0;
+    S res=dat[0][k%B];
+    k/=B;
+    int p=1;
     while(k){
       if(p==(int)dat.size())extend();
       res=M::op(res,dat[p][k%B]);
