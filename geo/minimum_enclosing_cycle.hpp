@@ -40,3 +40,33 @@ std::vector<bool>minimum_enclosing_cycle(std::vector<Point<T>>p){
   else std::fill(res.begin(),res.end(),1);
   return res;
 }
+template<typename T,typename T4>
+T minimum_enclosing_cycle_diameter(std::vector<Point<T>>p){
+  static_assert(std::is_integral_v<T>);
+  std::vector<bool>cycle=minimum_enclosing_cycle<T,T4>(p);
+  std::vector<int>idx;
+  for(int i=0;i<(int)p.size();i++)if(cycle[i])idx.push_back(i);
+  if((int)idx.size()==1)return 0;
+  else if((int)idx.size()==2){
+    T v=(p[idx[0]]-p[idx[1]]).norm();
+    T v2=std::sqrt(v);
+    return v2+(v2*v2!=v);
+  }
+  else{
+    T4 s=std::abs(cross(p[idx[1]]-p[idx[0]],p[idx[2]]-p[idx[0]]));
+    T4 v=T4((p[idx[0]]-p[idx[1]]).norm())*T4((p[idx[1]]-p[idx[2]]).norm());
+    T4 v2=(p[idx[2]]-p[idx[0]]).norm();
+    T4 sum=0;
+    sum+=(v/(s*s))*v2;
+    v=v%(s*s);
+    T4 a=v/s,b=v%s;
+    T4 c=v2/s,d=v2%s;
+    sum+=a*c;
+    T4 u=a*d+b*c;
+    sum+=u/s;
+    u%=s;
+    sum+=(u*s+b*d+s*s-1)/(s*s);
+    T4 sq=std::sqrt(sum);
+    return sq+(sq*sq!=sum);
+  }
+}
