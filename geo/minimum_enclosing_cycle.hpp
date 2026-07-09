@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<algorithm>
 #include<numeric>
 #include "cycle_inout.hpp"
 #include "../random/generator.hpp"
