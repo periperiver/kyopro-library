@@ -3,6 +3,7 @@ template<unsigned m>
 struct Montgomery{
   static_assert(m%2==1);
   static_assert(m>=3);
+  static_assert(m<(1u<<30));
   static constexpr unsigned r=[](){
     unsigned res=m;
     for(int i=0;i<4;i++)res*=2-m*res;
