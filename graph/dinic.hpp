@@ -2,6 +2,7 @@
 #include<vector>
 #include<limits>
 #include<numeric>
+#include<cassert>
 #include "datastructure/csr_array.hpp"
 template<typename T>
 struct Dinic{
@@ -39,6 +40,8 @@ public:
   Dinic():n(0){}
   Dinic(int n):n(n),deg(n){}
   void add_edge(int u,int v,T cap){
+    assert(0<=u&&u<n);
+    assert(0<=v&&v<n);
     pos.push_back({u,deg[u]});
     int f=deg[u];
     int t=deg[v];
@@ -62,6 +65,8 @@ public:
     return ret;
   }
   T flow(int s,int t,T limit){
+    assert(0<=s&&s<n);
+    assert(0<=t&&t<n);
     g=csr_array<edge>(n,init_csr);
     std::vector<int>level(n),iter(n);
     Q<int>que;
@@ -107,12 +112,17 @@ public:
       if(!f)break;
       flow+=f;
     }
+    init_csr.clear();
+    for(int i=0;i<n;i++){
+      for(const edge&e:g[i])init_csr.emplace_back(i,e);
+    }
     return flow;
   }
   T flow(int s,int t){
     return flow(s,t,std::numeric_limits<T>::max());
   }
   std::vector<bool>min_cut(int s){
+    assert(0<=s&&s<n);
     std::vector<bool>ret(n,false);
     Q<int>que;
     que.push(s);

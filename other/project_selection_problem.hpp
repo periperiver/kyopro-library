@@ -2,6 +2,7 @@
 #include "../graph/dinic.hpp"
 #include "../datastructure/unionfind.hpp"
 #include "overflow_check.hpp"
+#include<cassert>
 #include<concepts>
 #include<algorithm>
 template<std::integral T>
