@@ -16,10 +16,10 @@ concept Node=requires(T x){
   {T::update(x.left,x.left)}->std::same_as<decltype(x.left)>;
   {T::clone(x.left)}->std::same_as<decltype(x.left)>;
 };
-constexpr bool is_balanced(size_t lsz,size_t rsz){return std::min(lsz,rsz)>=(lsz+rsz)/15;}
-template<Node node>
+template<Node node,size_t alpha=4>
 struct PersistentWeightBalancedTree{
-private:
+  private:
+  constexpr bool is_balanced(size_t lsz,size_t rsz){return std::min(lsz,rsz)>=(lsz+rsz)/alpha;}
   using np=decltype(std::declval<node>().left);
   np merge_rec(np lnd,np rnd){
     if(!lnd)return rnd;
@@ -72,6 +72,14 @@ private:
       return std::make_pair(merge_rec(x,lnd),rnd);
     }
   }
+  template<typename T>
+  np set_rec(np nd,size_t k,T v){
+    if(!nd->left)return node::single(v);
+    auto [lnd,rnd]=node::push(nd);
+    if(k<lnd->sz)lnd=set_rec(lnd,k,v);
+    else rnd=set_rec(rnd,k-lnd->sz,v);
+    return node::update(lnd,rnd);
+  }
   np root;
 public:
   PersistentWeightBalancedTree():root(nullptr){}
@@ -93,6 +101,7 @@ public:
   PersistentWeightBalancedTree(const PersistentWeightBalancedTree&rhs){
     *this=rhs;
   }
+  PersistentWeightBalancedTree(PersistentWeightBalancedTree&&rhs):root(rhs.root){}
   [[nodiscard]]PersistentWeightBalancedTree merge(PersistentWeightBalancedTree rhs){
     np nd=merge_rec(root,rhs.root);
     PersistentWeightBalancedTree res;
@@ -114,6 +123,25 @@ public:
     return *this;
   }
   np operator->(){return root;}
+  np get(size_t k)const{
+    assert(root&&k<root->sz);
+    np nd=root;
+    while(nd->left){
+      auto [lnd,rnd]=node::push(nd);
+      if(k<lnd->sz)nd=lnd;
+      else k-=lnd->sz,nd=rnd;
+    }
+    return nd;
+  }
+  template<typename T>
+  [[nodiscard]]PersistentWeightBalancedTree set(size_t k,T v){
+    static_assert(requires(T x){node::single(x);});
+    assert(root&&k<root->sz);
+    PersistentWeightBalancedTree res;
+    res.root=set_rec(root,k,v);
+    return res;
+  }
+  size_t size()const{return root?root->sz:0;}
 };
 }
 using persistent_weight_balanced_tree_impl::PersistentWeightBalancedTree;
