@@ -111,6 +111,7 @@ public:
   template<int need=3>
   [[nodiscard]]std::pair<PersistentWeightBalancedTree,PersistentWeightBalancedTree>split(size_t k){
     static_assert(1<=need&&need<=3);
+    assert(k<=size());
     auto [lnd,rnd]=split_rec<need>(root,k);
     PersistentWeightBalancedTree res1,res2;
     res1.root=lnd;
@@ -123,6 +124,7 @@ public:
     return *this;
   }
   np operator->(){return root;}
+  np get_root()const{return root;}
   np get(size_t k)const{
     assert(root&&k<root->sz);
     np nd=root;
