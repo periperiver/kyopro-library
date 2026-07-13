@@ -4,7 +4,8 @@
 #include "math/modint.hpp"
 using mint=mint998;
 struct node{
-  node *left,*right;
+  using np=std::shared_ptr<node>;
+  np left,right;
   int sz;
   mint a,b;
   mint sum;
@@ -13,22 +14,22 @@ struct node{
     a*=aa;
     sum=sum*aa+mint::raw(sz)*bb;
   }
-  static node* update(node *lnd,node *rnd){
-    node *res=new node();
+  static np update(np lnd,np rnd){
+    np res=std::make_shared<node>();
     res->left=lnd,res->right=rnd;
     res->sz=lnd->sz+rnd->sz;
     res->a=mint::raw(1),res->b=mint::raw(0);
     res->sum=lnd->sum+rnd->sum;
     return res;
   }
-  static node* clone(node *nd){
-    node *res=new node();
+  static np clone(np nd){
+    np res=std::make_shared<node>();
     *res=*nd;
     return res;
   }
   template<int need=3>
-  static std::pair<node*,node*>push(node *nd){
-    node *lnd=nullptr,*rnd=nullptr;
+  static std::pair<np,np>push(np nd){
+    np lnd=nullptr,rnd=nullptr;
     if(need&1){
       lnd=clone(nd->left);
       lnd->propagate(nd->a,nd->b);
@@ -39,8 +40,8 @@ struct node{
     }
     return {lnd,rnd};
   }
-  static node* single(mint x){
-    node *res=new node();
+  static np single(mint x){
+    np res=std::make_shared<node>();
     res->left=res->right=nullptr;
     res->sz=1;
     res->a=mint::raw(1),res->b=mint::raw(0);

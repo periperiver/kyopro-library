@@ -5,21 +5,23 @@
 #include<cassert>
 #include<concepts>
 #include<functional>
+#include<memory>
 namespace persistent_weight_balanced_tree_impl{
 template<typename T>
 concept Node=requires(T x){
-  {x.left}->std::same_as<T*&>;
-  {x.right}->std::same_as<T*&>;
+  requires std::same_as<decltype(x.left),T*>||std::same_as<decltype(x.left),std::shared_ptr<T>>;
+  requires std::same_as<decltype(x.left),decltype(x.right)>;
   {x.sz}->std::convertible_to<size_t>;
-  {T::push(&x)}->std::same_as<std::pair<T*,T*>>;
-  {T::update(&x,&x)}->std::same_as<T*>;
-  {T::clone(&x)}->std::same_as<T*>;
+  {T::push(x.left)}->std::same_as<std::pair<decltype(x.left),decltype(x.left)>>;
+  {T::update(x.left,x.left)}->std::same_as<decltype(x.left)>;
+  {T::clone(x.left)}->std::same_as<decltype(x.left)>;
 };
-constexpr bool is_balanced(size_t lsz,size_t rsz){return std::min(lsz,rsz)>=(lsz+rsz)/4;}
+constexpr bool is_balanced(size_t lsz,size_t rsz){return std::min(lsz,rsz)>=(lsz+rsz)/15;}
 template<Node node>
 struct PersistentWeightBalancedTree{
 private:
-  node* merge_rec(node *lnd,node *rnd){
+  using np=decltype(std::declval<node>().left);
+  np merge_rec(np lnd,np rnd){
     if(!lnd)return rnd;
     if(!rnd)return lnd;
     if(is_balanced(lnd->sz,rnd->sz))return node::update(lnd,rnd);
@@ -49,10 +51,10 @@ private:
     }
   }
   template<int need=3>
-  std::pair<node*,node*>split_rec(node *nd,size_t k){
+  std::pair<np,np>split_rec(np nd,size_t k){
     if(k==0)return std::make_pair(nullptr,nd);
     if(k==nd->sz)return std::make_pair(nd,nullptr);
-    node *x,*y;
+    np x,y;
     if(k<nd->left->sz){
       if constexpr(need==3)std::tie(x,y)=node::push(nd);
       else std::tie(x,y)=node::template push<need|1>(nd);
@@ -70,13 +72,13 @@ private:
       return std::make_pair(merge_rec(x,lnd),rnd);
     }
   }
-  public:
-  node *root;
+  np root;
+public:
   PersistentWeightBalancedTree():root(nullptr){}
   template<typename T>
   PersistentWeightBalancedTree(const std::vector<T>&init){
     static_assert(requires(T x){node::single(x);});
-    auto dfs=[&](auto self,int l,int r)->node* {
+    auto dfs=[&](auto self,int l,int r)->np {
       if(l+1==r)return node::single(init[l]);
       int mid=(l+r)/2;
       return node::update(self(self,l,mid),self(self,mid,r));
@@ -92,7 +94,7 @@ private:
     *this=rhs;
   }
   [[nodiscard]]PersistentWeightBalancedTree merge(PersistentWeightBalancedTree rhs){
-    node *nd=merge_rec(root,rhs.root);
+    np nd=merge_rec(root,rhs.root);
     PersistentWeightBalancedTree res;
     res.root=nd;
     return res;
@@ -111,6 +113,7 @@ private:
     else root=nullptr;
     return *this;
   }
+  np operator->(){return root;}
 };
 }
 using persistent_weight_balanced_tree_impl::PersistentWeightBalancedTree;
