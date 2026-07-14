@@ -86,6 +86,10 @@ public:
   template<typename T>
   PersistentWeightBalancedTree(const std::vector<T>&init){
     static_assert(requires(T x){node::single(x);});
+    if(init.empty()){
+      root=nullptr;
+      return;
+    }
     auto dfs=[&](auto self,int l,int r)->np {
       if(l+1==r)return node::single(init[l]);
       int mid=(l+r)/2;
