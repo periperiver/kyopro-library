@@ -200,6 +200,7 @@
 "verify/self/geo/static_convex_hull3d.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/graph/maximum_independent_set.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/graph/offline_dynamic_mst.test.cpp": "2026-07-05 16:19:01 +0900",
+"verify/self/math/binomial_power_sum.test.cpp": "2026-07-14 20:34:24 +0900",
 "verify/self/math/count_exp_multiset.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/math/crt.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/math/discrete_logarithm.test.cpp": "2026-07-09 20:34:00 +0900",
