@@ -4,8 +4,14 @@
 //sum[0≤i≤n] C(n,i)*i^k
 template<typename T>
 T binomial_power_sum(long long n,int k){
-  assert(k<=n);
   std::vector<T>pw=enumerate_fully_multiplicative_function(k,[&](int x){return T::raw(x).pow(k);});
+  if(n<k){
+    T res=T();
+    for(int i=0;i<=n;i++){
+      res+=F<T>::C(n,i)*pw[i];
+    }
+    return res;
+  }
   T c=1;
   for(int i=1;i<=k;i++){
     c*=n-i+1;
