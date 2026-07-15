@@ -18,6 +18,10 @@ std::conditional_t<restore,std::vector<int>,int>shortest_path(const Graph<T>&g,i
     assert(mask[vs[i]]==0);
     mask[vs[i]]=1<<i;
   }
+  if(k==0&&s==t){
+    if constexpr(restore)return {s};
+    else return 0;
+  }
   std::vector<std::tuple<int,int,gf2>>edges;
   for(const Edge<T>&e:g)if(e.from!=e.to){
     edges.emplace_back(e.from,e.to,Random::get<unsigned long long>());
@@ -26,10 +30,15 @@ std::conditional_t<restore,std::vector<int>,int>shortest_path(const Graph<T>&g,i
   std::vector<int>a;
   do{
     a.clear();
-    for(auto[u,v,w]:edges){
-      if(u==s||v==s)a.push_back(s^u^v);
+    int ptr=0;
+    for(auto&[u,v,w]:edges){
+      if(v==s)std::swap(u,v);
+      if(u==s){
+        if(s==t)a.push_back(ptr);
+        else a.push_back(v);
+      }
+      ptr++;
     }
-    std::sort(a.begin(),a.end());
     if(s!=t)std::erase_if(edges,[&](const std::tuple<int,int,gf2>&tp){return std::get<0>(tp)==s||std::get<1>(tp)==s;});
     std::erase_if(vs,[&](int v){return s==v;});
     k=vs.size();
@@ -41,10 +50,22 @@ std::conditional_t<restore,std::vector<int>,int>shortest_path(const Graph<T>&g,i
     int d=std::numeric_limits<int>::max();
     int ns=-1;
     for(int i=0;i<n;i++){
-      for(int a2:a)if(dpv.back()[a2].val()){
-        ns=a2;
-        d=i+1;
-        break;
+      if(s==t){
+        for(int id:a){
+          auto [u,v,w]=edges[id];
+          if(dpv.back()[v]!=dpe.back()[id*2]){
+            if(ns==-1||ns>v)ns=v;
+            d=i+1;
+            break;
+          }
+        }
+      }
+      else{
+        for(int a2:a)if(dpv.back()[a2].val()){
+          if(ns==-1||ns>a2)ns=a2;
+          d=i+1;
+          break;
+        }
       }
       if(ns!=-1){
         break;
@@ -77,5 +98,5 @@ std::conditional_t<restore,std::vector<int>,int>shortest_path(const Graph<T>&g,i
     res.push_back(t);
     return res;
   }
-  else return -1;
+  else return std::numeric_limits<int>::max();
 }
