@@ -196,6 +196,7 @@
 "verify/self/datastructure/kinetic_tournament.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/datastructure/kth_bit.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/datastructure/power_query.test.cpp": "2026-07-09 20:34:00 +0900",
+"verify/self/datastructure/subset_query.test.cpp": "2026-07-16 00:11:29 +0900",
 "verify/self/dp/egz.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/geo/count_lattice.test.cpp": "2026-07-08 22:11:47 +0900",
 "verify/self/geo/dynamic_cht.test.cpp": "2026-07-05 16:19:01 +0900",
