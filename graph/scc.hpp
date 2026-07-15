@@ -4,6 +4,7 @@
 #include "graph_base.hpp"
 template<typename T>
 std::vector<int>strongly_connected_components(Graph<T>g){
+  assert(g.is_directed());
   int n=g.size();
   std::vector<bool>seen(n,false);
   fast_stack<int>st(g.edge_size()+1);
