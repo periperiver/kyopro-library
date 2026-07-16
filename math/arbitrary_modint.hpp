@@ -50,12 +50,12 @@ private:
   }
 public:
   arbitrary_modint():v(0){}
-  template<std::signed_integral U>
+  template<typename U,std::enable_if_t<std::signed_integral<U>||std::is_same_v<U,__int128_t>,std::nullptr_t> =nullptr>
   arbitrary_modint(U x){
     x%=std::make_signed_t<value_type>(umod);
     v=x>=0?x:x+umod;
   }
-  template<std::unsigned_integral U>
+  template<typename U,std::enable_if_t<std::unsigned_integral<U>||std::is_same_v<U,__uint128_t>,std::nullptr_t> =nullptr>
   arbitrary_modint(U x):v(x%umod){}
   static void set_mod(T m){
     assert(1<=m);

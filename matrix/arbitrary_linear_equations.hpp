@@ -46,8 +46,8 @@ struct ArbitraryLinearEquations{
         if(d>=(typename T::mul_type)T::mod())d+=T::mod();
         for(int j=pv;j<=n;j++){
           typename T::mul_type x=mat[i][j].val(),y=v[j].val();
-          mat[i][j]=T::raw((a*x+b*y)%T::mod());
-          v[j]=T::raw((c*x+d*y)%T::mod());//int128がintegralじゃないのが悪い
+          mat[i][j]=a*x+b*y;
+          v[j]=c*x+d*y;
         }
         while(pv<n&&v[pv].val()==0)pv++;
         if(pv==n)return;
