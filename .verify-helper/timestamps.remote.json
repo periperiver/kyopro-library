@@ -190,6 +190,7 @@
 "verify/LC/string/manacher.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/suffix_array.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/wildcard_matching.test.cpp": "2026-07-05 16:19:01 +0900",
+"verify/LC/string/z_algorithm.test.cpp": "2026-07-16 22:41:24 +0900",
 "verify/self/convolution/bitwise_convolution.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/convolution/fft.test.cpp": "2026-07-15 23:51:55 +0900",
 "verify/self/convolution/multiplicative_convolution_modn.test.cpp": "2026-07-06 14:36:28 +0900",
