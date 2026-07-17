@@ -1,7 +1,7 @@
 #pragma once
 #include<vector>
 #include<numeric>
-#include "datastructure/dynamic/splay.hpp"
+#include "../datastructure/dynamic/splay.hpp"
 template<typename Compare>
 std::vector<int>merge_insertion_sort(int n,const Compare&compare){
   struct node{
@@ -93,6 +93,6 @@ std::vector<int>merge_insertion_sort(int n,const Compare&compare){
   };
   std::vector<int>res(n);
   std::iota(res.begin(),res.end(),0);
-  dfs(dfs,res);
+  if(n>1)dfs(dfs,res);
   return res;
 }
