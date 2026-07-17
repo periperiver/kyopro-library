@@ -211,6 +211,7 @@
 "verify/self/math/discrete_logarithm.test.cpp": "2026-07-16 22:52:04 +0900",
 "verify/self/math/divisor.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/math/pisano_period.test.cpp": "2026-07-16 22:52:04 +0900",
+"verify/self/other/merge_insertion_sort.test.cpp": "2026-07-17 22:58:01 +0900",
 "verify/self/poly/bmbm.test.cpp": "2026-07-16 22:52:04 +0900",
 "verify/self/poly/power_prod_sum.test.cpp": "2026-07-05 16:19:01 +0900",
 "verify/self/string/minimum_rotation.test.cpp": "2026-07-05 16:19:01 +0900",
