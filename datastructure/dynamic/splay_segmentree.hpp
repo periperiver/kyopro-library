@@ -61,17 +61,20 @@ public:
     if(!root||l==r)return M::e();
     root=near(root,l);
     S res=M::e();
-    if(l<=root->key)res=root->v;
+    if(root->left)res=root->left->sum;
+    if(l<=root->key&&root->key<r)res=M::op(res,root->v);
     if(root->right){
       node *rnd=root->right;
       rnd->par=nullptr;
       rnd=near(rnd,r);
       if(rnd->left)res=M::op(res,rnd->left->sum);
-      if(r<=rnd->key)res=M::op(res,rnd->v);
+      if(rnd->key<r)res=M::op(res,rnd->v);
       root->right=rnd;
+      rnd->par=root;
     }
     return res;
   }
+  S all_prod(){return root?root->sum:M::e();}
   void deallocate(){
     if(root)delete root;
   }
