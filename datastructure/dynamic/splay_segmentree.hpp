@@ -61,8 +61,7 @@ public:
     if(!root||l==r)return M::e();
     root=near(root,l);
     S res=M::e();
-    if(root->left)res=root->left->sum;
-    if(l<=root->key&&root->key<r)res=M::op(res,root->v);
+    if(l<=root->key&&root->key<r)res=root->v;
     if(root->right){
       node *rnd=root->right;
       rnd->par=nullptr;
