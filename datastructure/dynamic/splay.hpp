@@ -1,5 +1,6 @@
 #pragma once
 #include<type_traits>
+#include<concepts>
 struct has_update_impl{
   template<typename T>
   static auto check(T&&x)->decltype(x.update(),std::true_type{});
@@ -31,6 +32,10 @@ struct has_middle:public decltype(has_middle_impl::check<T>(std::declval<T>())){
 template<typename T>
 inline constexpr bool has_middle_v=has_middle<T>::value;
 
+template<typename T>
+concept can_copy_monoid=requires(T x){
+  x.copy_monoid(std::declval<T*>());
+};
 template<typename T,bool no_push=false>
 void splay(T*nd){
   if constexpr(has_push_v<T>&&!no_push)nd->push();
@@ -65,7 +70,10 @@ void splay(T*nd){
           p->par=nd;
           p->right=pp;
           pp->par=p;
-          if constexpr(has_update_v<T>)pp->update(),p->update(),nd->update();
+          if constexpr(has_update_v<T>){
+            if constexpr(can_copy_monoid<T>)nd->copy_monoid(pp),pp->update(),p->update();
+            else pp->update(),p->update(),nd->update();
+          }
           continue;
         }
         else if(pp->right==p){
@@ -89,7 +97,10 @@ void splay(T*nd){
           pp->par=nd;
           nd->right=p;
           p->par=nd;
-          if constexpr(has_update_v<T>)pp->update(),p->update(),nd->update();
+          if constexpr(has_update_v<T>){
+            if constexpr(can_copy_monoid<T>)nd->copy_monoid(pp),pp->update(),p->update();
+            else pp->update(),p->update(),nd->update();
+          }
           continue;
         }
       }
@@ -109,7 +120,10 @@ void splay(T*nd){
       if(p->left)p->left->par=p;
       nd->right=p;
       p->par=nd;
-      if constexpr(has_update_v<T>)p->update(),nd->update();
+      if constexpr(has_update_v<T>){
+        if constexpr(can_copy_monoid<T>)nd->copy_monoid(p),p->update();
+        else p->update(),nd->update();
+      }
       break;
     }
     else if(p->right==nd){
@@ -135,7 +149,10 @@ void splay(T*nd){
           p->par=nd;
           nd->right=pp;
           pp->par=nd;
-          if constexpr(has_update_v<T>)pp->update(),p->update(),nd->update();
+          if constexpr(has_update_v<T>){
+            if constexpr(can_copy_monoid<T>)nd->copy_monoid(pp),pp->update(),p->update();
+            else pp->update(),p->update(),nd->update();
+          }
           continue;
         }
         else if(pp->right==p){
@@ -159,7 +176,10 @@ void splay(T*nd){
           p->par=nd;
           p->left=pp;
           pp->par=p;
-          if constexpr(has_update_v<T>)pp->update(),p->update(),nd->update();
+          if constexpr(has_update_v<T>){
+            if constexpr(can_copy_monoid<T>)nd->copy_monoid(pp),pp->update(),p->update();
+            else pp->update(),p->update(),nd->update();
+          }
           continue;
         }
       }
@@ -179,7 +199,10 @@ void splay(T*nd){
       if(p->right)p->right->par=p;
       nd->left=p;
       p->par=nd;
-      if constexpr(has_update_v<T>)p->update(),nd->update();
+      if constexpr(has_update_v<T>){
+        if constexpr(can_copy_monoid<T>)nd->copy_monoid(p),p->update();
+        else p->update(),nd->update();
+      }
       break;
     }
     else break;
