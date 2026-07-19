@@ -13,6 +13,10 @@ private:
       if(left)sum=M::op(left->sum,sum);
       if(right)sum=M::op(sum,right->sum);
     }
+    ~node(){
+      if(left)delete left;
+      if(right)delete right;
+    }
     void splay(){
       while(this->par){
         node *p=this->par;
@@ -139,6 +143,8 @@ private:
   node *root;
 public:
   DynamicSegmentTree():root(nullptr){}
+  DynamicSegmentTree(DynamicSegmentTree&&rhs):root(std::move(rhs.root)){}
+  DynamicSegmentTree(const DynamicSegmentTree&)=delete;
   void set(I key,S val){
     if(!root)root=new node(key,val);
     else{
@@ -230,4 +236,7 @@ public:
     return ret;
   }
   S all_prod()const{return root?root->sum:M::e();}
+  ~DynamicSegmentTree(){
+    if(root)delete root;
+  }
 };
