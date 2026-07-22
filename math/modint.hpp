@@ -3,6 +3,7 @@
 #include<cassert>
 #include<type_traits>
 #include<optional>
+#include<cstdint>
 #include "primality_test_constexpr.hpp"
 #include "ext_gcd.hpp"
 template<auto m>
