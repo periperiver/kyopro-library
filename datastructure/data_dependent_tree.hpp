@@ -3,7 +3,7 @@
 #include<vector>
 #include<ranges>
 #include<cassert>
-#include "../math/modint61.hpp"
+#include "../math/modint.hpp"
 #include "../math/primitive_root.hpp"
 #include "dynamic/splay.hpp"
 struct DataDependentTree{

@@ -3,27 +3,56 @@
 #include<cassert>
 #include<type_traits>
 #include<optional>
-#include "primality_test.hpp"
+#include "primality_test_constexpr.hpp"
 #include "ext_gcd.hpp"
 template<auto m>
 struct modint{
   static_assert(1<=m&&m<(1ull<<63));
-  using value_type=std::conditional_t<((m>>31)!=0),uint32_t,uint64_t>;
-  using mul_type=std::conditional_t<((m>>31)!=0),uint64_t,__uint128_t>;
+  using value_type=std::conditional_t<((m>>31)==0),uint32_t,uint64_t>;
+  using mul_type=std::conditional_t<((m>>31)==0),uint64_t,__uint128_t>;
 private:
   value_type v;
   static constexpr value_type umod=m;
   modint sqrt_impl()const{
+    if(this->val()<=1)return *this;
+    if(umod%8==1){
+      modint b=2;
+      while(b.pow((umod-1)/2).val()==1)b++;
+      value_type m2=umod-1;
+      int e=0;
+      while(m2%2==0)m2>>=1,e++;
+      modint x=this->pow((m2-1)/2);
+      modint y=(*this)*x*x;
+      x*=*this;
+      modint z=b.pow(m2);
+      while(y.val()!=1){
+        int j=0;
+        modint t=y;
+        while(t.val()!=1)t*=t,j++;
+        z=z.pow((value_type(1))<<(e-j-1));
+        x*=z;
+        z*=z;
+        y*=z;
+        e=j;
+      }
+      return x;
+    }
+    else if(umod%8==5){
+      modint res=this->pow((umod+3)/8);
+      if((res*res).val()==this->val())return res;
+      else return res*modint(2).pow((umod-1)/4);
+    }
+    else return this->pow((umod+1)/4);
   }
 public:
-  modint():v(0){}
+  constexpr modint():v(0){}
   template<typename U,std::enable_if_t<std::signed_integral<U>||std::is_same_v<U,__int128_t>,std::nullptr_t> =nullptr>
-  modint(U x){
+  constexpr modint(U x){
     x%=std::make_signed_t<value_type>(umod);
     v=x>=0?x:x+umod;
   }
   template<typename U,std::enable_if_t<std::unsigned_integral<U>||std::is_same_v<U,__uint128_t>,std::nullptr_t> =nullptr>
-  modint(U x):v(x%umod){}
+  constexpr modint(U x):v(x%umod){}
   static constexpr value_type mod(){return umod;}
   template<typename U>
   static modint raw(U x){
@@ -31,18 +60,18 @@ public:
     res.v=x;
     return res;
   }
-  inline std::make_signed_t<value_type> val()const{return v;}
-  inline modint &operator+=(const modint&b){
+  constexpr std::make_signed_t<value_type> val()const{return v;}
+  constexpr modint &operator+=(const modint&b){
     this->v+=b.v;
     if(this->v>=umod)this->v-=umod;
     return *this;
   }
-  inline modint &operator-=(const modint&b){
+  constexpr modint &operator-=(const modint&b){
     this->v-=b.v;
     if(this->v>=umod)this->v+=umod;
     return *this;
   }
-  inline modint &operator*=(const modint&b){
+  constexpr modint &operator*=(const modint&b){
     mul_type x=mul_type(this->v)*mul_type(b.v);
     if constexpr(m==((1ull<<61)-1)){
       this->v=(x>>61)+(x&umod);
@@ -51,28 +80,28 @@ public:
     else this->v=x%umod;
     return *this;
   }
-  inline modint &operator/=(const modint&b){return *this*=b.inv();}
-  inline modint operator+()const{return *this;}
-  inline modint operator-()const{return modint()-*this;}
-  friend inline modint operator+(const modint&a,const modint&b){return modint(a)+=b;}
-  friend inline modint operator-(const modint&a,const modint&b){return modint(a)-=b;}
-  friend inline modint operator*(const modint&a,const modint&b){return modint(a)*=b;}
-  friend inline modint operator/(const modint&a,const modint&b){return modint(a)/=b;}
-  auto operator<=>(const modint&)const=default;
-  inline modint operator++(int){
+  constexpr modint &operator/=(const modint&b){return *this*=b.inv();}
+  constexpr modint operator+()const{return *this;}
+  constexpr modint operator-()const{return modint()-*this;}
+  friend constexpr modint operator+(const modint&a,const modint&b){return modint(a)+=b;}
+  friend constexpr modint operator-(const modint&a,const modint&b){return modint(a)-=b;}
+  friend constexpr modint operator*(const modint&a,const modint&b){return modint(a)*=b;}
+  friend constexpr modint operator/(const modint&a,const modint&b){return modint(a)/=b;}
+  constexpr auto operator<=>(const modint&)const=default;
+  constexpr modint operator++(int){
     modint res=*this;
     this->v++;
     if(this->v==umod)this->v=0;
     return res;
   }
-  inline modint operator--(int){
+  constexpr modint operator--(int){
     modint res=*this;
     if(this->v=0)this->v=umod;
     this->v--;
     return res;
   }
   template<std::integral U>
-  modint pow(U k)const{
+  constexpr modint pow(U k)const{
     if constexpr(std::is_signed_v<U>){
       assert(0<=k);
     }
@@ -84,8 +113,8 @@ public:
     }
     return res;
   }
-  modint inv()const{
-    if constexpr(isprime(umod)){
+  constexpr modint inv()const{
+    if constexpr(isprime_constexpr(umod)){
       assert(v!=0);
       return pow(umod-2);
     }
