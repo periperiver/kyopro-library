@@ -3,7 +3,7 @@
 #include<array>
 #include<cassert>
 #include "../math/primitive_root.hpp"
-#include "../math/modint61.hpp"
+#include "../math/modint.hpp"
 #include "../math/util.hpp"
 struct ShiftTree{
   int n,log2n,delta;

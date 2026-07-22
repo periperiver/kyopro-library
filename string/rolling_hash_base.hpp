@@ -1,6 +1,6 @@
 #pragma once
 #include<vector>
-#include "../math/modint61.hpp"
+#include "../math/modint.hpp"
 #include "../math/primitive_root.hpp"
 struct RollingHashBase{
   static mint61 base;

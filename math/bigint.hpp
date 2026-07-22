@@ -92,9 +92,9 @@ private:
     static constexpr int mod1=167772161;
     static constexpr int mod2=469762049;
     static constexpr int mod3=754974721;
-    using mint1=mod_int<mod1>;
-    using mint2=mod_int<mod2>;
-    using mint3=mod_int<mod3>;
+    using mint1=modint<mod1>;
+    using mint2=modint<mod2>;
+    using mint3=modint<mod3>;
     std::vector<mint1>lhs1(lhs.begin(),lhs.end()),rhs1(rhs.begin(),rhs.end());
     std::vector<mint2>lhs2(lhs.begin(),lhs.end()),rhs2(rhs.begin(),rhs.end());
     std::vector<mint3>lhs3(lhs.begin(),lhs.end()),rhs3(rhs.begin(),rhs.end());

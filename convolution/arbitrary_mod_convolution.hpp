@@ -10,9 +10,9 @@ std::vector<T>arbitrary_mod_convolution(const std::vector<T>&a,const std::vector
     for(int i=0;i<a.size();i++)for(int j=0;j<b.size();j++)ret[i+j]+=a[i]*b[j];
     return ret;
   }
-  using mint1=mod_int<167772161>;
-  using mint2=mod_int<469762049>;
-  using mint3=mod_int<998244353>;
+  using mint1=modint<167772161>;
+  using mint2=modint<469762049>;
+  using mint3=modint<998244353>;
   std::vector<mint1>a1(a.size()),b1(b.size());
   std::vector<mint2>a2(a.size()),b2(b.size());
   std::vector<mint3>a3(a.size()),b3(b.size());

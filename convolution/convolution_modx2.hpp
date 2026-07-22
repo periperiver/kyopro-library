@@ -4,8 +4,8 @@
 #include "../math/modint.hpp"
 template<typename T,std::enable_if_t<std::is_integral_v<T>,std::nullptr_t> =nullptr>
 std::vector<long long>convolution_modx2(const std::vector<T>&a,const std::vector<T>&b){
-  using mint1=mod_int<897581057>;
-  using mint2=mod_int<998244353>;
+  using mint1=modint<897581057>;
+  using mint2=modint<998244353>;
   int n=a.size(),m=b.size();
   int z=ceil_pow2(n+m-1);
   std::vector<mint1>a1(z),b1(z);

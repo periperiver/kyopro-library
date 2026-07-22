@@ -1,7 +1,6 @@
 #pragma once
 #include<utility>
 #include "rolling_hash_base.hpp"
-#include "math/modint61.hpp"
 #include "datastructure/segmenttree.hpp"
 struct DynamicRollingHash{
 private:
