@@ -13,7 +13,7 @@ struct modint{
 private:
   value_type v;
   static constexpr value_type umod=m;
-  modint sqrt_impl()const{
+  constexpr modint sqrt_impl()const{
     if(this->val()<=1)return *this;
     if(umod%8==1){
       modint b=2;
@@ -55,7 +55,7 @@ public:
   constexpr modint(U x):v(x%umod){}
   static constexpr value_type mod(){return umod;}
   template<typename U>
-  static modint raw(U x){
+  static constexpr modint raw(U x){
     modint res;
     res.v=x;
     return res;
