@@ -5,8 +5,8 @@
 #include "../math/crt2.hpp"
 template<typename T>
 std::vector<long long>frequency_table_tree_distance(const Tree<T>&t){
-  using mint1=mod_int<167772161>;
-  using mint2=mod_int<998244353>;
+  using mint1=modint<167772161>;
+  using mint2=modint<998244353>;
   assert(!t.is_directed());
   int n=t.size();
   Tree<T>t2(t);
