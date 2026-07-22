@@ -97,7 +97,7 @@ public:
   }
   constexpr modint operator--(int){
     modint res=*this;
-    if(this->v=0)this->v=umod;
+    if(this->v==0)this->v=umod;
     this->v--;
     return res;
   }
