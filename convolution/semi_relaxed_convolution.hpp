@@ -1,16 +1,18 @@
 #pragma once
+#include<limits>
 #include "ntt.hpp"
 template<typename T>
 struct SemiRelaxedConvolution{
 private:
+  using mul_type=typename T::mul_type;
   std::vector<T>f,g,h;
   std::vector<std::vector<T>>f_memo,g_memo;
   int p,n,loglog2n,na;
-  std::vector<unsigned long long>temp;
+  std::vector<mul_type>temp;
   static constexpr int b=4;
   static constexpr int d=6;
   static_assert(b<=d);
-  static_assert((unsigned long long)(T::mod()-1)*(T::mod()-1)<=(-1ull)/(1<<b));
+  static_assert((mul_type)(T::mod()-1)*(T::mod()-1)<=std::numeric_limits<mul_type>::max()/(1<<b));
 public:
   SemiRelaxedConvolution(){}
   explicit SemiRelaxedConvolution(const std::vector<T>&f_):f(f_),p(0){
@@ -57,10 +59,10 @@ public:
       std::copy(g.begin()+p2-sq,g.begin()+p2,buf.begin());
       dft(buf);
       std::copy(buf.begin(),buf.end(),g_memo[w].begin()+(p2-sq)*2);
-      for(int i=0;i<sq*2;i++)temp[i]=(unsigned long long)buf[i].val()*f_memo[w][i].val();
+      for(int i=0;i<sq*2;i++)temp[i]=(mul_type)buf[i].val()*f_memo[w][i].val();
       for(int i=1;i<lc;i++){
         for(int j=0;j<sq*2;j++){
-          temp[j]+=(unsigned long long)f_memo[w][i*sq*2+j].val()*g_memo[w][(p2-sq*(i+1))*2+j].val();
+          temp[j]+=(mul_type)f_memo[w][i*sq*2+j].val()*g_memo[w][(p2-sq*(i+1))*2+j].val();
         }
       }
       for(int i=0;i<sq*2;i++)buf[i]=temp[i];

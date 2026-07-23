@@ -3,6 +3,7 @@
 template<typename T>
 struct RelaxedConvolution{
 private:
+using mul_type=typename T::mul_type;
   int p;
   std::vector<T>f,g,h;
   std::vector<std::vector<T>>f_memo,g_memo;
@@ -37,7 +38,7 @@ public:
       std::vector<T>f2(f.end()-(1<<w),f.end()),g2(g.end()-(1<<w),g.end());
       f2.resize(2<<w),g2.resize(2<<w);
       dft(f2),dft(g2);
-      for(int i=0;i<(2<<w);i++)f2[i]=(unsigned long long)f2[i].val()*g_memo[w-b][i].val()+(unsigned long long)g2[i].val()*f_memo[w-b][i].val();
+      for(int i=0;i<(2<<w);i++)f2[i]=(mul_type)f2[i].val()*g_memo[w-b][i].val()+(mul_type)g2[i].val()*f_memo[w-b][i].val();
       idft(f2);
       T inv=T::raw(2<<w).inv();
       for(int i=0;i<(1<<w);i++)h[p+i]+=f2[i+(1<<w)-1]*inv;
