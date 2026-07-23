@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/factorize"
 #include<iostream>
 #include<algorithm>
-#include "math/primefactor.hpp"
+#include "math/factorize.hpp"
 int main(){
   int q;
   std::cin>>q;
