@@ -45,6 +45,25 @@ private:
     }
     else return this->pow((umod+1)/4);
   }
+  template<typename U,std::enable_if_t<std::unsigned_integral<U>||std::is_same_v<U,__uint128_t>,std::nullptr_t> =nullptr>
+  static constexpr value_type take_mod(U x){
+    if constexpr(std::numeric_limits<U>::max()<umod)return x;
+    if constexpr(umod==(1ull<<61)-1){
+      value_type res=(x>>61)+(x&umod);
+      if(res>=umod)res-=umod;
+      return res;
+    }
+    if(umod==(1ull<<61)-(1ull<<24)+1){
+      static constexpr value_type mask=(1ull<<61)-1;
+      value_type high=x>>61,low=x&mask;
+      mul_type t=low+(mul_type(high)<<24)-high;
+      high=t>>61,low=t&mask;
+      low=low+(mul_type(high)<<24)-high;
+      if(low>=umod)low-=umod;
+      return low;
+    }
+    return x%umod;
+  }
 public:
   constexpr modint():v(0){}
   template<typename U,std::enable_if_t<std::signed_integral<U>||std::is_same_v<U,__int128_t>,std::nullptr_t> =nullptr>
@@ -53,7 +72,7 @@ public:
     v=x>=0?x:x+umod;
   }
   template<typename U,std::enable_if_t<std::unsigned_integral<U>||std::is_same_v<U,__uint128_t>,std::nullptr_t> =nullptr>
-  constexpr modint(U x):v(x%umod){}
+  constexpr modint(U x):v(take_mod<U>(x)){}
   static constexpr value_type mod(){return umod;}
   template<typename U>
   static constexpr modint raw(U x){
@@ -73,12 +92,7 @@ public:
     return *this;
   }
   constexpr modint &operator*=(const modint&b){
-    mul_type x=mul_type(this->v)*mul_type(b.v);
-    if constexpr(umod==((1ull<<61)-1)){
-      this->v=(x>>61)+(x&umod);
-      if(this->v>=umod)this->v-=umod;
-    }
-    else this->v=x%umod;
+    this->v=take_mod(mul_type(this->v)*mul_type(b.v));
     return *this;
   }
   constexpr modint &operator/=(const modint&b){return *this*=b.inv();}
@@ -151,3 +165,4 @@ struct std::hash<modint<m>>{
 using mint998=modint<998244353>;
 using mint107=modint<1000000007>;
 using mint61=modint<2305843009213693951>;
+using mint6124=modint<2305843009196916737>;

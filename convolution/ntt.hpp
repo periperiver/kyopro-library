@@ -35,7 +35,7 @@ void dft(std::vector<T>&a){
       int p=1<<(h-len-2);
       T rot=T::raw(1),imag=T::raw(r.root[2]);
       for(int s=0;s<(1<<len);s++){
-        const mul_type rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
+        const mul_type rot1=rot.val(),rot2=(rot*rot).val(),rot3=(rot*T::raw(rot2)).val();
         int of=s<<(h-len);
         for(int i=0;i<p;i++){
           const mul_type a0=a[i+of].val(),a1=(mul_type)a[i+of+p].val()*rot1,a2=(mul_type)a[i+of+p*2].val()*rot2,a3=(mul_type)a[i+of+p*3].val()*rot3;
@@ -82,7 +82,7 @@ void idft(std::vector<T>&a){
       int p=1<<(h-len);
       T rot=T::raw(1),imag=T::raw(r.invroot[2]);
       for(int s=0;s<(1<<(len-2));s++){
-        const mul_type rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
+        const mul_type rot1=rot.val(),rot2=(rot*rot).val(),rot3=(rot*T::raw(rot2)).val();
         int of=s<<(h-len+2);
         for(int i=0;i<p;i++){
           const mul_type a0=a[i+of].val(),a1=a[i+of+p].val(),a2=a[i+of+p*2].val(),a3=a[i+of+p*3].val();
