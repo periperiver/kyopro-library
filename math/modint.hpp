@@ -76,7 +76,7 @@ public:
     mul_type x=mul_type(this->v)*mul_type(b.v);
     if constexpr(m==((1ull<<61)-1)){
       this->v=(x>>61)+(x&umod);
-      if(this->v>=umod)this->v+=umod;
+      if(this->v>=umod)this->v-=umod;
     }
     else this->v=x%umod;
     return *this;
