@@ -4,6 +4,7 @@
 #include<type_traits>
 #include<optional>
 #include<cstdint>
+#include<limits>
 #include "primality_test_constexpr.hpp"
 #include "ext_gcd.hpp"
 template<auto m>
@@ -53,7 +54,7 @@ private:
       if(res>=umod)res-=umod;
       return res;
     }
-    if(umod==(1ull<<61)-(1ull<<24)+1){
+    if constexpr(umod==(1ull<<61)-(1ull<<24)+1){
       static constexpr value_type mask=(1ull<<61)-1;
       value_type high=x>>61,low=x&mask;
       mul_type t=low+(mul_type(high)<<24)-high;
@@ -136,7 +137,12 @@ public:
     else{
       modint res;
       auto [g,x]=inv_mod<std::make_signed_t<value_type>>(this->v,umod);
-      assert(g==1);
+      if constexpr(std::is_constant_evaluated()){
+        if(g!=1){
+          throw "no inverse";
+        }
+      }
+      else assert(g==1);
       res.v=x;
       return res;
     }
