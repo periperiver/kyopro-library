@@ -74,7 +74,7 @@ public:
   }
   constexpr modint &operator*=(const modint&b){
     mul_type x=mul_type(this->v)*mul_type(b.v);
-    if constexpr(m==((1ull<<61)-1)){
+    if constexpr(umod==((1ull<<61)-1)){
       this->v=(x>>61)+(x&umod);
       if(this->v>=umod)this->v-=umod;
     }
