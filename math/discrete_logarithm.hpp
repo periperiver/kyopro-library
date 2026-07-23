@@ -4,7 +4,7 @@
 #include<cassert>
 #include<numeric>
 #include "../matrix/arbitrary_linear_equations.hpp"
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "arbitrary_modint.hpp"
 #include "crt.hpp"
 #include "../random/generator.hpp"

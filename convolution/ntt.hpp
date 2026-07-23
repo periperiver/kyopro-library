@@ -4,16 +4,16 @@
 #include "ntt_root.hpp"
 template<typename T>
 void dft(std::vector<T>&a){
+  using value_type=typename T::value_type;
+  using mul_type=typename T::mul_type;
   #ifdef NTT_SIMD
-  if constexpr(std::numeric_limits<T::value_type>::digits<=32){
+  if constexpr(std::numeric_limits<value_type>::digits<=32){
     if((int)a.size()>=32){
       dft_simd(a);
       return;
     }
   }
   #endif
-  using value_type=typename T::value_type;
-  using mul_type=typename T::mul_type;
   static constexpr ntt_root<T::mod()>r;
   static constexpr mul_type mod2=(mul_type)T::mod()*T::mod();
   int n=a.size();
@@ -54,16 +54,16 @@ void dft(std::vector<T>&a){
 }
 template<typename T>
 void idft(std::vector<T>&a){
+  using value_type=typename T::value_type;
+  using mul_type=typename T::mul_type;
   #ifdef NTT_SIMD
-  if constexpr(std::numeric_limits<T::value_type>::digits<=32){
+  if constexpr(std::numeric_limits<value_type>::digits<=32){
     if((int)a.size()>=32){
       idft_simd(a);
       return;
     }
   }
   #endif
-  using value_type=typename T::value_type;
-  using mul_type=typename T::mul_type;
   static constexpr ntt_root<T::mod()>r;
   int n=a.size();
   int h=lsb(n);
