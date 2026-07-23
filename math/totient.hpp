@@ -3,7 +3,7 @@
 #include<algorithm>
 #include<type_traits>
 #include<numeric>
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "util.hpp"
 template<typename T,std::enable_if_t<(std::numeric_limits<T>::digits>32),std::nullptr_t> =nullptr>
 T totient(T n){

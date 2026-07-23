@@ -2,7 +2,7 @@
 #include<vector>
 #include<cmath>
 #include<unordered_map>
-#include "is_prime_constexpr.hpp"
+#include "primality_test_constexpr.hpp"
 #include "primitive_root_constexpr.hpp"
 #include "pow_mod.hpp"
 #include "binary_gcd.hpp"
@@ -10,7 +10,7 @@
 template<int mod>
 struct fast_log{
 private:
-  static_assert(is_prime_constexpr(mod));
+  static_assert(isprime_constexpr(mod));
   static std::vector<int>small_log;
 public:
   static constexpr int g=primitive_root_constexpr(mod);
@@ -27,8 +27,8 @@ public:
     return res;
   }
   static inline int log(int a,int b){
+    if(b==0)return a==0?1:-1;
     if(a==0)return b==1?0:-1;
-    if(b==0)return -1;
     int loga=log(a);
     int logb=log(b);
     int gcd_am=binary_gcd(loga,mod-1);

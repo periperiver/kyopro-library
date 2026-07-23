@@ -1,6 +1,6 @@
 #pragma once
 #include "../matrix/constant.hpp"
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "../datastructure/power_query.hpp"
 #include "arbitrary_modint.hpp"
 #include "divisor.hpp"

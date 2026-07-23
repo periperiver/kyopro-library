@@ -2,7 +2,7 @@
 #include<vector>
 #include<algorithm>
 #include<cassert>
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "util.hpp"
 template<typename T>
 std::vector<T>divisor(T n){

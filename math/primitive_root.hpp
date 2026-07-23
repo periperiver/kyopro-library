@@ -2,7 +2,7 @@
 #include<vector>
 #include<algorithm>
 #include "../random/generator.hpp"
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "arbitrary_modint.hpp"
 template<std::integral T>
 bool is_primitive_root(T n,T g_,const std::vector<std::pair<T,int>>&n_f){

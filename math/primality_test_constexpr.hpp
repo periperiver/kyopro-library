@@ -1,6 +1,8 @@
 #pragma once
 #include<initializer_list>
 constexpr bool isprime_constexpr(unsigned long long n){
+  if(n==998244353)return true;
+  if(n==1000000007)return true;
   if(n<64)return 2891462833508853932ll>>n&1;
   if(n%2==0)return false;
   unsigned long long d=n-1;

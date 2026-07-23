@@ -2,7 +2,7 @@
 #include<vector>
 #include<cassert>
 #include<type_traits>
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "pow_mod.hpp"
 template<typename Ts>
 struct CRT{

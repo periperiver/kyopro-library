@@ -2,7 +2,7 @@
 #include<numeric>
 #include<algorithm>
 #include<type_traits>
-#include "primefactor.hpp"
+#include "factorize.hpp"
 #include "carmichael_constexpr.hpp"
 template<typename T>
 std::enable_if_t<std::is_integral_v<T>,T>carmichael(T n){

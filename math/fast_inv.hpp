@@ -3,12 +3,12 @@
 #include<vector>
 #include<cstdint>
 #include<tuple>
-#include "is_prime_constexpr.hpp"
+#include "primality_test_constexpr.hpp"
 template<int mod>
 struct fast_inv{
 private:
   static_assert(2*(1<<20)<mod&&mod<(1<<30));
-  static_assert(is_prime_constexpr(mod));
+  static_assert(isprime_constexpr(mod));
   static std::vector<std::pair<uint16_t,uint16_t>>frac;
   static std::vector<uint32_t>small_inv;
 public:
