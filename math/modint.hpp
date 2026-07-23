@@ -131,13 +131,18 @@ public:
   }
   constexpr modint inv()const{
     if constexpr(isprime_constexpr(umod)){
-      assert(v!=0);
+      if(std::is_constant_evaluated()){
+        if(v==0){
+          throw "no inverse";
+        }
+      }
+      else assert(v!=0);
       return pow(umod-2);
     }
     else{
       modint res;
       auto [g,x]=inv_mod<std::make_signed_t<value_type>>(this->v,umod);
-      if constexpr(std::is_constant_evaluated()){
+      if(std::is_constant_evaluated()){
         if(g!=1){
           throw "no inverse";
         }
