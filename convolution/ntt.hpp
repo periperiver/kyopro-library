@@ -1,16 +1,21 @@
 #pragma once
 #include<vector>
+#include<limits>
 #include "ntt_root.hpp"
 template<typename T>
 void dft(std::vector<T>&a){
   #ifdef NTT_SIMD
-  if((int)a.size()>=32){
-    dft_simd(a);
-    return;
+  if constexpr(std::numeric_limits<T::value_type>::digits<=32){
+    if((int)a.size()>=32){
+      dft_simd(a);
+      return;
+    }
   }
   #endif
+  using value_type=typename T::value_type;
+  using mul_type=typename T::mul_type;
   static constexpr ntt_root<T::mod()>r;
-  static constexpr unsigned long long mod2=(unsigned long long)T::mod()*T::mod();
+  static constexpr mul_type mod2=(mul_type)T::mod()*T::mod();
   int n=a.size();
   int h=lsb(n);
   int len=0;
@@ -30,12 +35,12 @@ void dft(std::vector<T>&a){
       int p=1<<(h-len-2);
       T rot=T::raw(1),imag=T::raw(r.root[2]);
       for(int s=0;s<(1<<len);s++){
-        const unsigned long long rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
+        const mul_type rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
         int of=s<<(h-len);
         for(int i=0;i<p;i++){
-          const unsigned long long a0=a[i+of].val(),a1=(unsigned long long)a[i+of+p].val()*rot1,a2=(unsigned long long)a[i+of+p*2].val()*rot2,a3=(unsigned long long)a[i+of+p*3].val()*rot3;
-          const unsigned long long m=(unsigned long long)T(a1+mod2-a3).val()*imag.val();
-          const unsigned long long k=mod2-a2;
+          const mul_type a0=a[i+of].val(),a1=(mul_type)a[i+of+p].val()*rot1,a2=(mul_type)a[i+of+p*2].val()*rot2,a3=(mul_type)a[i+of+p*3].val()*rot3;
+          const mul_type m=(mul_type)T(a1+mod2-a3).val()*imag.val();
+          const mul_type k=mod2-a2;
           a[i+of]=a0+a2+a1+a3;
           a[i+of+p]=a0+a2+(mod2*2-a1-a3);
           a[i+of+p*2]=a0+k+m;
@@ -50,11 +55,15 @@ void dft(std::vector<T>&a){
 template<typename T>
 void idft(std::vector<T>&a){
   #ifdef NTT_SIMD
-  if((int)a.size()>=32){
-    idft_simd(a);
-    return;
+  if constexpr(std::numeric_limits<T::value_type>::digits<=32){
+    if((int)a.size()>=32){
+      idft_simd(a);
+      return;
+    }
   }
   #endif
+  using value_type=typename T::value_type;
+  using mul_type=typename T::mul_type;
   static constexpr ntt_root<T::mod()>r;
   int n=a.size();
   int h=lsb(n);
@@ -73,11 +82,11 @@ void idft(std::vector<T>&a){
       int p=1<<(h-len);
       T rot=T::raw(1),imag=T::raw(r.invroot[2]);
       for(int s=0;s<(1<<(len-2));s++){
-        const unsigned long long rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
+        const mul_type rot1=rot.val(),rot2=rot1*rot1%T::mod(),rot3=rot1*rot2%T::mod();
         int of=s<<(h-len+2);
         for(int i=0;i<p;i++){
-          const unsigned long long a0=a[i+of].val(),a1=a[i+of+p].val(),a2=a[i+of+p*2].val(),a3=a[i+of+p*3].val();
-          const unsigned long long k=T((T::mod()+a2-a3)*imag.val()).val();
+          const mul_type a0=a[i+of].val(),a1=a[i+of+p].val(),a2=a[i+of+p*2].val(),a3=a[i+of+p*3].val();
+          const mul_type k=T((T::mod()+a2-a3)*imag.val()).val();
           a[i+of]=a0+a1+a2+a3;
           a[i+of+p]=(a0+T::mod()-a1+k)*rot1;
           a[i+of+p*2]=(a0+a1+T::mod()*2-a2-a3)*rot2;
