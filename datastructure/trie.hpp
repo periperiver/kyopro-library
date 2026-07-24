@@ -1,19 +1,23 @@
 #pragma once
-#include "template.hpp"
+#include<vector>
+#include<cassert>
 template<typename K,typename V,int N>
 struct trie{
 private:
   struct node{
-    node** child;
+    node* child[N];
     node *par;
     V *val;
-    node():val(nullptr),child(new node*[N]),par(nullptr){
+    node():child{},par(nullptr),val(nullptr){
       for(int i=0;i<N;i++)child[i]=nullptr;
+    }
+    ~node(){
+      for(int i=0;i<N;i++)if(child[i])delete child[i];
     }
   };
   struct trie_iterator{
     node *nd;
-    vector<K>key;
+    std::vector<K>key;
     trie_iterator(node *nd2):nd(nd2),key(){}
     bool operator!=(const trie_iterator&itr)const{
       return nd!=itr.nd;
@@ -46,16 +50,17 @@ private:
       }while(nd&&!nd->val);
       return *this;
     }
-    pair<const vector<K>&,V&> operator*()const{
+    std::pair<const std::vector<K>&,V&> operator*()const{
       return {key,*nd->val};
     }
   };
   node *root;
 public:
   trie(){
+    assert(0);
     root=new node();
   }
-  V &operator[](const vector<K>&key){
+  V &operator[](const std::vector<K>&key){
     int sz=key.size();
     node *now=root;
     for(int i=0;i<sz;i++){
@@ -68,7 +73,7 @@ public:
     if(!now->val)now->val=new V();
     return *now->val;
   }
-  bool contains(const vector<K>&key)const{
+  bool contains(const std::vector<K>&key)const{
     int sz=key.size();
     node *now=root;
     for(int i=0;i<sz;i++){
@@ -85,4 +90,5 @@ public:
   trie_iterator end(){
     return trie_iterator(nullptr);
   }
+  ~trie(){delete root;}
 };
