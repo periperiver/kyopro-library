@@ -221,6 +221,10 @@
 "verify/self/math/pisano_period.test.cpp": "2026-07-23 21:44:02 +0900",
 "verify/self/other/merge_insertion_sort.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/poly/bmbm.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/self/poly/power_prod_sum.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/self/string/minimum_rotation.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/yukicoder/convolution/arbitrary_xor_convolution.test.cpp": "2026-06-25 23:49:04 +0900",
-"verify/yukicoder/dp/monge_shortest_path.test.cpp": "2026-06-25 23:28:18 +0900"
+"verify/yukicoder/dp/monge_shortest_path.test.cpp": "2026-06-25 23:28:18 +0900",
+"verify/yukicoder/graph/shortest_path.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/yukicoder/graph/shortest_path_restore.test.cpp": "2026-07-24 22:57:22 +0900"
 }
