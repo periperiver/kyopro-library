@@ -1,29 +1,18 @@
 #pragma once
 namespace Random{
-constexpr unsigned int constexpr_random32(){
-  char c[]=__TIME__;
-  unsigned int x=(c[0]-'0')*10+(c[1]-'0');
-  unsigned int y=(c[3]-'0')*10+(c[4]-'0');
-  unsigned int z=(c[6]-'0')*10+(c[7]-'0');
-  unsigned int a=x*3600+y*60+z;
-  for(int i=0;i<10;i++){
-    a^=a<<13;
-    a^=a>>17;
-    a^=a<<5;
+constexpr unsigned long long to_seed(const char*s){
+  unsigned long long h=14695981039346656037ULL;
+  while(*s){
+    h^=static_cast<unsigned char>(*s++);
+    h*=1099511628211ULL;
   }
-  return a;
+  return h;
 }
-constexpr unsigned long long constexpr_random64(){
-  char c[]=__TIME__;
-  unsigned int x=(c[0]-'0')*10+(c[1]-'0');
-  unsigned int y=(c[3]-'0')*10+(c[4]-'0');
-  unsigned int z=(c[6]-'0')*10+(c[7]-'0');
-  unsigned long long a=x*3600+y*60+z;
-  for(int i=0;i<10;i++){
-    a^=a<<13;
-    a^=a>>7;
-    a^=a<<17;
-  }
-  return a;
+constexpr unsigned long long constexpr_random_seed=(to_seed(__TIME__)*0x9e3779b97f4a7c15ULL)^to_seed(__DATE__);
+constexpr unsigned long long next_value(unsigned long long n){
+  n^=n<<13;
+  n^=n>>7;
+  n^=n<<17;
+  return n;
 }
 }
