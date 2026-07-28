@@ -260,6 +260,34 @@ void idft_simd(std::vector<T>&a){
     }
   }
 }
+template<typename T>
+__attribute__((target("avx2")))
+void transposed_dft_simd(std::vector<T>&a){
+  using MM=Montgomery<T::mod()>;
+  static constexpr ntt_root<T::mod()>r;
+  static constexpr std::array<unsigned,r.rate2.size()>rate2_m=[](){
+    std::array<unsigned,r.rate2.size()>res;
+    for(int i=0;i<(int)res.size();i++)res[i]=MM::reduce((unsigned long long)r.rate2[i]*MM::r2);
+    return res;
+  }();
+  static constexpr std::array<unsigned,r.rate3.size()>rate3_m=[](){
+    std::array<unsigned,r.rate3.size()>res;
+    for(int i=0;i<(int)res.size();i++)res[i]=MM::reduce((unsigned long long)r.rate3[i]*MM::r2);
+    return res;
+  }();
+  alignas(32) static constexpr std::array<unsigned,(r.rank2-3)*8>rate4_m=[](){
+    std::array<unsigned,(r.rank2-3)*8>res;
+    unsigned prod=1;
+    for(int i=0;i<=r.rank2-4;i++){
+      unsigned v=(unsigned long long)r.root[i+4]*prod%MM::mod();
+      v=MM::reduce((unsigned long long)v*MM::r2);
+      res[i*8]=MM::reduce(MM::r2);
+      for(int j=1;j<8;j++)res[i*8+j]=MM::reduce((unsigned long long)res[i*8+j-1]*v);
+      prod=(unsigned long long)prod*r.invroot[i+4]%MM::mod();
+    }
+    return res;
+  }();
+}
 }
 using ntt_simd_impl::dft_simd;
 using ntt_simd_impl::idft_simd;

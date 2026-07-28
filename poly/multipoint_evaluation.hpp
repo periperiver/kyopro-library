@@ -5,7 +5,6 @@
 #include "convolution/ntt_doubling.hpp"
 #include "convolution/transposed_ntt_doubling.hpp"
 #include "fps.hpp"
-#include "middle_product.hpp"
 template<typename T>
 std::vector<T>multipoint_evaluation(std::vector<T>f,const std::vector<T>&x){
   int n=ceil_pow2((int)x.size()),log2n=msb(n);
