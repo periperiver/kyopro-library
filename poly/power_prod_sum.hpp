@@ -2,12 +2,8 @@
 #include "fps.hpp"
 #include "../convolution/ntt_doubling.hpp"
 #include<cassert>
-/*
-0≤j<mに対するsum(f_i*g_i^j)の列挙
-sum_i(f_i/(1-g_i*x))
-*/
 template<typename T>
-std::vector<T>power_prod_sum(std::vector<T>f,std::vector<T>g,int m){
+std::pair<std::vector<T>,std::vector<T>>power_prod_sum(std::vector<T>f,std::vector<T>g){
   assert(f.size()==g.size());
   int s=f.size();
   int n=ceil_pow2(f.size()),log2n=msb(n);
@@ -49,8 +45,20 @@ std::vector<T>power_prod_sum(std::vector<T>f,std::vector<T>g,int m){
   g.push_back(n);
   std::reverse(f.begin(),f.end());
   std::reverse(g.begin(),g.end());
-  f.resize(m),g.resize(m);
-  f=ntt_convolution(f,fps_inv(g));
+  f.resize(s),g.resize(s+1);
+  T inv=T::raw(n).inv();
+  for(T&x:f)x*=inv;
+  for(T&x:g)x*=inv;
+  return std::make_pair(f,g);
+}
+/*
+0≤j<mに対するsum(f_i*g_i^j)の列挙
+sum_i(f_i/(1-g_i*x))
+*/
+template<typename T>
+std::vector<T>power_prod_sum(std::vector<T>f,std::vector<T>g,int m){
+  std::tie(f,g)=power_prod_sum(f,g);
+  f=ntt_convolution(f,fps_inv(g,m));
   f.resize(m);
   return f;
 }
