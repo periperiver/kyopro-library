@@ -35,7 +35,7 @@ std::vector<T>multipoint_evaluation(std::vector<T>f,const std::vector<T>&x){
   std::reverse(g.begin(),g.end());
   g=fps_inv(g,f.size());
   f.resize(f.size()+n-1);
-  f=middle_product(f,g);
+  f=transposed_ntt_convolution(f,g);
   std::reverse(f.begin(),f.end());
   transposed_idft(f);
   {

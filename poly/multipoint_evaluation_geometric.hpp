@@ -1,5 +1,5 @@
 #pragma once
-#include "middle_product.hpp"
+#include "../convolution/transposed_ntt.hpp"
 template<typename T>
 std::vector<T>multipoint_evaluation_geometric(std::vector<T>f,T a,T r,int m){
   int n=f.size();
@@ -43,7 +43,7 @@ std::vector<T>multipoint_evaluation_geometric(std::vector<T>f,T a,T r,int m){
   };
   std::vector<T>g=calc(r.inv(),std::max(n,m));
   for(int i=0;i<n;i++)f[i]*=g[i];
-  f=middle_product(calc(r,n+m-1),f);
+  f=transposed_ntt_convolution(calc(r,n+m-1),f);
   for(int i=0;i<m;i++)f[i]*=g[i];
   return f;
 }
