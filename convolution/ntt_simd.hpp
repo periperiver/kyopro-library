@@ -260,6 +260,120 @@ void idft_simd(std::vector<T>&a){
     }
   }
 }
+template<typename T>
+__attribute__((target("avx2")))
+void transposed_dft_simd(std::vector<T>&a){
+  using MM=Montgomery<T::mod()>;
+  static constexpr ntt_root<T::mod()>r;
+  static constexpr std::array<unsigned,r.rate2.size()>rate2_m=[](){
+    std::array<unsigned,r.rate2.size()>res;
+    for(int i=0;i<(int)res.size();i++)res[i]=MM::reduce((unsigned long long)r.rate2[i]*MM::r2);
+    return res;
+  }();
+  static constexpr std::array<unsigned,r.rate3.size()>rate3_m=[](){
+    std::array<unsigned,r.rate3.size()>res;
+    for(int i=0;i<(int)res.size();i++)res[i]=MM::reduce((unsigned long long)r.rate3[i]*MM::r2);
+    return res;
+  }();
+  alignas(32) static constexpr std::array<unsigned,(r.rank2-3)*8>rate4_m=[](){
+    std::array<unsigned,(r.rank2-3)*8>res;
+    unsigned prod=1;
+    for(int i=0;i<=r.rank2-4;i++){
+      unsigned v=(unsigned long long)r.root[i+4]*prod%MM::mod();
+      v=MM::reduce((unsigned long long)v*MM::r2);
+      res[i*8]=MM::reduce(MM::r2);
+      for(int j=1;j<8;j++)res[i*8+j]=MM::reduce((unsigned long long)res[i*8+j-1]*v);
+      prod=(unsigned long long)prod*r.invroot[i+4]%MM::mod();
+    }
+    return res;
+  }();
+  for(int i=0;i<(int)a.size();i++)b[i]=a[i].val();
+  int h=lsb(a.size());
+  int len=h;
+  unsigned one=MM::reduce(MM::r2);
+  unsigned r2=MM::reduce((unsigned long long)r.root[2]*MM::r2);
+  unsigned r3=MM::reduce((unsigned long long)r.root[3]*MM::r2);
+  unsigned r3_2=MM::reduce((unsigned long long)r3*r3);
+  unsigned r3_3=MM::reduce((unsigned long long)r3_2*r3);
+  __m256i p1=_mm256_set_epi32(r3_3,r3_2,r3,one,one,one,one,one);
+  __m256i p2=_mm256_set_epi32(r2,one,one,one,r2,one,one,one);
+  __m256i rot=_mm256_set1_epi32(one);
+  for(int s=0;s<(int)a.size()/8;s++){
+    __m256i u=_mm256_loadu_si256((__m256i*)(b+s*8));
+    mul_simd<MM>(u,MM::r2);
+    __m256i v=u;
+    u=_mm256_blend_epi32(u,sub_simd<MM>(_mm256_setzero_si256(),u),0b10101010);
+    v=_mm256_shuffle_epi32(v,0b10110001);
+    u=add_simd<MM>(u,v);
+    mul_simd<MM>(u,p2);
+    v=u;
+    u=_mm256_blend_epi32(u,sub_simd<MM>(_mm256_setzero_si256(),u),0b11001100);
+    v=_mm256_shuffle_epi32(v,0b01001110);
+    u=add_simd<MM>(u,v);
+    mul_simd<MM>(u,p1);
+    v=u;
+    u=_mm256_blend_epi32(u,sub_simd<MM>(_mm256_setzero_si256(),u),0b11110000);
+    v=_mm256_permute2x128_si256(v,v,0b01);
+    u=add_simd<MM>(u,v);
+    mul_simd<MM>(u,rot);
+    _mm256_storeu_si256((__m256i*)(b+s*8),u);
+    mul_simd<MM>(rot,_mm256_loadu_si256((__m256i*)(rate4_m.data()+8*lsb(~(unsigned)s))));
+  }
+  len-=3;
+  if(len%2!=0){
+    unsigned rot=MM::reduce(MM::r2);
+    for(int s=0;s<(1<<(len-1));s++){
+      int offset=s<<(h-len+1);
+      __m256i b0=_mm256_loadu_si256((__m256i*)(b+offset));
+      __m256i b1=_mm256_loadu_si256((__m256i*)(b+offset+8));
+      mul_simd<MM>(b1,rot);
+      _mm256_storeu_si256((__m256i*)(b+offset),add_simd<MM>(b0,b1));
+      _mm256_storeu_si256((__m256i*)(b+offset+8),sub_simd<MM>(b0,b1));
+      rot=MM::reduce((unsigned long long)rot*rate2_m[lsb(~(unsigned)s)]);
+    }
+    len--;
+  }
+  while(len>0){
+    int p=1<<(h-len);
+    unsigned rot=one,imag=MM::reduce((unsigned long long)r.root[2]*MM::r2);
+    for(int s=0;s<(1<<(len-2));s++){
+      const unsigned rot1=rot,rot2=MM::reduce((unsigned long long)rot*rot),rot3=MM::reduce((unsigned long long)rot*rot2);
+      int offset=s<<(h-len+2);
+      for(int i=0;i<p;i+=8){
+        __m256i a0=_mm256_loadu_si256((__m256i*)(b+i+offset));
+        __m256i a1=_mm256_loadu_si256((__m256i*)(b+i+offset+p));
+        __m256i a2=_mm256_loadu_si256((__m256i*)(b+i+offset+p*2));
+        __m256i a3=_mm256_loadu_si256((__m256i*)(b+i+offset+p*3));
+        __m256i k=sub_simd<MM>(a2,a3);
+        mul_simd<MM>(k,imag);
+        __m256i a01=add_simd<MM>(a0,a1),a23=add_simd<MM>(a2,a3);
+        _mm256_storeu_si256((__m256i*)(b+i+offset),add_simd<MM>(a01,a23));
+        a2=sub_simd<MM>(a01,a23);
+        mul_simd<MM>(a2,rot2);
+        _mm256_storeu_si256((__m256i*)(b+i+offset+p*2),a2);
+        a01=sub_simd<MM>(a0,a1);
+        a1=add_simd<MM>(a01,k);
+        a3=sub_simd<MM>(a01,k);
+        mul_simd<MM>(a1,rot1);
+        mul_simd<MM>(a3,rot3);
+        _mm256_storeu_si256((__m256i*)(b+i+offset+p),a1);
+        _mm256_storeu_si256((__m256i*)(b+i+offset+p*3),a3);
+      }
+      if(s+1!=1<<(len-2))rot=MM::reduce((unsigned long long)(rot)*rate3_m[lsb(~(unsigned)s)]);
+    }
+    len-=2;
+  }
+  for(int i=0;i<(int)a.size();i+=8){
+    __m256i u=_mm256_loadu_si256((__m256i*)(b+i));
+    mul_simd<MM>(u,1);
+    _mm256_storeu_si256((__m256i*)(b+i),u);
+    for(int j=0;j<8;j++){
+      if(b[i+j]>=T::mod())b[i+j]-=T::mod();
+      a[i+j]=T::raw(b[i+j]);
+    }
+  }
+}
 }
 using ntt_simd_impl::dft_simd;
 using ntt_simd_impl::idft_simd;
+using ntt_simd_impl::transposed_dft_simd;

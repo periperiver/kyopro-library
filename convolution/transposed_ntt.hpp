@@ -5,6 +5,14 @@ template<typename T>
 void transposed_dft(std::vector<T>&a){
   using value_type=typename T::value_type;
   using mul_type=typename T::mul_type;
+  #ifdef NTT_SIMD
+  if constexpr(std::numeric_limits<value_type>::digits<=32){
+    if((int)a.size()>=32){
+      transposed_dft_simd(a);
+      return;
+    }
+  }
+  #endif
   static constexpr ntt_root<T::mod()>r;
   int n=a.size();
   int h=lsb(n);
