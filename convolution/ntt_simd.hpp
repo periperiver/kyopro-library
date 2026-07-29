@@ -321,14 +321,15 @@ void transposed_dft_simd(std::vector<T>&a){
   }
   len-=3;
   if(len%2!=0){
-    unsigned rot=MM::reduce(MM::r2);
+    unsigned rot=one;
     for(int s=0;s<(1<<(len-1));s++){
       int offset=s<<(h-len+1);
       __m256i b0=_mm256_loadu_si256((__m256i*)(b+offset));
       __m256i b1=_mm256_loadu_si256((__m256i*)(b+offset+8));
-      mul_simd<MM>(b1,rot);
       _mm256_storeu_si256((__m256i*)(b+offset),add_simd<MM>(b0,b1));
-      _mm256_storeu_si256((__m256i*)(b+offset+8),sub_simd<MM>(b0,b1));
+      b0=sub_simd<MM>(b0,b1);
+      mul_simd<MM>(b0,rot);
+      _mm256_storeu_si256((__m256i*)(b+offset+8),b0);
       rot=MM::reduce((unsigned long long)rot*rate2_m[lsb(~(unsigned)s)]);
     }
     len--;
@@ -359,7 +360,7 @@ void transposed_dft_simd(std::vector<T>&a){
         _mm256_storeu_si256((__m256i*)(b+i+offset+p),a1);
         _mm256_storeu_si256((__m256i*)(b+i+offset+p*3),a3);
       }
-      if(s+1!=1<<(len-2))rot=MM::reduce((unsigned long long)(rot)*rate3_m[lsb(~(unsigned)s)]);
+      if(s+1!=1<<(len-2))rot=MM::reduce((unsigned long long)rot*rate3_m[lsb(~(unsigned)s)]);
     }
     len-=2;
   }
@@ -372,6 +373,29 @@ void transposed_dft_simd(std::vector<T>&a){
       a[i+j]=T::raw(b[i+j]);
     }
   }
+}
+template<typename T>
+__attribute__((target("avx2")))
+void transposed_idft_simd(std::vector<T>&a){
+  using MM=Montgomery<T::mod()>;
+  static constexpr ntt_root<T::mod()>r;
+  static constexpr std::array<unsigned,r.invrate3.size()>invrate3_m=[](){
+    std::array<unsigned,r.invrate3.size()>res;
+    for(int i=0;i<(int)res.size();i++)res[i]=MM::reduce((unsigned long long)r.invrate3[i]*MM::r2);
+    return res;
+  }();
+  alignas(32) static constexpr std::array<unsigned,(r.rank2-3)*8>invrate4_m=[](){
+    std::array<unsigned,(r.rank2-3)*8>res;
+    unsigned prod=1;
+    for(int i=0;i<=r.rank2-4;i++){
+      unsigned v=(unsigned long long)r.invroot[i+4]*prod%MM::mod();
+      v=MM::reduce((unsigned long long)v*MM::r2);
+      res[i*8]=MM::reduce(MM::r2);
+      for(int j=1;j<8;j++)res[i*8+j]=MM::reduce((unsigned long long)res[i*8+j-1]*v);
+      prod=(unsigned long long)prod*r.root[i+4]%MM::mod();
+    }
+    return res;
+  }();
 }
 }
 using ntt_simd_impl::dft_simd;
