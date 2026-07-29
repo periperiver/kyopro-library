@@ -20,11 +20,10 @@ void transposed_dft(std::vector<T>&a){
   while(len){
     if(len==1){
       int p=1<<(h-1);
-      T rot=T::raw(1);
       for(int i=0;i<p;i++){
         T u=a[i],v=a[i+p];
         a[i]=u+v;
-        a[i+p]=(u-v)*rot;
+        a[i+p]=u-v;
       }
       len--;
     }
@@ -52,6 +51,14 @@ template<typename T>
 void transposed_idft(std::vector<T>&a){
   using value_type=typename T::value_type;
   using mul_type=typename T::mul_type;
+  #ifdef NTT_SIMD
+  if constexpr(std::numeric_limits<value_type>::digits<=32){
+    if((int)a.size()>=32){
+      transposed_idft_simd(a);
+      return;
+    }
+  }
+  #endif
   static constexpr ntt_root<T::mod()>r;
   static constexpr mul_type mod2=(mul_type)T::mod()*T::mod();
   int n=a.size();
