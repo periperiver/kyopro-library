@@ -121,6 +121,7 @@
 "verify/LC/math/floor_sum.test.cpp": "2026-06-23 18:19:05 +0900",
 "verify/LC/math/gaussint.test.cpp": "2026-06-23 19:46:50 +0900",
 "verify/LC/math/kth_root.test.cpp": "2026-06-23 19:46:50 +0900",
+"verify/LC/math/kth_root_mod.test.cpp": "2026-07-30 23:32:21 +0900",
 "verify/LC/math/montmort.test.cpp": "2026-07-16 22:52:04 +0900",
 "verify/LC/math/multiplicative_sum.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/math/nimber.test.cpp": "2026-06-23 19:46:50 +0900",
