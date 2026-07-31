@@ -53,6 +53,7 @@ public:
     }
   }
   S get(I key){
+    if(!root)return M::e();
     root=near(root,key);
     return root->key==key?root->v:M::e();
   }
