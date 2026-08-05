@@ -201,6 +201,7 @@
 "verify/self/convolution/fft.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/convolution/multiplicative_convolution_modn.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/convolution/ntt_64bit.test.cpp": "2026-07-26 18:21:51 +0900",
+"verify/self/convolution/quadratic_exp_convolution.test.cpp": "2026-08-05 15:09:20 +0900",
 "verify/self/convolution/relaxed_convolution_64bit.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/convolution/semi_relaxed_convolution_64bit.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/datastructure/kinetic_tournament.test.cpp": "2026-07-24 22:57:22 +0900",
