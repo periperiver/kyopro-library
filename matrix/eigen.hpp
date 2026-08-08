@@ -11,7 +11,7 @@ std::vector<std::pair<T,std::vector<std::vector<T>>>>eigen_values_vectors(std::v
     std::vector<std::vector<T>>lhs(mat);
     for(int i=0;i<(int)mat.size();i++)lhs[i][i]-=lamda;
     std::vector<T>rhs(mat.size());
-    res.emplace_back(lamda,matrix_linear_equation(lhs,rhs).second);
+    res.emplace_back(lamda,linear_equation(lhs,rhs).second);
   }
   return res;
 }

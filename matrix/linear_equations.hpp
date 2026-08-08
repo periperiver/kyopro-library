@@ -2,7 +2,7 @@
 #include<vector>
 #include<cassert>
 template<typename T>
-std::pair<std::vector<T>,std::vector<std::vector<T>>>matrix_linear_equation(std::vector<std::vector<T>>mat,std::vector<T>c){
+std::pair<std::vector<T>,std::vector<std::vector<T>>>linear_equation(std::vector<std::vector<T>>mat,std::vector<T>c){
   int n=mat.size(),m=mat[0].size();
   assert(n==c.size());
   int y=0;

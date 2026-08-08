@@ -9,7 +9,7 @@ int main(){
   std::vector<mint>rhs(n);
   for(int i=0;i<n;i++)for(int j=0;j<m;j++)std::cin>>a[i][j];
   for(int i=0;i<n;i++)std::cin>>rhs[i];
-  auto [c,d]=matrix_linear_equation(a,rhs);
+  auto [c,d]=linear_equation(a,rhs);
   if(c.empty())std::cout<<"-1\n";
   else{
     std::cout<<d.size()<<std::endl;

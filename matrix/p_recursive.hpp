@@ -20,7 +20,7 @@ std::vector<std::vector<T>>find_p_recursive(std::vector<T>a,int d){
       }
     }
   }
-  auto g=matrix_linear_equation(mat,std::vector<T>(m-1,0)).second;
+  auto g=linear_equation(mat,std::vector<T>(m-1,0)).second;
   if(g.empty())return std::vector<std::vector<T>>{};
   std::vector<T>c=g[0];
   while(std::all_of(c.end()-d-1,c.end(),[](T x){return x==0;}))c.erase(c.end()-d-1,c.end());
