@@ -43,7 +43,7 @@ void lll_algorithm(std::vector<std::vector<T>>&b){
     if(i==n)return;
     std::copy(b[i].begin(),b[i].end(),b2[i].begin());
     for(int j=0;j<i;j++){
-      mu[i][j]=dot(b[i],b2[j])/dot(b2[j],b2[j]);
+      mu[i][j]=dot(b[i],b2[j])/c[j];
       add(b2[i],b2[j],-mu[i][j]);
     }
     c[i]=dot(b2[i],b2[i]);

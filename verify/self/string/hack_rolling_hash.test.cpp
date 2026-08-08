@@ -18,13 +18,13 @@ void test(T g,T mod){
 }
 int main(){
   for(int mod:{123457,998244353}){
-    for(int i=0;i<100;i++){
+    for(int i=0;i<1000;i++){
       int g=Random::range(1,mod);
       test(g,mod);
     }
   }
   for(long long mod:{92709568269121ll,(1ll<<61)-1}){
-    for(int i=0;i<100;i++){
+    for(int i=0;i<1000;i++){
       long long g=Random::range(1ll,mod);
       test(g,mod);
     }
