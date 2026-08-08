@@ -144,6 +144,7 @@
 "verify/LC/math/tetration.test.cpp": "2026-07-23 21:44:02 +0900",
 "verify/LC/math/totient_sum.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/matrix/arbitrary_matrix_det.test.cpp": "2026-07-16 22:52:04 +0900",
+"verify/LC/matrix/gauss_elimination.test.cpp": "2026-08-08 13:15:49 +0900",
 "verify/LC/matrix/hafnian.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/matrix/linear_equation.test.cpp": "2026-08-08 12:08:26 +0900",
 "verify/LC/matrix/matrix_charpoly.test.cpp": "2026-07-24 00:52:45 +0900",
