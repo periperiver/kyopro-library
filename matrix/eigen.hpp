@@ -1,6 +1,6 @@
 #pragma once
 #include "poly_matrix.hpp"
-#include "linear_equations.hpp"
+#include "linear_equation.hpp"
 #include "../poly/polynomial_root_finding.hpp"
 template<typename T>
 std::vector<std::pair<T,std::vector<std::vector<T>>>>eigen_values_vectors(std::vector<std::vector<T>>mat){

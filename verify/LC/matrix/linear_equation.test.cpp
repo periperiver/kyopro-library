@@ -1,5 +1,5 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/system_of_linear_equations"
-#include "matrix/linear_equations.hpp"
+#include "matrix/linear_equation.hpp"
 #include "math/modint.hpp"
 using mint=mint998;
 int main(){

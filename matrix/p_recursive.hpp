@@ -2,7 +2,7 @@
 #include<iostream>
 #include<cassert>
 #include "matrix/matrix.hpp"
-#include "linear_equations.hpp"
+#include "linear_equation.hpp"
 #include "matrix/poly_matrix_prod.hpp"
 template<typename T>
 std::vector<std::vector<T>>find_p_recursive(std::vector<T>a,int d){
