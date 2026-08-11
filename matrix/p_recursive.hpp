@@ -66,7 +66,7 @@ T calc_p_recursive_naive(const std::vector<T>&a,const std::vector<std::vector<T>
       c+=coef[r][k]*power;
       power*=i;
     }
-    que[ptr++]=make_pair(num,-den*c);
+    que[ptr++]=std::make_pair(num,-den*c);
     if(ptr==r)ptr=0;
   }
   if(--ptr==-1)ptr=r-1;
@@ -92,7 +92,7 @@ T calc_p_recursive_fast(const std::vector<T>&a,const std::vector<std::vector<T>>
 template<typename T>
 T kth_term_p_recursive(std::vector<T>a,int K){
   if(K<a.size())return a[K];
-  if(std::all_of(all(a),[](T x){return x.val()==0;}))return 0;
+  if(std::all_of(a.begin(),a.end(),[](T x){return x.val()==0;}))return 0;
   assert((int)a.size()>=5);
   int n=a.size()-2;
   for(int d=0;;d++){
