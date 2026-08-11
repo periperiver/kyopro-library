@@ -225,6 +225,7 @@
 "verify/self/math/fast_log.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/math/pisano_period.test.cpp": "2026-07-23 21:44:02 +0900",
 "verify/self/other/merge_insertion_sort.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/self/other/range_min_sum.test.cpp": "2026-08-11 18:44:35 +0900",
 "verify/self/poly/bmbm.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/poly/power_prod_sum.test.cpp": "2026-07-28 15:59:41 +0900",
 "verify/self/string/hack_rolling_hash.test.cpp": "2026-08-08 18:00:33 +0900",
