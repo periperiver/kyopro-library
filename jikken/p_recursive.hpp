@@ -3,8 +3,9 @@
 #include "../matrix/lll_algorithm.hpp"
 #include "../matrix/linear_equation.hpp"
 #include "../matrix/gauss_elimination.hpp"
+#include "../matrix/p_recursive.hpp"
 template<typename T>
-std::vector<std::vector<T>>find_p_recursive_lll(std::vector<T>a){
+p_recursive_coefficients<T>find_p_recursive_lll(std::vector<T>a){
   using mul_type=std::make_signed_t<typename T::mul_type>;
   int n=a.size();
   n--;
@@ -22,11 +23,9 @@ std::vector<std::vector<T>>find_p_recursive_lll(std::vector<T>a){
     for(int i=0;i<=n-k+1;i++){
       T sum=0;
       for(int j=0;j<k;j++){
-        T c=a[i+j];
-        for(int l=0;l<d;l++){
-          sum+=c*coef[j*d+l];
-          c*=i+j;
-        }
+        T c=coef[j*d+d-1];
+        for(int l=d-2;l>=0;l--)c=c*T::raw(i)+coef[j*d+l];
+        sum+=c*a[i+j];
       }
       if(sum.val()!=0)return false;
     }
@@ -34,7 +33,6 @@ std::vector<std::vector<T>>find_p_recursive_lll(std::vector<T>a){
   };
   for(int d=1;d<=3;d++){
     for(int k=2;k<n;k++){
-      debug(d,k);
       int m=d*k;
       std::vector<std::vector<T>>mat;
       for(int i=0;i<n-k+1;i++){
@@ -43,7 +41,7 @@ std::vector<std::vector<T>>find_p_recursive_lll(std::vector<T>a){
           T c=a[i+j];
           for(int l=0;l<d;l++){
             v[j*d+l]=c;
-            c*=i+j;
+            c*=T::raw(i);
           }
         }
       }
@@ -67,5 +65,5 @@ std::vector<std::vector<T>>find_p_recursive_lll(std::vector<T>a){
   std::vector<std::vector<T>>res(coef.size()/deg,std::vector<T>(deg));
   for(int i=0;i<(int)coef.size();i++)res[i/deg][i%deg]=coef[i];
   while(std::all_of(res.back().begin(),res.back().end(),[](const T&x){return x.val()==0;}))res.pop_back();
-  return res;
+  return p_recursive_coefficients<T>(a,res);
 }

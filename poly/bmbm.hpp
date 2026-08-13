@@ -5,7 +5,7 @@
 template<typename T>
 T kth_term(std::vector<T>p,long long k){
   std::vector<T>q=find_linear_recurrence(p);
-  if constexpr(is_static_modint_v<T>){
+  if constexpr(is_static_modint_v<T>&&isprime_constexpr(T::mod())&&T::mod()>2){
     if((T::mod()-1)%(ceil_pow2(q.size()*2-1))==0){
       p=ntt_convolution(p,q);
       p.resize(q.size()-1);
