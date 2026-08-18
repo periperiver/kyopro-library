@@ -1,4 +1,4 @@
-#pragma ocne
+#pragma once
 #include<vector>
 #include<cmath>
 long long count_prime(long long n){
