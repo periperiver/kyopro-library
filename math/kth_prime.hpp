@@ -13,16 +13,7 @@ long long kth_prime(long long k){
     res-=diff/dx;
     diff=count_prime(res)-k;
   }
-  while(diff>=0){
-    diff-=isprime(res);
-    res--;
-  }
-  while(diff<0){
-    res++;
-    if(isprime(res)){
-      diff++;
-      if(diff==0)break;
-    }
-  }
+  while(diff>=0)diff-=isprime(res--);
+  while(diff<0)diff+=isprime(++res);
   return res;
 }
