@@ -5,7 +5,7 @@
 #include "primality_test.hpp"
 long long kth_prime(long long k){
   assert(1<=k);
-  long long res=k;
+  long long res=k*std::log(k);
   long long diff=count_prime(res)-k;
   while(std::abs(diff)>10){
     double lg=std::log(res);
