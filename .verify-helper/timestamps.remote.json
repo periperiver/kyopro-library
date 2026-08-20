@@ -155,6 +155,7 @@
 "verify/LC/matrix/matrix_product.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/matrix/pfaffian.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/matrix/strassen.test.cpp": "2026-07-24 00:52:45 +0900",
+"verify/LC/other/semigroup_pow.test.cpp": "2026-08-20 15:44:49 +0900",
 "verify/LC/other/two_sat.test.cpp": "2026-07-15 23:31:56 +0900",
 "verify/LC/poly/berlekamp_massey.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/poly/bostan_mori.test.cpp": "2026-07-26 18:21:51 +0900",
