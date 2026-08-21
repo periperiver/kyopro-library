@@ -12,10 +12,14 @@ std::pair<T,std::vector<int>>optimal_topological_sort_tree(const std::vector<int
   int root=std::find(par.begin(),par.end(),-1)-par.begin();
   assert(root!=n);
   assert(std::find(par.begin()+root+1,par.end(),-1)==par.end());
+  assert(std::all_of(c.begin(),c.end(),[](T x){return x>=0;}));
+  assert(std::all_of(d.begin(),d.end(),[](T x){return x>=0;}));
   std::vector<int>l(n),r(n),nxt(n);
   std::iota(l.begin(),l.end(),0);
   std::iota(r.begin(),r.end(),0);
   auto comp=[](const std::tuple<T,T,int,int>&lhs,const std::tuple<T,T,int,int>&rhs)->bool {
+    if(std::get<0>(rhs)==0&&std::get<1>(rhs)==0)return false;
+    if(std::get<0>(lhs)==0&&std::get<1>(lhs)==0)return true;
     return std::get<1>(lhs)*std::get<0>(rhs)<std::get<1>(rhs)*std::get<0>(lhs);
   };
   T res=0;
