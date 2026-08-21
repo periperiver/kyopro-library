@@ -1,96 +1,80 @@
 #pragma once
-#include "template.hpp"
+#include<set>
+#include<cassert>
 template<typename T>
-struct range_set{
+struct RangeSet{
 private:
-  set<pair<T,T>>s;
-  T INF;
-  T SUM;
+  std::set<std::pair<T,T>>s;
 public:
-  range_set():INF(numeric_limits<T>::max()/2),SUM(0){
-    s.insert({INF,INF+1});
-    s.insert({-INF,-INF+1});
-  }
-  T insert(T l,T r){
-    if(l==r)return 0;
-    assert(l<r);
-    auto itr=prev(s.lower_bound({l+1,0}));
-    if((*itr).first<=l&&r<=(*itr).second)return 0;
-    T sum=0;
-    if((*itr).first<=l&&l<=(*itr).second){
-      l=(*itr).first;
-      sum+=(*itr).second-(*itr).first;
+  T sum;
+  RangeSet():s{},sum(0){}
+  void insert(T l,T r){
+    assert(l<=r);
+    if(l==r)return;
+    auto itr=s.lower_bound(std::make_pair(l,l));
+    if(itr!=s.begin()){
+      auto itr2=std::prev(itr);
+      if(itr2->second>=l){
+        sum-=itr2->second-itr2->first;
+        l=itr2->first;
+        r=std::max(r,itr2->second);
+        itr=s.erase(itr2);
+      }
+    }
+    while(itr!=s.end()&&itr->second<=r){
+      sum-=itr->second-itr->first;
       itr=s.erase(itr);
     }
-    else itr=next(itr);
-    while(r>(*itr).second){
-      sum+=(*itr).second-(*itr).first;
+    if(itr==s.end()||itr->first>r){
+      s.emplace(l,r);
+      sum+=r-l;
+      return;
+    }
+    sum+=itr->first-l;
+    r=itr->second;
+    s.erase(itr);
+    s.emplace(l,r);
+  }
+  void erase(T l,T r){
+    assert(l<=r);
+    if(l==r)return;
+    auto itr=s.lower_bound(std::make_pair(l,l));
+    if(itr!=s.begin()){
+      auto itr2=std::prev(itr);
+      if(l<itr2->second){
+        auto [l2,r2]=*itr2;
+        s.erase(itr2);
+        if(r<r2){
+          s.emplace(l2,l);
+          s.emplace(r,r2);
+          sum-=r-l;
+          return;
+        }
+        s.emplace(l2,l);
+        sum-=r2-l;
+      }
+    }
+    while(itr!=s.end()&&itr->second<=r){
+      sum-=itr->second-itr->first;
       itr=s.erase(itr);
     }
-    if((*itr).first<=r){
-      sum+=(*itr).second-(*itr).first;
-      r=(*itr).second;
-      itr=s.erase(itr);
-    }
-    s.insert({l,r});
-    SUM+=r-l-sum;
-    return r-l-sum;
-  }
-  T insert(T x){
-    return insert(x,x+1);
-  }
-  T erase(T l,T r){
-    if(l==r)return 0;
-    assert(l<r);
-    auto itr=prev(s.lower_bound({l+1,0}));
-    if((*itr).first<=l&&r<=(*itr).second){
-      if((*itr).first!=l)s.insert({(*itr).first,l});
-      if((*itr).second!=r)s.insert({r,(*itr).second});
+    if(itr!=s.end()&&itr->first<r){
+      auto [l2,r2]=*itr;
       s.erase(itr);
-      SUM-=r-l;
-      return r-l;
+      sum-=r-l2;
+      s.emplace(r,r2);
     }
-    T sum=0;
-    if((*itr).first<=l&&l<(*itr).second){
-      sum+=(*itr).second-l;
-      if((*itr).first!=l)s.insert({(*itr).first,l});
-      itr=s.erase(itr);
-    }
-    else itr=next(itr);
-    while((*itr).second<=r){
-      sum+=(*itr).second-(*itr).first;
-      itr=s.erase(itr);
-    }
-    if((*itr).first<r){
-      sum+=r-(*itr).first;
-      if((*itr).second!=r)s.insert({r,(*itr).second});
-      itr=s.erase(itr);
-    }
-    SUM-=sum;
-    return sum;
   }
-  T erase(T x){
-    return erase(x,x+1);
-  }
-  int size()const{return s.size()-2;}
-  T sum()const{return SUM;}
   bool contains(T l,T r)const{
-    assert(l<r);
-    auto itr=prev(s.lower_bound({l+1,0}));
-    return (*itr).first<=l&&r<=(*itr).second;
+    auto itr=s.lower_bound(std::make_pair(l+1,l));
+    if(itr!=s.begin()){
+      itr=std::prev(itr);
+      return r<=itr->second;
+    }
+    return false;
   }
-  bool contains(T x)const{
-    return contains(x,x+1);
-  }
-  T p1(T x)const{
-    auto itr=prev(s.lower_bound({x+1,0}));
-    if((*itr).first<=x+1&&x+1<(*itr).second)return x+1;
-    itr=next(itr);
-    return (*itr).first;
-  }
-  T m1(T x)const{
-    auto itr=prev(s.lower_bound({x,0}));
-    if((*itr).first<=x-1&&x-1<(*itr).second)return x-1;
-    return (*itr).second-1;
-  }
+  std::set<std::pair<T,T>>::iterator begin(){return s.begin();}
+  std::set<std::pair<T,T>>::iterator end(){return s.end();}
+  std::set<std::pair<T,T>>::const_iterator begin()const{return s.begin();}
+  std::set<std::pair<T,T>>::const_iterator end()const{return s.end();}
 };
