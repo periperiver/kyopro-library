@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/aplusb"
 #include<iostream>
 #include<cassert>
+#include<algorithm>
 #include "datastructure/static_range_mex.hpp"
 #include "math/mex.hpp"
 #include "random/generator.hpp"
