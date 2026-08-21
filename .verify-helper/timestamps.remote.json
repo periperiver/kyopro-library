@@ -211,6 +211,7 @@
 "verify/self/datastructure/kth_bit.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/datastructure/power_query.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/datastructure/range_set.test.cpp": "2026-08-21 14:51:13 +0900",
+"verify/self/datastructure/static_range_mex.test.cpp": "2026-08-21 15:12:58 +0900",
 "verify/self/datastructure/subset_query.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/dp/egz.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/geo/count_lattice.test.cpp": "2026-07-24 22:57:22 +0900",
