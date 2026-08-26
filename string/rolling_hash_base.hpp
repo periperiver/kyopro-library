@@ -23,4 +23,9 @@ struct RollingHashBase{
   }
 };
 std::vector<mint61> RollingHashBase::power{1};
-mint61 RollingHashBase::base=primitive_root(mint61::mod());
+mint61 RollingHashBase::base=
+#ifdef FIX
+1000;
+#else
+primitive_root(mint61::mod());
+#endif

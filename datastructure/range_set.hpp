@@ -73,6 +73,7 @@ public:
     }
     return false;
   }
+  int size()const{return s.size();}
   std::set<std::pair<T,T>>::iterator begin(){return s.begin();}
   std::set<std::pair<T,T>>::iterator end(){return s.end();}
   std::set<std::pair<T,T>>::const_iterator begin()const{return s.begin();}
