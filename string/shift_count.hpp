@@ -21,8 +21,7 @@ std::vector<int>shift_count(std::vector<T>f,std::vector<T>g){
     return res;
   };
   csr_array<int>csrf(z.size(),gen(std::move(f))),csrg(z.size(),gen(std::move(g)));
-  std::vector<mint998>buf1(s),buf2(s);
-  mint998 inv=mint998(s).inv();
+  std::vector<mint998>buf1(s),buf2(s),buf3(s);
   const int cost=s*msb(s)*2;
   for(int i=0;i<(int)z.size();i++)if(csrf[i].size()&&csrg[i].size()){
     if(csrf[i].size()<cost/csrg[i].size()){
@@ -37,11 +36,12 @@ std::vector<int>shift_count(std::vector<T>f,std::vector<T>g){
       for(int j:csrf[i])buf1[j]++;
       for(int j:csrg[i])buf2[m-1-j]++;
       dft(buf1),dft(buf2);
-      for(int j=0;j<s;j++)buf1[j]*=buf2[j];
-      idft(buf1);
-      for(int j=0;j<n;j++)res[j]+=(buf1[m-1+j]*inv).val();
+      for(int j=0;j<s;j++)buf3[j]+=buf1[j]*buf2[j];
     }
   }
+  mint998 inv=mint998(s).inv();
+  idft(buf3);
+  for(int j=0;j<n;j++)res[j]+=(buf3[m-1+j]*inv).val();
   return res;
 }
 std::vector<int>shift_count(const std::string&s,const std::string&t){
