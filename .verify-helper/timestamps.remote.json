@@ -31,6 +31,7 @@
 "verify/LC/datastructure/dynamic/splay_lazy_segmenttree.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/datastructure/dynamic/splay_segmenttree.test.cpp": "2026-07-31 21:43:56 +0900",
 "verify/LC/datastructure/hash_map.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/LC/datastructure/kd_tree.test.cpp": "2026-08-28 21:32:07 +0900",
 "verify/LC/datastructure/permutation_tree.test.cpp": "2026-06-24 21:42:35 +0900",
 "verify/LC/datastructure/persistent/potential_unionfind.test.cpp": "2026-07-24 00:52:45 +0900",
 "verify/LC/datastructure/persistent/unionfind.test.cpp": "2026-06-27 13:48:03 +0900",
