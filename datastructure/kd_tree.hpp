@@ -29,14 +29,14 @@ private:
   S prod_rec(int id,int lx,int rx,int ly,int ry){
     const auto&[lx2,rx2,ly2,ry2]=rect[id];
     if(lx<=lx2&&rx2<=rx&&ly<=ly2&&ry2<=ry)return dat[id];
-    if(rx2<=lx||rx<=ly2||ry2<=ly||ry<=ly2)return M::e();
+    if(rx2<=lx||rx<=lx2||ry2<=ly||ry<=ly2)return M::e();
     push(id);
     return M::op(prod_rec(id*2,lx,rx,ly,ry),prod_rec(id*2+1,lx,rx,ly,ry));
   }
   void apply_rec(int id,int lx,int rx,int ly,int ry,F f){
     const auto&[lx2,rx2,ly2,ry2]=rect[id];
     if(lx<=lx2&&rx2<=rx&&ly<=ly2&&ry2<=ry)return propagate(id,f);
-    if(rx2<=lx||rx<=ly2||ry2<=ly||ry<=ly2)return;
+    if(rx2<=lx||rx<=lx2||ry2<=ly||ry<=ly2)return;
     push(id);
     apply_rec(id*2,lx,rx,ly,ry,f);
     apply_rec(id*2+1,lx,rx,ly,ry,f);
@@ -89,14 +89,19 @@ public:
     }
     for(int i=z;--i;){
       update(i);
+      if(lr[i].first+1==lr[i].second){
+        rect[i]=rect[i*2+1];
+        continue;
+      }
       const auto&[lx1,rx1,ly1,ry1]=rect[i*2];
       const auto&[lx2,rx2,ly2,ry2]=rect[i*2+1];
       rect[i]=std::make_tuple(std::min(lx1,lx2),std::max(rx1,rx2),std::min(ly1,ly2),std::max(ry1,ry2));
     }
   }
   void set(int i,S v){
-    dat[i=pos[i]]=v;
+    i=pos[i];
     for(int j=log2n;j>=1;j--)push(i>>j);
+    dat[i]=v;
     while(i>>=1)update(i);
   }
   S prod(I lx,I rx,I ly,I ry){
@@ -104,7 +109,8 @@ public:
     assert(ly<=ry);
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
     if(lx==rx||ly==ry)return M::e();
-    else return prod_rec(1,lx,rx,ly,ry);
+    auto res=prod_rec(1,lx,rx,ly,ry);
+    return res;
   }
   void apply(I lx,I rx,I ly,I ry,F f){
     assert(lx<=rx);
