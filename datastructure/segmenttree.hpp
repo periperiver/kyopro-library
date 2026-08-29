@@ -2,7 +2,7 @@
 #include<iostream>
 #include<vector>
 #include<cassert>
-#include "math/util.hpp"
+#include "../math/util.hpp"
 template<typename M>
 struct SegmentTree{
   using S=typename M::S;

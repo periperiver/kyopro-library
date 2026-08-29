@@ -12,18 +12,23 @@ private:
   int n,z,log2n;
   std::vector<std::pair<I,int>>xz,yz;
   std::vector<S>dat;
-  std::vector<F>lazy;
+  std::vector<std::pair<F,bool>>lazy;
   std::vector<int>pos;
   std::vector<std::tuple<int,int,int,int>>rect;
   std::vector<int>len;
-  void propagate(int i,F f){
+  inline void propagate(int i,F f){
     dat[i]=M::mapping(f,dat[i],len[i]);
-    if(i<z)lazy[i]=M::composition(f,lazy[i]);
+    if(i<z){
+      lazy[i].first=M::composition(f,lazy[i].first);
+      lazy[i].second=true;
+    }
   }
   inline void push(int id){
-    propagate(id*2,lazy[id]);
-    propagate(id*2+1,lazy[id]);
-    lazy[id]=M::id();
+    if(lazy[id].second){
+      propagate(id*2,lazy[id].first);
+      propagate(id*2+1,lazy[id].first);
+      lazy[id]=std::make_pair(M::id(),false);
+    }
   }
   inline void update(int i){dat[i]=M::op(dat[i*2],dat[i*2+1]);}
   S prod_rec(int id,int lx,int rx,int ly,int ry){
@@ -46,7 +51,7 @@ private:
   inline int gety(I y)const{return std::lower_bound(yz.begin(),yz.end(),std::make_pair(y,0))-yz.begin();}
 public:
   kdTree(){}
-  kdTree(std::vector<std::tuple<I,I,S>>init):n(init.size()),z(ceil_pow2(n)),log2n(msb(z)),xz(n),yz(n),dat(z*2,M::e()),lazy(z,M::id()),pos(n),rect(z*2),len(z*2){
+  kdTree(std::vector<std::tuple<I,I,S>>init):n(init.size()),z(ceil_pow2(n)),log2n(msb(z)),xz(n),yz(n),dat(z*2,M::e()),lazy(z,std::make_pair(M::id(),false)),pos(n),rect(z*2),len(z*2){
     for(int i=0;i<n;i++){
       const auto&[x,y,v]=init[i];
       xz[i]=std::make_pair(x,i);
@@ -118,4 +123,5 @@ public:
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
     if(lx<rx&&ly<ry)apply_rec(1,lx,rx,ly,ry,f);
   }
+  S all_prod()const{return dat[1];}
 };
