@@ -14,11 +14,41 @@ private:
     Rectangle(){}
     Rectangle(I x,I y):lx(x),rx(x+1),ly(y),ry(y+1){}
     Rectangle(I lx,I rx,I ly,I ry):lx(lx),rx(rx),ly(ly),ry(ry){}
+    template<int mask>
     constexpr bool contains(const Rectangle&r)const{
-      return r.lx<=lx&&rx<=r.rx&&r.ly<=ly&&ry<=r.ry;
+      if constexpr(mask==0)return r.lx<=lx&&rx<=r.rx&&r.ly<=ly&&ry<=r.ry;
+      else if constexpr(mask==1)return rx<=r.rx&&r.ly<=ly&&ry<=r.ry;
+      else if constexpr(mask==2)return r.lx<=lx&&r.ly<=ly&&ry<=r.ry;
+      else if constexpr(mask==3)return r.ly<=ly&&ry<=r.ry;
+      else if constexpr(mask==4)return r.lx<=lx&&rx<=r.rx&&ry<=r.ry;
+      else if constexpr(mask==5)return rx<=r.rx&&ry<=r.ry;
+      else if constexpr(mask==6)return r.lx<=lx&&ry<=r.ry;
+      else if constexpr(mask==7)return ry<=r.ry;
+      else if constexpr(mask==8)return r.lx<=lx&&rx<=r.rx&&r.ly<=ly;
+      else if constexpr(mask==9)return rx<=r.rx&&r.ly<=ly;
+      else if constexpr(mask==10)return r.lx<=lx&&r.ly<=ly;
+      else if constexpr(mask==11)return r.ly<=ly;
+      else if constexpr(mask==12)return r.lx<=lx&&rx<=r.rx;
+      else if constexpr(mask==13)return rx<=r.rx;
+      else if constexpr(mask==14)return r.lx<=lx;
     }
-    constexpr bool disjoint(const Rectangle&r)const{
-      return r.rx<=lx||rx<=r.lx||r.ry<=ly||ry<=r.ly;
+    template<int mask>
+    constexpr bool disjoint(const Rectangle&r)const{;
+      if constexpr(mask==0)return rx<=r.lx||r.rx<=lx||ry<=r.ly||r.ry<=ly;
+      else if constexpr(mask==1)return r.rx<=lx||ry<=r.ly||r.ry<=ly;
+      else if constexpr(mask==2)return rx<=r.lx||ry<=r.ly||r.ry<=ly;
+      else if constexpr(mask==3)return ry<=r.ly||r.ry<=ly;
+      else if constexpr(mask==4)return rx<=r.lx||r.rx<=lx||r.ry<=ly;
+      else if constexpr(mask==5)return r.rx<=lx||r.ry<=ly;
+      else if constexpr(mask==6)return rx<=r.lx||r.ry<=ly;
+      else if constexpr(mask==7)return r.ry<=ly;
+      else if constexpr(mask==8)return rx<=r.lx||r.rx<=lx||ry<=r.ly;
+      else if constexpr(mask==9)return r.rx<=lx||ry<=r.ly;
+      else if constexpr(mask==10)return rx<=r.lx||ry<=r.ly;
+      else if constexpr(mask==11)return ry<=r.ly;
+      else if constexpr(mask==12)return rx<=r.lx||r.rx<=lx;
+      else if constexpr(mask==13)return r.rx<=lx;
+      else if constexpr(mask==14)return rx<=r.lx;
     }
   };
   struct node{
@@ -49,19 +79,44 @@ private:
     }
   }
   inline void update(int i){dat[i].val=M::op(dat[i*2].val,dat[i*2+1].val);}
+  template<bool splitx,int mask>
   S prod_rec(int id,const Rectangle&r){
-    if(dat[id].rect.contains(r))return dat[id].val;
-    if(dat[id].rect.disjoint(r))return M::e();
-    push(id);
-    return M::op(prod_rec(id*2,r),prod_rec(id*2+1,r));
+    if constexpr(mask==15)return dat[id].val;
+    else{
+      if(dat[id].rect.template contains<mask>(r))return dat[id].val;
+      if(dat[id].rect.template disjoint<mask>(r))return M::e();
+      push(id);
+      if constexpr(splitx){
+        if(r.rx<=dat[id].split)return prod_rec<0,mask>(id*2,r);
+        else if(dat[id].split<=r.lx)return prod_rec<0,mask>(id*2+1,r);
+        else return M::op(prod_rec<0,mask|2>(id*2,r),prod_rec<0,mask|1>(id*2+1,r));
+      }
+      else{
+        if(r.ry<=dat[id].split)return prod_rec<1,mask>(id*2,r);
+        else if(dat[id].split<=r.ly)return prod_rec<1,mask>(id*2+1,r);
+        else return M::op(prod_rec<1,mask|8>(id*2,r),prod_rec<1,mask|4>(id*2+1,r));
+      }
+    }
   }
+  template<bool splitx,int mask>
   void apply_rec(int id,const Rectangle&r,F f){
-    if(dat[id].rect.contains(r))return propagate(id,f);
-    if(dat[id].rect.disjoint(r))return;
-    push(id);
-    apply_rec(id*2,r,f);
-    apply_rec(id*2+1,r,f);
-    update(id);
+    if constexpr(mask==15)return propagate(id,f);
+    else{
+      if(dat[id].rect.template contains<mask>(r))return propagate(id,f);
+      if(dat[id].rect.template disjoint<mask>(r))return;
+      push(id);
+      if constexpr(splitx){
+        if(r.rx<=dat[id].split)apply_rec<0,mask>(id*2,r,f);
+        else if(dat[id].split<=r.lx)apply_rec<0,mask>(id*2+1,r,f);
+        else apply_rec<0,mask|2>(id*2,r,f),apply_rec<0,mask|1>(id*2+1,r,f);
+      }
+      else{
+        if(r.ry<=dat[id].split)return apply_rec<1,mask>(id*2,r,f);
+        else if(dat[id].split<=r.ly)return apply_rec<1,mask>(id*2+1,r,f);
+        else apply_rec<1,mask|8>(id*2,r,f),apply_rec<1,mask|4>(id*2+1,r,f);
+      }
+      update(id);
+    }
   }
   inline int getx(I x)const{return std::lower_bound(xz.begin(),xz.end(),std::make_pair(x,0))-xz.begin();}
   inline int gety(I y)const{return std::lower_bound(yz.begin(),yz.end(),std::make_pair(y,0))-yz.begin();}
@@ -130,14 +185,14 @@ public:
     assert(ly<=ry);
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
     if(lx==rx||ly==ry)return M::e();
-    auto res=prod_rec(1,Rectangle(lx,rx,ly,ry));
+    auto res=prod_rec<1,0>(1,Rectangle(lx,rx,ly,ry));
     return res;
   }
   void apply(I lx,I rx,I ly,I ry,F f){
     assert(lx<=rx);
     assert(ly<=ry);
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
-    if(lx<rx&&ly<ry)apply_rec(1,Rectangle(lx,rx,ly,ry),f);
+    if(lx<rx&&ly<ry)apply_rec<1,0>(1,Rectangle(lx,rx,ly,ry),f);
   }
   S all_prod()const{return dat[1];}
 };
