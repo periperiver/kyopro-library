@@ -111,8 +111,8 @@ private:
         else apply_rec<0,mask|2>(id*2,r,f),apply_rec<0,mask|1>(id*2+1,r,f);
       }
       else{
-        if(r.ry<=dat[id].split)return apply_rec<1,mask>(id*2,r,f);
-        else if(dat[id].split<=r.ly)return apply_rec<1,mask>(id*2+1,r,f);
+        if(r.ry<=dat[id].split)apply_rec<1,mask>(id*2,r,f);
+        else if(dat[id].split<=r.ly)apply_rec<1,mask>(id*2+1,r,f);
         else apply_rec<1,mask|8>(id*2,r,f),apply_rec<1,mask|4>(id*2+1,r,f);
       }
       update(id);
