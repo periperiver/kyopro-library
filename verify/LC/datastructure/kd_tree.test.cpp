@@ -14,7 +14,7 @@ struct Monoid{
   using F=std::pair<mint,mint>;
   static S op(S x,S y){return {x.first+y.first,x.second+y.second};}
   static S e(){return {0,0};}
-  static S mapping(F f,S x,long long){return {x.first*f.first+x.second*f.second,x.second};}
+  static S mapping(F f,S x){return {x.first*f.first+x.second*f.second,x.second};}
   static F composition(F f,F g){return {f.first*g.first,f.second+f.first*g.second};}
   static F id(){return {mint::raw(1),mint::raw(0)};}
 };
