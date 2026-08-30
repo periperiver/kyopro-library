@@ -22,7 +22,10 @@ private:
     std::array<std::tuple<int,int,int,int>,(1<<B)-1>rect;
     std::array<std::pair<I,int>,(1<<B)-1>split;
     node(){}
-    node(Iterator l,Iterator r){if(l<r)build<0>(l,r);}
+    node(Iterator l,Iterator r){
+      ch.fill(nullptr);
+      if(l<r)build<0>(l,r);
+    }
     template<int id>
     void build(Iterator l,Iterator r){
       lazy[id]=std::make_pair(M::id(),false);
