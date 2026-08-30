@@ -1,32 +1,35 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/dynamic_point_set_rectangle_affine_rectangle_sum"
 #include "fastio.hpp"
 #include "datastructure/kd_tree.hpp"
-#include "math/modint.hpp"
-using mint=mint998;
 struct Query{
   int t;
   int lx,rx,ly,ry;
-  mint a,b;
+  int a,b;
   Query(){}
 };
+constexpr long long mod=998244353;
 struct Monoid{
-  using S=std::pair<mint,int>;
-  using F=std::pair<mint,mint>;
-  static S op(S x,S y){return {x.first+y.first,x.second+y.second};}
+  using S=std::pair<int,int>;
+  using F=std::pair<int,int>;
+  static S op(S x,S y){
+    int s=x.first+y.first;
+    if(s>=mod)s-=mod;
+    return {s,x.second+y.second};
+  }
   static S e(){return {0,0};}
-  static S mapping(F f,S x,long long sz=0){return {x.first*f.first+x.second*f.second,x.second};}
-  static F composition(F f,F g){return {f.first*g.first,f.second+f.first*g.second};}
-  static F id(){return {mint::raw(1),mint::raw(0)};}
+  static S mapping(F f,S x){return {((long long)x.first*f.first+(long long)x.second*f.second)%mod,x.second};}
+  static F composition(F f,F g){return {(long long)f.first*g.first%mod,(f.second+(long long)f.first*g.second)%mod};}
+  static F id(){return {1,0};}
 };
 int main(){
   int n,q;
   rd(n),rd(q);
-  std::vector<std::tuple<int,int,std::pair<mint,int>>>init(n);
+  std::vector<std::tuple<int,int,std::pair<int,int>>>init(n);
   std::vector<Query>query(q);
   for(int i=0;i<n;i++){
     int x,y,z;
     rd(x),rd(y),rd(z);
-    init[i]={x,y,std::make_pair(mint::raw(z),1)};
+    init[i]={x,y,std::make_pair(z,1)};
   }
   for(int i=0;i<q;i++){
     int t;
@@ -34,16 +37,16 @@ int main(){
     if(t==0){
       int x,y,w;
       rd(x),rd(y),rd(w);
-      init.emplace_back(x,y,std::make_pair(mint::raw(0),0));
+      init.emplace_back(x,y,std::make_pair(0,0));
       query[i].t=0;
-      query[i].a=mint::raw(w);
+      query[i].a=w;
     }
     else if(t==1){
       int x,w;
       rd(x),rd(w);
       query[i].t=1;
       query[i].lx=x;
-      query[i].a=mint::raw(w);
+      query[i].a=w;
     }
     else if(t==2){
       int lx,rx,ly,ry;
@@ -56,7 +59,7 @@ int main(){
       rd(lx),rd(ly),rd(rx),rd(ry),rd(a),rd(b);
       query[i].t=3;
       query[i].lx=lx,query[i].rx=rx,query[i].ly=ly,query[i].ry=ry;
-      query[i].a=mint::raw(a),query[i].b=mint::raw(b);
+      query[i].a=a,query[i].b=b;
     }
   }
   kdTree<int,Monoid>seg(init);
@@ -69,7 +72,7 @@ int main(){
       seg.set(a.lx,std::make_pair(a.a,1));
     }
     else if(a.t==2){
-      wt(seg.prod(a.lx,a.rx,a.ly,a.ry).first.val());
+      wt(seg.prod(a.lx,a.rx,a.ly,a.ry).first);
       wt('\n');
     }
     else{
