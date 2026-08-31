@@ -8,7 +8,7 @@ struct MonoidUpdate{
     S():val(),f(false){}
     S(T v):val(v),f(true){}
   };
-  static S op(S x,S y){return y.f?y:f;}
+  static S op(S x,S y){return y.f?y:x;}
   static S e(){return S();}
   template<typename U>
   static inline S pow(S x,U p){

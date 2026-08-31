@@ -5,8 +5,8 @@
 template<typename I,typename M>
 struct DynamicLazySegmentTree{
 private:
-  using S=typename M::S;
-  using F=typename M::F;
+  using S=typename M::M1::S;
+  using F=typename M::M2::S;
   struct node{
     node *left,*right,*par;
     I l,r,L,R;

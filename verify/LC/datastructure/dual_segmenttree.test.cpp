@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/range_affine_point_get"
 #include "fastio.hpp"
 #include "datastructure/dual_segmenttree.hpp"
-#include "monoid/rangeaffine_rangesum.hpp"
+#include "monoid/affine.hpp"
 #include "math/modint.hpp"
 using mint=mint998;
 int main(){
@@ -13,7 +13,7 @@ int main(){
     rd(v);
     x=mint::raw(v);
   }
-  DualSegmentTree<RangeAffineRangeSum<mint>>seg(a);
+  DualSegmentTree<MonoidAffine<mint>>seg(n);
   while(q--){
     int t;
     rd(t);
@@ -25,7 +25,8 @@ int main(){
     else{
       int i;
       rd(i);
-      wt(seg.get(i).val()),wt('\n');
+      auto [b,c]=seg.get(i);
+      wt((b*a[i]+c).val()),wt('\n');
     }
   }
 }

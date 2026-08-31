@@ -20,12 +20,12 @@ int main(){
     if(t==0){
       int i,p,a,b;
       rd(i),rd(p),rd(a),rd(b);
-      seg.set(i,p,{{mint::raw(a),mint::raw(b)},{mint::raw(a),mint::raw(b)}});
+      seg.set(i,p,std::make_pair(mint::raw(a),mint::raw(b)));
     }
     else if(t==1){
       int l,r,x;
       rd(l),rd(r),rd(x);
-      auto [a,b]=seg.prod(l,r).first;
+      auto [a,b]=seg.prod(l,r).sum;
       wt((a*mint::raw(x)+b).val()),wt('\n');
     }
     else{

@@ -22,11 +22,21 @@ struct M1{
 };
 using M2=MonoidAffine<mint>;
 template<typename M>
+M::S naive(typename M::S x,long long k){
+  typename M::S res=M::e();
+  while(k){
+    if(k&1)res=M::op(res,x);
+    x=M::op(x,x);
+    k>>=1;
+  }
+  return res;
+}
+template<typename M>
 void test(typename M::S x){
   PowerQuery<M>power(x);
   for(int i=0;i<1000;i++){
     long long k=Random::range(1ll<<60);
-    assert(power(k)==M::pow(x,k));
+    assert(power(k)==naive<M>(x,k));
   }
 }
 int main(){

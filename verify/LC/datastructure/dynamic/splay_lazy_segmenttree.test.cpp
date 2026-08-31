@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/range_affine_range_sum_large_array"
 #include "fastio.hpp"
 #include "datastructure/dynamic/splay_lazy_segmenttree.hpp"
-#include "monoid/rangeaffine_rangesum.hpp"
+#include "monoid2/rangeaffine_rangesum.hpp"
 #include "math/modint.hpp"
 using mint=mint998;
 int main(){
@@ -19,7 +19,7 @@ int main(){
     else{
       int l,r;
       rd(l),rd(r);
-      wt(seg.prod(l,r).val()),wt('\n');
+      wt(seg.prod(l,r).first.val()),wt('\n');
     }
   }
 }
