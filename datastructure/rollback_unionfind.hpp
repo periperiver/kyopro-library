@@ -1,8 +1,9 @@
 #pragma once
-#include "template.hpp"
+#include<vector>
+#include<stack>
 struct rollbackUF{
-  stack<pair<int,int>>history;
-  vector<int>par;
+  std::stack<std::pair<int,int>>history;
+  std::vector<int>par;
   int sz;
   rollbackUF(int n):sz(n),par(n,-1){}
   int root(int u)const{
@@ -13,7 +14,7 @@ struct rollbackUF{
   bool merge(int u,int v){
     int ru=root(u),rv=root(v);
     if(ru==rv)return false;
-    if(par[ru]<par[rv])swap(ru,rv);
+    if(par[ru]<par[rv])std::swap(ru,rv);
     history.emplace(ru,par[ru]);
     par[ru]=rv;
     sz--;

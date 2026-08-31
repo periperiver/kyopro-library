@@ -185,8 +185,7 @@ public:
     assert(ly<=ry);
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
     if(lx==rx||ly==ry)return M::M1::e();
-    auto res=prod_rec<1,0>(1,Rectangle(lx,rx,ly,ry));
-    return res;
+    return prod_rec<1,0>(1,Rectangle(lx,rx,ly,ry));
   }
   void apply(I lx,I rx,I ly,I ry,F f){
     assert(lx<=rx);
