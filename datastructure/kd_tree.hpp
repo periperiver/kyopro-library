@@ -141,15 +141,15 @@ public:
     for(int i=1;i<z;i++){
       auto [l,r]=lr[i];
       if(msb(i)%2==0){
-        std::sort(idx.begin()+l,idx.begin()+r,[&](const std::tuple<int,int,int>&lhs,const std::tuple<int,int,int>&rhs){return std::get<1>(lhs)<std::get<1>(rhs);});
         int m=(l+r)/2;
+        std::nth_element(idx.begin()+l,idx.begin()+m,idx.begin()+r,[&](const std::tuple<int,int,int>&lhs,const std::tuple<int,int,int>&rhs){return std::get<1>(lhs)<std::get<1>(rhs);});
         lr[i*2]=std::make_pair(l,m);
         lr[i*2+1]=std::make_pair(m,r);
         dat[i].split=std::get<1>(idx[m]);
       }
       else{
-        std::sort(idx.begin()+l,idx.begin()+r,[&](const std::tuple<int,int,int>&lhs,const std::tuple<int,int,int>&rhs){return std::get<2>(lhs)<std::get<2>(rhs);});
         int m=(l+r)/2;
+        std::nth_element(idx.begin()+l,idx.begin()+m,idx.begin()+r,[&](const std::tuple<int,int,int>&lhs,const std::tuple<int,int,int>&rhs){return std::get<2>(lhs)<std::get<2>(rhs);});
         lr[i*2]=std::make_pair(l,m);
         lr[i*2+1]=std::make_pair(m,r);
         dat[i].split=std::get<2>(idx[m]);
