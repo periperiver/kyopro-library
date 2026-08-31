@@ -5,8 +5,8 @@
 template<typename M>
 struct SegmentTreeBeats{
 private:
-  using S=typename M::S;
-  using F=typename M::F;
+  using S=typename M::M1::S;
+  using F=typename M::M2::S;
   int m,n,logn;
   std::vector<S>data;
   std::vector<F>lazy;
@@ -15,14 +15,14 @@ public:
   SegmentTreeBeats(int N):m(N){
     n=ceil_pow2(N);
     logn=msb(n);
-    data.resize(n*2,M::e());
-    lazy.resize(n*2,M::id());
+    data.resize(n*2,M::M1::e());
+    lazy.resize(n*2,M::M2::e());
   }
   SegmentTreeBeats(const std::vector<S>&a):m((int)a.size()){
     n=ceil_pow2(a.size());
     logn=msb(n);
-    data.resize(n*2,M::e());
-    lazy.resize(n*2,M::id());
+    data.resize(n*2,M::M1::e());
+    lazy.resize(n*2,M::M2::e());
     for(int i=0;i<m;i++)data[i+n]=a[i];
     for(int i=n-1;i>=1;i--)update(i);
   }
@@ -53,11 +53,11 @@ public:
     }
     S lft=M::e(),rht=M::e();
     while(l<r){
-      if(l&1)lft=M::op(lft,data[l++]);
-      if(r&1)rht=M::op(data[--r],rht);
+      if(l&1)lft=M::M1::op(lft,data[l++]);
+      if(r&1)rht=M::M1::op(data[--r],rht);
       l>>=1,r>>=1;
     }
-    return M::op(lft,rht);
+    return M::M1::op(lft,rht);
   }
   S all_prod()const{return data[1];}
   void apply(int l,int r,F f){
@@ -82,9 +82,9 @@ public:
   }
 private:
   void internalapply(int p,F f){
-    data[p]=M::mapping(f,data[p]);
+    data[p]=M::act(data[p],f);
     if(p<n){
-      lazy[p]=M::composition(f,lazy[p]);
+      lazy[p]=M::M2::op(lazy[p],f);
       if(data[p].fail){
         push(p);
         update(p);
@@ -94,7 +94,7 @@ private:
   void push(int p){
     internalapply(p*2,lazy[p]);
     internalapply(p*2+1,lazy[p]);
-    lazy[p]=M::id();
+    lazy[p]=M::M2::e();
   }
-  inline void update(int p){data[p]=M::op(data[p*2],data[p*2+1]);}
+  inline void update(int p){data[p]=M::M1::op(data[p*2],data[p*2+1]);}
 };

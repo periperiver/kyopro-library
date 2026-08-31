@@ -20,7 +20,7 @@ struct Monoid{
   };
   struct M2{
     using S=std::pair<int,int>;
-    static S op(S x,S y){return {(long long)x.first*y.first%mod,(x.second+(long long)x.first*y.second)%mod};}
+    static S op(S x,S y){return {(long long)x.first*y.first%mod,((long long)x.second*y.first+y.second)%mod};}
     static S e(){return {1,0};}
   };
   static M1::S act(M1::S x,M2::S f){return {((long long)x.first*f.first+(long long)x.second*f.second)%mod,x.second};}

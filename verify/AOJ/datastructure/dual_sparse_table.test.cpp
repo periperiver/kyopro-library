@@ -1,4 +1,4 @@
-#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/beta/room.html#HUPC2020Day1/problems/B"
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/challenges/sources/VPC/HUPC/3165?year=2020"
 #include<iostream>
 #include "datastructure/dual_sparse_table.hpp"
 #include "monoid/add_pair.hpp"
