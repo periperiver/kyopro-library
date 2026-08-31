@@ -7,7 +7,7 @@ using mint=mint998;
 int main(){
   int n,q;
   rd(n),rd(q);
-  DynamicLazySegmentTree<int,RangeAffineRangeSum<mint>>seg;
+  DynamicLazySegmentTree<int,RangeAffineRangeSum<mint>>seg(0,n,std::make_pair(0,1));
   while(q--){
     int t;
     rd(t);

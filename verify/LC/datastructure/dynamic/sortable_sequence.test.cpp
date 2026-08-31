@@ -12,7 +12,7 @@ int main(){
   for(int i=0;i<n;i++){
     int p,a,b;
     rd(p),rd(a),rd(b);
-    seg.insert(i,p,{{mint::raw(a),mint::raw(b)},{mint::raw(a),mint::raw(b)}});
+    seg.insert(i,p,std::make_pair(mint::raw(a),mint::raw(b)));
   }
   while(q--){
     int t;

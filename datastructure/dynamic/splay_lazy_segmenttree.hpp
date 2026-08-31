@@ -1,6 +1,7 @@
 #pragma once
 #include<utility>
 #include<limits>
+#include "../../monoid/pow.hpp"
 #include "splay.hpp"
 template<typename I,typename M>
 struct DynamicLazySegmentTree{
@@ -18,10 +19,10 @@ private:
     inline void propagate(const F&f){
       v=M::act(v,f);
       sum=M::act(sum,f);
-      layz=M::M2::op(lazy,f);
+      lazy=M::M2::op(lazy,f);
     }
     inline void update(){
-      sum=M::pow(v,r-l);
+      sum=monoid_pow<typename M::M1>(v,r-l);
       if(left)sum=M::M1::op(left->sum,sum),L=left->L;
       else L=l;
       if(right)sum=M::M1::op(sum,right->sum),R=right->R;
@@ -146,7 +147,9 @@ private:
     return lnd;
   }
 public:
-  DynamicLazySegmentTree():nil(),root(new node(std::numeric_limits<I>::min()/2,std::numeric_limits<I>::max()/2,M::M1::e())){}
+  DynamicLazySegmentTree(){}
+  DynamicLazySegmentTree(I l,I r):nil(),root(new node(l-1,r+1,M::M1::e())){}
+  DynamicLazySegmentTree(I l,I r,S init):nil(),root(new node(l-1,r+1,init)){}
   void set(I k,const S&x){
     root=between(root,k,k+1);
     root->right->left->v=x;
