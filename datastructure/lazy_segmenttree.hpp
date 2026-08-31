@@ -7,25 +7,25 @@
 template<typename M>
 struct LazySegmentTree{
 private:
-  using S=typename M::S;
-  using F=typename M::F;
+  using S=typename M::M1::S;
+  using F=typename M::M2::S;
   int n,z;
   int log2n;
   std::vector<S>dat;
   std::vector<F>lazy;
   inline void propagate(int i,const F&f){
-    dat[i]=M::mapping(f,dat[i],1<<(log2n-msb(i)));
-    lazy[i]=M::composition(f,lazy[i]);
+    dat[i]=M::act(dat[i],f);
+    if(i<z)lazy[i]=M::M2::op(lazy[i],f);
   }
   inline void push(int i){
     if(i<z){
       propagate(i*2,lazy[i]);
       propagate(i*2+1,lazy[i]);
-      lazy[i]=M::id();
+      lazy[i]=M::M2::e();
     }
   }
   inline void update(int i){
-    dat[i]=M::op(dat[i*2],dat[i*2+1]);
+    dat[i]=M::M1::op(dat[i*2],dat[i*2+1]);
   }
   inline void path_push(int i){
     int l=lsb(i);
@@ -43,11 +43,11 @@ public:
   LazySegmentTree():n(0),z(0),log2n(0){}
   explicit LazySegmentTree(int n_):n(n_),z(ceil_pow2(n_)){
     log2n=msb(z);
-    dat.resize(z*2,M::e()),lazy.resize(z*2,M::id());
+    dat.resize(z*2,M::M1::e()),lazy.resize(z*2,M::M2::e());
   }
   explicit LazySegmentTree(const std::vector<S>&init):n(init.size()),z(ceil_pow2((int)init.size())){
     log2n=msb(z);
-    dat.resize(z*2,M::e()),lazy.resize(z*2,M::id());
+    dat.resize(z*2,M::M1::e()),lazy.resize(z*2,M::M2::e());
     for(int i=0;i<n;i++)dat[i+z]=init[i];
     for(int i=z-1;i>=1;i--)update(i);
   }
@@ -87,13 +87,13 @@ public:
     if(r==n)r=z;
     l+=z,r+=z;
     path_push(l),path_push(r);
-    S left=M::e(),right=M::e();
+    S left=M::M1::e(),right=M::M1::e();
     while(l<r){
-      if(l&1)left=M::op(left,dat[l++]);
-      if(r&1)right=M::op(dat[--r],right);
+      if(l&1)left=M::M1::op(left,dat[l++]);
+      if(r&1)right=M::M1::op(dat[--r],right);
       l>>=1,r>>=1;
     }
-    return M::op(left,right);
+    return M::M1::op(left,right);
   }
   inline S all_prod()const{return dat[1];}
   template<typename Func>
@@ -102,16 +102,16 @@ public:
     if(l==n)return n;
     l+=z;
     for(int i=log2n;i>=1;i--)push(l>>i);
-    S now=M::e();
+    S now=M::M1::e();
     do{
       l>>=lsb(l);
-      S nxt=M::op(now,dat[l]);
+      S nxt=M::M1::op(now,dat[l]);
       if(f(nxt))now=nxt,l++;
       else{
         while(l<z){
           push(l);
           l<<=1;
-          nxt=M::op(now,dat[l]);
+          nxt=M::M1::op(now,dat[l]);
           if(f(nxt))now=nxt,l++;
         }
         return l-z;
@@ -125,17 +125,17 @@ public:
     if(r==0)return 0;
     r+=z;
     for(int i=log2n;i>=1;i--)push((r-1)>>i);
-    S now=M::e();
+    S now=M::M1::e();
     do{
       r--;
       while(r>1&&(r&1))r>>=1;
-      S nxt=M::op(dat[r],now);
+      S nxt=M::M1::op(dat[r],now);
       if(f(nxt))now=nxt;
       else{
         while(r<z){
           push(r);
           r=(r<<1)+1;
-          nxt=M::op(dat[r],now);
+          nxt=M::M1::op(dat[r],now);
           if(f(nxt))now=nxt,r--;
         }
         return r-z+1;
@@ -149,13 +149,13 @@ public:
   }
   friend std::ostream &operator<<(std::ostream&os,const LazySegmentTree&seg){
     std::vector<F>lazy2(seg.lazy);
-    for(int i=0;i<seg.n;i++)lazy2[i+seg.z]=M::id();
+    for(int i=0;i<seg.n;i++)lazy2[i+seg.z]=M::M2::e();
     for(int i=1;i<seg.z;i++){
-      lazy2[i*2]=M::composition(lazy2[i],lazy2[i*2]);
-      lazy2[i*2+1]=M::composition(lazy2[i],lazy2[i*2+1]);
+      lazy2[i*2]=M::M2::op(lazy2[i*2],lazy2[i]);
+      lazy2[i*2+1]=M::M2::op(lazy2[i*2+1],lazy2[i]);
     }
     os<<"{";
-    for(int i=0;i<seg.n;i++)os<<M::mapping(lazy2[i+seg.z],seg.dat[i+seg.z],1)<<",}"[i+1==seg.n];
+    for(int i=0;i<seg.n;i++)os<<M::act(seg.dat[i+seg.z],lazy2[i+seg.z])<<",}"[i+1==seg.n];
     if(seg.n==0)os<<"}";
     return os;
   }

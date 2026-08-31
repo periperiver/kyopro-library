@@ -2,41 +2,41 @@
 template<typename I,typename M>
 struct DynamicLazySegmentTree{
 private:
-  using S=typename M::S;
-  using F=typename M::F;
+  using S=typename M::M1::S;
+  using F=typename M::M2::S;
   struct node{
     I l,r;
     node *left,*right,*par;
     S val;
     F lazy;
-    node(I l,I r,S val):l(l),r(r),val(val),lazy(M::id()),left(nullptr),right(nullptr),par(nullptr){}
+    node(I l,I r,S val):l(l),r(r),val(val),lazy(M::M2::e()),left(nullptr),right(nullptr),par(nullptr){}
     void propagate(F f){
-      val=M::mapping(f,val,r-l);
-      lazy=M::composition(f,lazy);
+      val=M::act(val,f);
+      lazy=M::M2::op(lazy,f);
     }
     void push(){
       I mid=(l+r)/2;
       if(!left){
-        left=new node(l,mid,M::e());
+        left=new node(l,mid,M::M1::e());
         left->par=this;
       }
       if(!right){
-        right=new node(mid,r,M::e());
+        right=new node(mid,r,M::M1::e());
         right->par=this;
       }
       left->propagate(lazy);
       right->propagate(lazy);
-      lazy=M::id();
+      lazy=M::M2::e();
     }
     inline void update(){
-      val=M::op(left->val,right->val);
+      val=M::M1::op(left->val,right->val);
     }
   };
   node *root;
 public:
   DynamicLazySegmentTree():root(nullptr){}
   DynamicLazySegmentTree(I l,I r){
-    root=new node(l,r,M::e());
+    root=new node(l,r,M::M1::e());
   }
   DynamicLazySegmentTree(const DynamicLazySegmentTree<I,M>&seg){
     auto dfs=[&](auto self,node *nd)->node* {
@@ -136,9 +136,9 @@ public:
     }
   }
   S prod(I l,I r){
-    if(l==r)return M::e();
+    if(l==r)return M::M1::e();
     node *nd=root;
-    S sum=M::e();
+    S sum=M::M1::e();
     while(nd->r-nd->l>1){
       I mid=(nd->l+nd->r)/2;
       nd->push();
@@ -152,22 +152,22 @@ public:
       I mid=(le->l+le->r)/2;
       le->push();
       if(l<mid){
-        sum=M::op(le->right->val,sum);
+        sum=M::M1::op(le->right->val,sum);
         le=le->left;
       }
       else le=le->right;
     }
-    sum=M::op(le->val,sum);
+    sum=M::M1::op(le->val,sum);
     while(ri->r>r){
       I mid=(ri->l+ri->r)/2;
       ri->push();
       if(r<=mid)ri=ri->left;
       else{
-        sum=M::op(sum,ri->left->val);
+        sum=M::M1::op(sum,ri->left->val);
         ri=ri->right;
       }
     }
-    sum=M::op(sum,ri->val);
+    sum=M::M1::op(sum,ri->val);
     return sum;
   }
   S all_prod()const{

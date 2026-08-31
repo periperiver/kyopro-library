@@ -12,26 +12,26 @@ private:
     I l,r,L,R;
     S v,sum;
     F lazy;
-    node():left(nullptr),right(nullptr),par(nullptr),l(),r(),L(),R(),v(M::e()),sum(M::e()),lazy(M::id()){}
-    node(I k,S v_):left(nullptr),right(nullptr),par(nullptr),l(k),r(k+1),L(k),R(k+1),v(v_),sum(v_),lazy(M::id()){}
-    node(I l_,I r_,S v_):left(nullptr),right(nullptr),par(nullptr),l(l_),r(r_),L(l_),R(r_),v(v_),sum(v_),lazy(M::id()){}
+    node():left(nullptr),right(nullptr),par(nullptr),l(),r(),L(),R(),v(M::M1::e()),sum(M::M1::e()),lazy(M::M2::e()){}
+    node(I k,S v_):left(nullptr),right(nullptr),par(nullptr),l(k),r(k+1),L(k),R(k+1),v(v_),sum(v_),lazy(M::M2::e()){}
+    node(I l_,I r_,S v_):left(nullptr),right(nullptr),par(nullptr),l(l_),r(r_),L(l_),R(r_),v(v_),sum(v_),lazy(M::M2::e()){}
     inline void propagate(const F&f){
-      v=M::mapping(f,v,1);
-      sum=M::mapping(f,sum,R-L);
-      lazy=M::composition(f,lazy);
+      v=M::act(v,f);
+      sum=M::act(sum,f);
+      layz=M::M2::op(lazy,f);
     }
     inline void update(){
       sum=M::pow(v,r-l);
-      if(left)sum=M::op(left->sum,sum),L=left->L;
+      if(left)sum=M::M1::op(left->sum,sum),L=left->L;
       else L=l;
-      if(right)sum=M::op(sum,right->sum),R=right->R;
+      if(right)sum=M::M1::op(sum,right->sum),R=right->R;
       else R=r;
     }
     inline void push(){
-      if(lazy!=M::id()){
+      if(lazy!=M::M2::e()){
         if(left)left->propagate(lazy);
         if(right)right->propagate(lazy);
-        lazy=M::id();
+        lazy=M::M2::e();
       }
     }
   };
@@ -146,7 +146,7 @@ private:
     return lnd;
   }
 public:
-  DynamicLazySegmentTree():nil(),root(new node(std::numeric_limits<I>::min()/2,std::numeric_limits<I>::max()/2,M::e())){}
+  DynamicLazySegmentTree():nil(),root(new node(std::numeric_limits<I>::min()/2,std::numeric_limits<I>::max()/2,M::M1::e())){}
   void set(I k,const S&x){
     root=between(root,k,k+1);
     root->right->left->v=x;
@@ -163,7 +163,7 @@ public:
     root->right->update(),root->update();
   }
   S prod(I l,I r){
-    if(l==r)return M::e();
+    if(l==r)return M::M1::e();
     root=between(root,l,r);
     return root->right->left->sum;
   }
