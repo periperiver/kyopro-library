@@ -1,5 +1,7 @@
 #pragma once
 #include<vector>
+#include<array>
+#include<limits>
 #include<tuple>
 #include<cassert>
 #include<algorithm>
@@ -50,6 +52,24 @@ private:
       else if constexpr(mask==13)return r.rx<=lx;
       else if constexpr(mask==14)return rx<=r.lx;
     }
+    template<int mask>
+    constexpr bool contains(const std::pair<I,I>&xy)const{
+      if constexpr(mask==0)return lx<=xy.first&&xy.first<rx&&ly<=xy.second&&xy.second<ry;
+      else if constexpr(mask==1)return xy.first<rx&&ly<=xy.second&&xy.second<ry;
+      else if constexpr(mask==2)return lx<=xy.first&&ly<=xy.second&&xy.second<ry;
+      else if constexpr(mask==3)return ly<=xy.second&&xy.second<ry;
+      else if constexpr(mask==4)return lx<=xy.first&&xy.first<rx&&xy.second<ry;
+      else if constexpr(mask==5)return xy.first<rx&&xy.second<ry;
+      else if constexpr(mask==6)return lx<=xy.first&&xy.second<ry;
+      else if constexpr(mask==7)return xy.second<ry;
+      else if constexpr(mask==8)return lx<=xy.first&&xy.first<rx&&ly<=xy.second;
+      else if constexpr(mask==9)return xy.first<rx&&ly<=xy.second;
+      else if constexpr(mask==10)return lx<=xy.first&&ly<=xy.second;
+      else if constexpr(mask==11)return ly<=xy.second;
+      else if constexpr(mask==12)return lx<=xy.first&&xy.first<rx;
+      else if constexpr(mask==13)return xy.first<rx;
+      else if constexpr(mask==14)return lx<=xy.first;
+    }
   };
   struct node{
     Rectangle rect;
@@ -59,16 +79,33 @@ private:
     bool flag;
     node():rect(),split(),val(M::M1::e()),lazy(M::M2::e()),flag(false){}
   };
+  struct Block{
+    std::array<std::pair<I,I>,8>xy;
+    std::array<S,8>dat;
+    inline void propagate(const F&f){
+      for(int i=0;i<8;i++)dat[i]=M::act(dat[i],f);
+    }
+    template<int mask>
+    inline void apply(const Rectangle&r,const F&f){
+      for(int i=0;i<8;i++)if(r.template contains<mask>(xy[i]))dat[i]=M::act(dat[i],f);
+    }
+    template<int mask>
+    inline S prod(const Rectangle&r){
+      S res=M::M1::e();
+      for(int i=0;i<8;i++)if(r.template contains<mask>(xy[i]))res=M::M1::op(res,dat[i]);
+      return res;
+    }
+    Block():xy{},dat{M::M1::e()}{}
+  };
   int n,z,log2n;
   std::vector<std::pair<I,int>>xz,yz;
   std::vector<node>dat;
-  std::vector<int>pos;
+  std::vector<std::pair<int,int>>pos;
+  std::vector<Block>block;
   inline void propagate(int i,F f){
     dat[i].val=M::act(dat[i].val,f);
-    if(i<z){
-      dat[i].lazy=M::M2::op(dat[i].lazy,f);
-      dat[i].flag=true;
-    }
+    dat[i].lazy=M::M2::op(dat[i].lazy,f);
+    dat[i].flag=true;
   }
   inline void push(int i){
     if(dat[i].flag){
@@ -85,16 +122,23 @@ private:
     else{
       if(dat[id].rect.template contains<mask>(r))return dat[id].val;
       if(dat[id].rect.template disjoint<mask>(r))return M::M1::e();
-      push(id);
-      if constexpr(splitx){
-        if(r.rx<=dat[id].split)return prod_rec<0,mask>(id*2,r);
-        else if(dat[id].split<=r.lx)return prod_rec<0,mask>(id*2+1,r);
-        else return M::M1::op(prod_rec<0,mask|2>(id*2,r),prod_rec<0,mask|1>(id*2+1,r));
+      if(id>=z){
+        S res=block[id-z].template prod<mask>(r);
+        if(dat[id].flag)res=M::act(res,dat[id].lazy);
+        return res;
       }
       else{
-        if(r.ry<=dat[id].split)return prod_rec<1,mask>(id*2,r);
-        else if(dat[id].split<=r.ly)return prod_rec<1,mask>(id*2+1,r);
-        else return M::M1::op(prod_rec<1,mask|8>(id*2,r),prod_rec<1,mask|4>(id*2+1,r));
+        push(id);
+        if constexpr(splitx){
+          if(r.rx<=dat[id].split)return prod_rec<0,mask>(id*2,r);
+          else if(dat[id].split<=r.lx)return prod_rec<0,mask>(id*2+1,r);
+          else return M::M1::op(prod_rec<0,mask|2>(id*2,r),prod_rec<0,mask|1>(id*2+1,r));
+        }
+        else{
+          if(r.ry<=dat[id].split)return prod_rec<1,mask>(id*2,r);
+          else if(dat[id].split<=r.ly)return prod_rec<1,mask>(id*2+1,r);
+          else return M::M1::op(prod_rec<1,mask|8>(id*2,r),prod_rec<1,mask|4>(id*2+1,r));
+        }
       }
     }
   }
@@ -104,25 +148,37 @@ private:
     else{
       if(dat[id].rect.template contains<mask>(r))return propagate(id,f);
       if(dat[id].rect.template disjoint<mask>(r))return;
-      push(id);
-      if constexpr(splitx){
-        if(r.rx<=dat[id].split)apply_rec<0,mask>(id*2,r,f);
-        else if(dat[id].split<=r.lx)apply_rec<0,mask>(id*2+1,r,f);
-        else apply_rec<0,mask|2>(id*2,r,f),apply_rec<0,mask|1>(id*2+1,r,f);
+      if(id>=z){
+        if(dat[id].flag){
+          block[id-z].propagate(dat[id].lazy);
+          dat[id].lazy=M::M2::e();
+          dat[id].flag=false;
+        }
+        block[id-z].template apply<mask>(r,f);
+        dat[id].val=M::M1::e();
+        for(int i=0;i<8;i++)dat[id].val=M::M1::op(dat[id].val,block[id-z].dat[i]);
       }
       else{
-        if(r.ry<=dat[id].split)apply_rec<1,mask>(id*2,r,f);
-        else if(dat[id].split<=r.ly)apply_rec<1,mask>(id*2+1,r,f);
-        else apply_rec<1,mask|8>(id*2,r,f),apply_rec<1,mask|4>(id*2+1,r,f);
+        push(id);
+        if constexpr(splitx){
+          if(r.rx<=dat[id].split)apply_rec<0,mask>(id*2,r,f);
+          else if(dat[id].split<=r.lx)apply_rec<0,mask>(id*2+1,r,f);
+          else apply_rec<0,mask|2>(id*2,r,f),apply_rec<0,mask|1>(id*2+1,r,f);
+        }
+        else{
+          if(r.ry<=dat[id].split)apply_rec<1,mask>(id*2,r,f);
+          else if(dat[id].split<=r.ly)apply_rec<1,mask>(id*2+1,r,f);
+          else apply_rec<1,mask|8>(id*2,r,f),apply_rec<1,mask|4>(id*2+1,r,f);
+        }
+        update(id);
       }
-      update(id);
     }
   }
   inline int getx(I x)const{return std::lower_bound(xz.begin(),xz.end(),std::make_pair(x,0))-xz.begin();}
   inline int gety(I y)const{return std::lower_bound(yz.begin(),yz.end(),std::make_pair(y,0))-yz.begin();}
 public:
   kdTree(){}
-  kdTree(std::vector<std::tuple<I,I,S>>init):n(init.size()),z(ceil_pow2(n)),log2n(msb(z)),xz(n),yz(n),dat(z*2),pos(n){
+  kdTree(std::vector<std::tuple<I,I,S>>init):n(init.size()),z(ceil_pow2((n+7)/8)),log2n(msb(z)),xz(n),yz(n),dat(z*2),pos(n),block(z*8){
     for(int i=0;i<n;i++){
       const auto&[x,y,v]=init[i];
       xz[i]=std::make_pair(x,i);
@@ -157,10 +213,22 @@ public:
     }
     for(int i=z;i<z*2;i++){
       if(lr[i].first!=lr[i].second){
-        auto [id,x,y]=idx[lr[i].first];
-        dat[i].val=std::get<2>(init[id]);
-        dat[i].rect=Rectangle(x,y);
-        pos[id]=i;
+        int len=lr[i].second-lr[i].first;
+        auto&[lx,rx,ly,ry]=dat[i].rect;
+        lx=ly=std::numeric_limits<I>::max();
+        rx=ry=std::numeric_limits<I>::min();
+        for(int j=0;j<len;j++){
+          auto [id,x,y]=idx[lr[i].first+j];
+          block[i-z].xy[j]=std::make_pair(x,y);
+          block[i-z].dat[j]=std::get<2>(init[id]);
+          dat[i].val=M::M1::op(dat[i].val,std::get<2>(init[id]));
+          pos[id]=std::make_pair(i-z,j);
+          if(lx>x)lx=x;
+          if(rx<x)rx=x;
+          if(ly>y)ly=y;
+          if(ry<y)ry=y;
+        }
+        rx++,ry++;
       }
     }
     for(int i=z;--i;){
@@ -175,10 +243,16 @@ public:
     }
   }
   void set(int i,S v){
-    i=pos[i];
-    for(int j=log2n;j>=1;j--)push(i>>j);
-    dat[i].val=v;
-    while(i>>=1)update(i);
+    auto [p,j]=pos[i];
+    for(int j=log2n;j>=1;j--)push((p+z)>>j);
+    block[p].propagate(dat[p+z].lazy);
+    dat[p+z].lazy=M::M2::e();
+    dat[p+z].flag=false;
+    block[p].dat[j]=v;
+    dat[p+z].val=M::M1::e();
+    for(int i=0;i<8;i++)dat[p+z].val=M::M1::op(dat[p+z].val,block[p].dat[i]);
+    p+=z;
+    while(p>>=1)update(p);
   }
   S prod(I lx,I rx,I ly,I ry){
     assert(lx<=rx);
