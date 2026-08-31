@@ -4,7 +4,7 @@
 #include<numeric>
 #include<queue>
 #include "datastructure/dual_sparse_table.hpp"
-#include "monoid/rangechmin_rangemin.hpp"
+#include "monoid/min.hpp"
 #include "graph_base.hpp"
 #include "tree_base.hpp"
 template<typename T>
@@ -12,6 +12,8 @@ std::vector<T>erased_shortest_pah(const Graph<T>&g,int s,int t){
   assert(!g.is_directed());
   int n=g.size();
   int m=g.edge_size();
+  if(m==0)return {};
+  if(s==t)return std::vector<T>(m,0);
   static constexpr T inf=std::numeric_limits<T>::max();
   auto dijkstra_few_zero=[&](int start)->std::pair<std::vector<T>,std::vector<int>> {
     std::vector<T>dst(n,inf);
@@ -48,6 +50,7 @@ std::vector<T>erased_shortest_pah(const Graph<T>&g,int s,int t){
   for(int i=0;i<m;i++){
     const Edge<T>&e=g.get_edge(i);
     assert(e.index==i);
+    if(e.from==e.to)continue;
     if(shortest_vertex[e.from]!=-1&&shortest_vertex[e.to]!=-1){
       if(dst_s[e.from]+e.weight==dst_s[e.to]||dst_s[e.to]+e.weight==dst_s[e.from]){
         int id=std::min(shortest_vertex[e.from],shortest_vertex[e.to]);
@@ -77,6 +80,7 @@ std::vector<T>erased_shortest_pah(const Graph<T>&g,int s,int t){
     if(shortest_edge[i]==-1){
       const Edge<T>&e=g.get_edge(i);
       res[i]=dst_s[t];
+      if(dst_s[e.from]==inf)continue;
       {
         int u=lca_s[e.from];
         int v=lca_t[e.to];
@@ -93,7 +97,7 @@ std::vector<T>erased_shortest_pah(const Graph<T>&g,int s,int t){
       }
     }
   }
-  std::vector<T>sp=dual_sparse_table<RangeChminRangeMin<T>>(path_size,query);
+  std::vector<T>sp=dual_sparse_table<MonoidMin<T>>(path_size,query);
   for(int i=0;i<m;i++)if(shortest_edge[i]!=-1){
     res[i]=sp[shortest_edge[i]];
   }
