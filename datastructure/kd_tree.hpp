@@ -7,8 +7,8 @@
 template<typename I,typename M>
 struct kdTree{
 private:
-  using S=typename M::S;
-  using F=typename M::F;
+  using S=typename M::M1::S;
+  using F=typename M::M2::S;
   struct Rectangle{
     I lx,rx,ly,ry;
     Rectangle(){}
@@ -57,16 +57,16 @@ private:
     S val;
     F lazy;
     bool flag;
-    node():rect(),split(),val(M::e()),lazy(M::id()),flag(false){}
+    node():rect(),split(),val(M::M1::e()),lazy(M::M2::e()),flag(false){}
   };
   int n,z,log2n;
   std::vector<std::pair<I,int>>xz,yz;
   std::vector<node>dat;
   std::vector<int>pos;
   inline void propagate(int i,F f){
-    dat[i].val=M::mapping(f,dat[i].val);
+    dat[i].val=M::act(dat[i].val,f);
     if(i<z){
-      dat[i].lazy=M::composition(f,dat[i].lazy);
+      dat[i].lazy=M::M2::op(dat[i].lazy,f);
       dat[i].flag=true;
     }
   }
@@ -74,27 +74,27 @@ private:
     if(dat[i].flag){
       propagate(i*2,dat[i].lazy);
       propagate(i*2+1,dat[i].lazy);
-      dat[i].lazy=M::id();
+      dat[i].lazy=M::M2::e();
       dat[i].flag=false;
     }
   }
-  inline void update(int i){dat[i].val=M::op(dat[i*2].val,dat[i*2+1].val);}
+  inline void update(int i){dat[i].val=M::M1::op(dat[i*2].val,dat[i*2+1].val);}
   template<bool splitx,int mask>
   S prod_rec(int id,const Rectangle&r){
     if constexpr(mask==15)return dat[id].val;
     else{
       if(dat[id].rect.template contains<mask>(r))return dat[id].val;
-      if(dat[id].rect.template disjoint<mask>(r))return M::e();
+      if(dat[id].rect.template disjoint<mask>(r))return M::M1::e();
       push(id);
       if constexpr(splitx){
         if(r.rx<=dat[id].split)return prod_rec<0,mask>(id*2,r);
         else if(dat[id].split<=r.lx)return prod_rec<0,mask>(id*2+1,r);
-        else return M::op(prod_rec<0,mask|2>(id*2,r),prod_rec<0,mask|1>(id*2+1,r));
+        else return M::M1::op(prod_rec<0,mask|2>(id*2,r),prod_rec<0,mask|1>(id*2+1,r));
       }
       else{
         if(r.ry<=dat[id].split)return prod_rec<1,mask>(id*2,r);
         else if(dat[id].split<=r.ly)return prod_rec<1,mask>(id*2+1,r);
-        else return M::op(prod_rec<1,mask|8>(id*2,r),prod_rec<1,mask|4>(id*2+1,r));
+        else return M::M1::op(prod_rec<1,mask|8>(id*2,r),prod_rec<1,mask|4>(id*2+1,r));
       }
     }
   }
@@ -184,7 +184,7 @@ public:
     assert(lx<=rx);
     assert(ly<=ry);
     lx=getx(lx),rx=getx(rx),ly=gety(ly),ry=gety(ry);
-    if(lx==rx||ly==ry)return M::e();
+    if(lx==rx||ly==ry)return M::M1::e();
     auto res=prod_rec<1,0>(1,Rectangle(lx,rx,ly,ry));
     return res;
   }

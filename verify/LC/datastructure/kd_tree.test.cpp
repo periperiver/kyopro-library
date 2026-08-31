@@ -9,17 +9,21 @@ struct Query{
 };
 constexpr long long mod=998244353;
 struct Monoid{
-  using S=std::pair<int,int>;
-  using F=std::pair<int,int>;
-  static S op(S x,S y){
-    int s=x.first+y.first;
-    if(s>=mod)s-=mod;
-    return {s,x.second+y.second};
-  }
-  static S e(){return {0,0};}
-  static S mapping(F f,S x){return {((long long)x.first*f.first+(long long)x.second*f.second)%mod,x.second};}
-  static F composition(F f,F g){return {(long long)f.first*g.first%mod,(f.second+(long long)f.first*g.second)%mod};}
-  static F id(){return {1,0};}
+  struct M1{
+    using S=std::pair<int,int>;
+    static S op(S x,S y){
+      int s=x.first+y.first;
+      if(s>=mod)s-=mod;
+      return {s,x.second+y.second};
+    }
+    static S e(){return {0,0};}
+  };
+  struct M2{
+    using S=std::pair<int,int>;
+    static S op(S x,S y){return {(long long)x.first*y.first%mod,(x.second+(long long)x.first*y.second)%mod};}
+    static S e(){return {1,0};}
+  };
+  static M1::S act(M1::S x,M2::S f){return {((long long)x.first*f.first+(long long)x.second*f.second)%mod,x.second};}
 };
 int main(){
   int n,q;
