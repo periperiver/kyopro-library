@@ -4,14 +4,13 @@
 #include<cassert>
 #include<stack>
 #include "lca.hpp"
-using namespace std;
 template<typename T=int>
 struct AuxiliaryTree{
 private:
-  vector<vector<Edge<T>>>g;
+  std::vector<std::vector<Edge<T>>>g;
   LowestCommonAncestor lca;
-  vector<int>in,out;
-  vector<T>dep;
+  std::vector<int>in,out;
+  std::vector<T>dep;
 public:
   AuxiliaryTree(const Tree<T>&t):g(t.size()),in(t.size()),out(t.size()){
     assert(t.is_directed());
@@ -31,17 +30,17 @@ public:
     dfs(dfs,root,-1);
   }
   AuxiliaryTree(){}
-  int build(vector<int>v){
+  int build(std::vector<int>v){
     assert(!v.empty());
     auto comp=[&](int x,int y)->bool {return in[x]<in[y];};
-    sort(v.begin(),v.end(),comp);
+    std::sort(v.begin(),v.end(),comp);
     v.reserve(v.size()*2-1);
     int vsize=v.size();
     for(int i=1;i<vsize;i++)v.push_back(lca.query(v[i-1],v[i]));
-    sort(v.begin(),v.end(),comp);
-    v.erase(unique(v.begin(),v.end()),v.end());
+    std::sort(v.begin(),v.end(),comp);
+    v.erase(std::unique(v.begin(),v.end()),v.end());
     for(int i=0;i<(int)v.size();i++)g[v[i]].clear();
-    stack<int>st;
+    std::stack<int>st;
     for(int i=0;i<(int)v.size();i++){
       while(!st.empty()&&out[st.top()]<=in[v[i]])st.pop();
       if(!st.empty()){
@@ -54,6 +53,6 @@ public:
     while(st.size()>1)st.pop();
     return st.top();
   }
-  vector<Edge<T>> &operator[](int i){return g[i];}
-  const vector<Edge<T>> &operator[](int i)const{return g[i];}
+  std::vector<Edge<T>> &operator[](int i){return g[i];}
+  const std::vector<Edge<T>> &operator[](int i)const{return g[i];}
 };

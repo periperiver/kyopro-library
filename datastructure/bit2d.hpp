@@ -1,9 +1,8 @@
 #pragma once
 #include <vector>
-using namespace std;
 template<typename T>
 struct BinaryIndexedTree2D{
-  vector<T>dat;
+  std::vector<T>dat;
   int h,w;
   BinaryIndexedTree2D(int h,int w):h(h),w(w),dat(h*w,0){}
   void add(int i,int j,T v){
