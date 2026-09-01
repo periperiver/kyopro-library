@@ -6,7 +6,7 @@
 #include<type_traits>
 #include "math/util.hpp"
 template<typename T,typename T2=T>
-T2 union_rectangles(const std::vector<std::pair<std::pair<T,T>,std::pair<T,T>>>&recs){
+T2 union_rectangles(const std::vector<std::tuple<T,T,T,T>>&recs){
   if(recs.empty())return 0;
   struct E{
     T x;
@@ -18,13 +18,13 @@ T2 union_rectangles(const std::vector<std::pair<std::pair<T,T>,std::pair<T,T>>>&
   std::vector<T>zy;
   query.reserve(recs.size()*2);
   zy.reserve(recs.size()*2);
-  for(const auto&[a,b]:recs)zy.push_back(a.second),zy.push_back(b.second);
+  for(const auto&[lx,rx,ly,ry]:recs)zy.push_back(ly),zy.push_back(ry);
   std::sort(zy.begin(),zy.end()),zy.erase(std::unique(zy.begin(),zy.end()),zy.end());
-  for(const auto&[a,b]:recs){
-    int l=std::lower_bound(zy.begin(),zy.end(),a.second)-zy.begin();
-    int r=std::lower_bound(zy.begin(),zy.end(),b.second)-zy.begin();
-    query.push_back({a.first,l,r,1});
-    query.push_back({b.first,l,r,-1});
+  for(const auto&[lx,rx,ly,ry]:recs){
+    int l=std::lower_bound(zy.begin(),zy.end(),ly)-zy.begin();
+    int r=std::lower_bound(zy.begin(),zy.end(),ry)-zy.begin();
+    query.push_back({lx,l,r,1});
+    query.push_back({rx,l,r,-1});
   }
   std::sort(query.begin(),query.end());
   int z=ceil_pow2((int)(zy.size()-1));
