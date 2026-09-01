@@ -51,13 +51,13 @@ int main(){
     for(int i=0;i<10;i++){
       auto a=gen(n,20);
       auto [l,r]=Random::distinct(n+1);
-      if(l==0)l++;
+      l++,r++;
       test(a,l,r);
     }
     for(int i=0;i<10;i++){
       auto a=gen(n,1000000000);
       auto [l,r]=Random::distinct(n+1);
-      if(l==0)l++;
+      l++,r++;
       test(a,l,r);
     }
   }
@@ -66,7 +66,7 @@ int main(){
     auto a=gen(n,100);
     auto b=gen(n,1000000000);
     auto [l,r]=Random::distinct(n+1);
-    if(l==0)l++;
+    l++,r++;
     test(a,l,r);
     test(b,l,r);
   }
