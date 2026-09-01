@@ -1,13 +1,12 @@
 #pragma once
 #include<vector>
 #include "factorial.hpp"
-using namespace std;
 template<typename T>
 struct BinomialPrefixSum{
 private:
-  static vector<vector<T>>table;
+  static std::vector<std::vector<T>>table;
   static constexpr int b=256;
-  static const T inv2;
+  static constexpr T inv2=T(2).inv();
   static void resize(int n){
     if(table.size()>n)return;
     int pre=table.size();
@@ -83,5 +82,4 @@ public:
     return get(n,k2)-get(n,k1-1);
   }
 };
-template<typename T>vector<vector<T>>BinomialPrefixSum<T>::table;
-template<typename T>const T BinomialPrefixSum<T>::inv2(T(2).inv());
+template<typename T>std::vector<std::vector<T>>BinomialPrefixSum<T>::table;

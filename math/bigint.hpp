@@ -4,7 +4,6 @@
 #include "convolution/ntt.hpp"
 #include "modint.hpp"
 #include "crt3.hpp"
-using namespace std;
 struct bint{
 private:
   static constexpr int ten[10]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000};
@@ -72,7 +71,7 @@ private:
       lhs.clear();
       return;
     }
-    if(min(n,m)<200){
+    if(std::min(n,m)<200){
       std::vector<i128>a(n+m-1,0);
       if(n<m)for(int i=0;i<n;i++)for(int j=0;j<m;j++)a[i+j]+=(i128)lhs[i]*rhs[j];
       else for(int j=0;j<m;j++)for(int i=0;i<n;i++)a[i+j]+=(i128)lhs[i]*rhs[j];
