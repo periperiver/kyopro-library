@@ -243,6 +243,7 @@
 "verify/self/math/fast_log.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/math/kth_prime.test.cpp": "2026-08-19 13:47:27 +0900",
 "verify/self/math/pisano_period.test.cpp": "2026-07-23 21:44:02 +0900",
+"verify/self/other/bit_reverse.test.cpp": "2026-09-01 17:56:05 +0900",
 "verify/self/other/merge_insertion_sort.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/other/range_min_sum.test.cpp": "2026-08-31 11:09:17 +0900",
 "verify/self/poly/arbitrary_polynomial_root_finding.test.cpp": "2026-08-13 22:39:15 +0900",
