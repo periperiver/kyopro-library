@@ -217,6 +217,7 @@
 "verify/self/convolution/relaxed_convolution_64bit.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/convolution/semi_relaxed_convolution_64bit.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/self/datastructure/dual_sparse_table.test.cpp": "2026-08-31 12:29:15 +0900",
+"verify/self/datastructure/dynamic/slide_sequence.test.cpp": "2026-09-03 16:11:39 +0900",
 "verify/self/datastructure/kinetic_tournament.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/datastructure/kth_bit.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/datastructure/power_query.test.cpp": "2026-08-31 11:38:17 +0900",
