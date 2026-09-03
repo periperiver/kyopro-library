@@ -1,5 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
+#include "io.hpp"
 using namespace std;
 using ll=long long;
 using ull=unsigned long long;
@@ -7,14 +8,10 @@ using P=pair<ll,ll>;
 template<typename T>using minque=priority_queue<T,vector<T>,greater<T>>;
 template<typename T>bool chmax(T &a,const T &b){return (a<b?(a=b,true):false);}
 template<typename T>bool chmin(T &a,const T &b){return (a>b?(a=b,true):false);}
-template<typename T1,typename T2>istream &operator>>(istream &is,pair<T1,T2>&p){is>>p.first>>p.second;return is;}
-template<typename T1,typename T2,typename T3>istream &operator>>(istream &is,tuple<T1,T2,T3>&a){is>>std::get<0>(a)>>std::get<1>(a)>>std::get<2>(a);return is;}
-template<typename T,size_t n>istream &operator>>(istream &is,array<T,n>&a){for(auto&i:a)is>>i;return is;}
-template<typename T>istream &operator>>(istream &is,vector<T> &a){for(auto &i:a)is>>i;return is;}
-template<typename T1,typename T2>void operator++(pair<T1,T2>&a,int n){a.first++,a.second++;}
-template<typename T1,typename T2>void operator--(pair<T1,T2>&a,int n){a.first--,a.second--;}
-template<typename T>void operator++(vector<T>&a,int n){for(auto &i:a)i++;}
-template<typename T>void operator--(vector<T>&a,int n){for(auto &i:a)i--;}
+template<typename T1,typename T2>void operator++(pair<T1,T2>&a,int){a.first++,a.second++;}
+template<typename T1,typename T2>void operator--(pair<T1,T2>&a,int){a.first--,a.second--;}
+template<typename T>void operator++(vector<T>&a,int){for(auto &i:a)i++;}
+template<typename T>void operator--(vector<T>&a,int){for(auto &i:a)i--;}
 #define overload3(_1,_2,_3,name,...) name
 #define rep1(i,n) for(int i=0;i<(int)(n);i++)
 #define rep2(i,l,r) for(int i=(int)(l);i<(int)(r);i++)
@@ -40,7 +37,6 @@ auto vec(const int (&d)[n],const T &init=T()){
 #define debug(...) static_cast<void>(0)
 #define debugg(...) static_cast<void>(0)
 #define SWITCH(a,b) (b)
-template<typename T1,typename T2>ostream &operator<<(ostream &os,const pair<T1,T2>&p){os<<p.first<<' '<<p.second;return os;}
 #endif
 struct Timer{
   clock_t start;
