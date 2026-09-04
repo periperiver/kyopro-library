@@ -13,5 +13,10 @@ public:
     dat[0]=0;
     for(int i=1;i<dat.size();i++)dat[i]=dat[i-1]*RollingHashBase::base+s[i-1];
   }
-  inline mint61 get(int l,int r)const{return dat[r]-dat[l]*RollingHashBase::power[r-l];}
+  RH get(int l,int r)const{
+    RH res;
+    res.g=RollingHashBase::power[r-l];
+    res.v=dat[r]-dat[l]*res.g;
+    return res;
+  }
 };

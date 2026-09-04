@@ -29,3 +29,16 @@ mint61 RollingHashBase::base=
 #else
 primitive_root(mint61::mod());
 #endif
+struct RH{
+  mint61 v,g;
+  RH():v(),g(1){}
+  template<typename T>
+  RH(T x):v(x),g(RollingHashBase::base){}
+  RH &operator+=(const RH&rhs){
+    v=v*rhs.g+rhs.v;
+    g*=rhs.g;
+    return *this;
+  }
+  friend RH operator+(const RH&lhs,const RH&rhs){return RH(lhs)+=rhs;}
+  auto operator<=>(const RH&)const=default;
+};
