@@ -206,6 +206,7 @@
 "verify/LC/string/lcp_array.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/longest_common_substring.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/manacher.test.cpp": "2026-06-23 21:17:05 +0900",
+"verify/LC/string/rolling_hash.test.cpp": "2026-09-04 14:31:08 +0900",
 "verify/LC/string/suffix_array.test.cpp": "2026-06-23 21:17:05 +0900",
 "verify/LC/string/wildcard_matching.test.cpp": "2026-07-26 18:21:51 +0900",
 "verify/LC/string/z_algorithm.test.cpp": "2026-07-16 22:41:24 +0900",
