@@ -55,10 +55,9 @@ private:
       return res;
     }
     if constexpr(umod==(1ull<<61)-(1ull<<24)+1){
-      static constexpr value_type mask=(1ull<<61)-1;
-      value_type high=x>>61,low=x&mask;
+      value_type high=x>>61,low=x&((1ull<<61)-1);
       mul_type t=low+(mul_type(high)<<24)-high;
-      high=t>>61,low=t&mask;
+      high=t>>61,low=t&((1ull<<61)-1);
       low=low+(mul_type(high)<<24)-high;
       if(low>=umod)low-=umod;
       return low;
