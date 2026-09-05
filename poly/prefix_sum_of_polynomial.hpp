@@ -9,9 +9,9 @@ std::vector<T>prefix_sum_of_polynomial(std::vector<T>f){
   for(int i=0;i<n;i++)f[i]*=F<T>::factorial(i);
   for(int i=0;i<n;i++)b[i]*=F<T>::factorial_inv(i);
   std::reverse(b.begin(),b.end());
-  f=ntt_convolution(std::move(f),std::move(b));
-  std::vector<T>res(n+1);
+  std::vector<T>res=ntt_convolution(f,b);
+  res.erase(res.begin(),res.begin()+n-2);
   res[0]=f[0];
-  for(int i=1;i<=n;i++)res[i]=f[i+n-2]*F<mint>::factorial_inv(i);
+  for(int i=1;i<=n;i++)res[i]*=F<mint>::factorial_inv(i);
   return res;
 }
