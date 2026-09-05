@@ -12,6 +12,6 @@ std::vector<T>prefix_sum_of_polynomial(std::vector<T>f){
   std::vector<T>res=ntt_convolution(f,b);
   res.erase(res.begin(),res.begin()+n-2);
   res[0]=f[0];
-  for(int i=1;i<=n;i++)res[i]*=F<mint>::factorial_inv(i);
+  for(int i=1;i<=n;i++)res[i]*=F<T>::factorial_inv(i);
   return res;
 }
