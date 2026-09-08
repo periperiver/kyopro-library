@@ -1,4 +1,6 @@
 #pragma once
+#ifndef IO_HPP
+#define IO_HPP
 #include<iostream>
 #include<vector>
 #include<queue>
@@ -207,3 +209,4 @@ ostream &operator<<(ostream&os,const unordered_set<T,Hash>&a){
   os<<'}';
   return os;
 }
+#endif
