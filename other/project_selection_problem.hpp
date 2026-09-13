@@ -26,11 +26,14 @@ public:
   ProjectSelectionProblem(){}
   ProjectSelectionProblem(int n_):n(n_),g(n+2),cost1(n),cost2(n),flip(n,false){}
   void add(int x,bool f,T cost){
+    assert(0<=x&&x<n);
     assert(!is_overflow_mul<T>(n,cost));
     if(!f)cost1[x]+=cost;
     else cost2[x]+=cost;
   }
   void add(int x,bool f,int y,bool g,T cost){
+    assert(0<=x&&x<n);
+    assert(0<=y&&y<n);
     assert(!is_overflow_mul<T>(n,cost));
     if(x==y){
       if(f==g)add(x,f,cost);
