@@ -23,6 +23,23 @@ struct fps2d{
     a=std::move(na);
     n=n_,m=m_;
   }
+  void shrink(){
+    int n2=n;
+    while(n2>0&&std::all_of(a.begin()+(n2-1)*m,a.begin()+n2*m,[](const T&x){return x==T();}))n2--;
+    int m2=m;
+    while(m2>0){
+      bool ok=true;
+      for(int i=0;i<n2;i++){
+        if(a[i*m+m2-1]!=T()){
+          ok=false;
+          break;
+        }
+      }
+      if(ok)m2--;
+      else break;
+    }
+    resize(n2,m2);
+  }
   std::pair<int,int>size()const{return std::make_pair(n,m);}
   fps2d &operator+=(const fps2d&rhs){
     assert(n==rhs.n&&m==rhs.m);
@@ -73,6 +90,8 @@ struct fps2d{
     }
     return res;
   }
-  T&operator[](int x,int y){return a[x*m+y];}
-  const T& operator[](int x,int y)const{return a[x*m+y];}
+  using iterator=typename std::vector<T>::iterator;
+  using const_iterator=typename std::vector<T>::const_iterator;
+  iterator operator[](int x){return a.begin()+x*m;}
+  const_iterator operator[](int x)const{return a.begin()+x*m;}
 };

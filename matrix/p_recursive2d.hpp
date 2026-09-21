@@ -97,7 +97,7 @@ p_recursive2d_result<T> make_p_recursive2d_row(std::vector<std::vector<T>>a){
     std::vector<std::vector<std::vector<T>>>coefs(n);
     bool fail=false;
     for(int i=0;i<n;i++){
-      coefs[i]=find_p_recursive(std::vector<T>(a[i].begin(),a[i].end()-2),d);
+      coefs[i]=find_p_recursive(std::vector<T>(a[i].begin(),a[i].end()-2)).coef;
       if(coefs[i].empty()){
         fail=true;
         break;
@@ -278,8 +278,10 @@ template<typename T,size_t d_row,size_t d_col,size_t p_row,size_t p_col>
 std::vector<T>calc_p_recursive2d(T a,std::array<std::array<T,p_row>,d_row>rowl,std::array<std::array<T,p_row>,d_row>rowr,std::array<std::array<T,p_col>,d_col>coll,std::array<std::array<T,p_col>,d_col>colr,std::vector<std::pair<int,int>>point){
   int n=point.size();
   static constexpr int none=-1e8;
+  std::vector<Point<int>>point2(point.size());
   for(std::pair<int,int>&p:point)if(p.first<0||p.second<0)p=std::make_pair(none,none);
-  auto t=manhattan_mst(point);
+  for(int i=0;i<(int)point.size();i++)point2[i]=Point<int>(point[i].first,point[i].second);
+  auto t=manhattan_mst(point2);
   int root=-1;
   for(int i=0;i<n;i++)if(point[i].first>=0){
     if(root==-1)root=i;
