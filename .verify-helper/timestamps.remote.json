@@ -253,6 +253,7 @@
 "verify/self/other/range_min_sum.test.cpp": "2026-08-31 11:09:17 +0900",
 "verify/self/poly/arbitrary_polynomial_root_finding.test.cpp": "2026-09-04 15:07:36 +0900",
 "verify/self/poly/bmbm.test.cpp": "2026-09-04 15:07:36 +0900",
+"verify/self/poly/fps2d_kth_inv.test.cpp": "2026-09-21 22:22:56 +0900",
 "verify/self/poly/power_prod_sum.test.cpp": "2026-09-04 15:07:36 +0900",
 "verify/self/poly/vandermonde_det.test.cpp": "2026-09-04 15:07:36 +0900",
 "verify/self/string/hack_rolling_hash.test.cpp": "2026-09-04 15:07:36 +0900",
