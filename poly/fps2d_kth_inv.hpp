@@ -1,6 +1,7 @@
 #pragma once
 #include "fps2d.hpp"
 //[x^k]p/q
+#include<iostream>
 template<typename T>
 std::vector<T>fps2d_kth_inv(fps2d<T>p,fps2d<T>q,int k,int deg){
   assert(q[0][0]!=T(0));
@@ -19,7 +20,7 @@ std::vector<T>fps2d_kth_inv(fps2d<T>p,fps2d<T>q,int k,int deg){
     int nm=std::min(m*2-1,deg);
     fps2d<T>np(nn,nm),nq(nn,nm);
     for(int i=0;i<nn;i++)for(int j=0;j<nm;j++){
-      np[i][j]=p[i*2+(k&1)][j];
+      if(i*2+(k&1)<n*2-1)np[i][j]=p[i*2+(k&1)][j];
       nq[i][j]=q[i*2][j];
     }
     k>>=1;
