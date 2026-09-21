@@ -11,7 +11,7 @@ std::vector<T> fps_inv(const std::vector<T> &a,int deg=-1){
   ret[0]=a[0].inv();
   for(int m=1;m<deg;m<<=1){
     std::vector<T> f(a.begin(),a.begin()+std::min(n,m*2));
-    if(f.size()<m*2)f.resize(m*2,0);
+    if((int)f.size()<m*2)f.resize(m*2,0);
     std::vector<T> g(ret);
     f.resize(m*2);
     dft(f);
