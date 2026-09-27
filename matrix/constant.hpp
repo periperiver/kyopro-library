@@ -7,14 +7,23 @@ template<typename T,int N,int M=N>
 struct ConstantMatrix{
 private:
   std::array<std::array<T,M>,N>dat;
+  static constexpr T zero(){
+    if constexpr(requires(){T::zero();})return T::zero();
+    else return T(0);
+  }
+  static constexpr T one(){
+    if constexpr(requires(){T::one();})return T::one();
+    else return T(1);
+  }
 public:
-  ConstantMatrix(){
-    dat.fill([](){std::array<T,M>res;res.fill(T());return res;}());
+  ConstantMatrix():ConstantMatrix(T()){}
+  explicit ConstantMatrix(T x){
+    dat.fill([&x](){std::array<T,M>res;res.fill(x);return res;}());
   }
   static ConstantMatrix E(){
     static_assert(N==M);
-    ConstantMatrix res;
-    for(int i=0;i<N;i++)res[i][i]=T(1);
+    ConstantMatrix res(zero());
+    for(int i=0;i<N;i++)res[i][i]=one();
     return res;
   }
   inline  ConstantMatrix &operator+=(const ConstantMatrix&rhs){
@@ -35,7 +44,7 @@ public:
   friend ConstantMatrix operator+(const ConstantMatrix&lhs,const ConstantMatrix&rhs){return ConstantMatrix(lhs)+=rhs;}
   friend ConstantMatrix operator-(const ConstantMatrix&lhs,const ConstantMatrix&rhs){return ConstantMatrix(lhs)-=rhs;}
   template<int K>friend ConstantMatrix<T,N,K> operator*(const ConstantMatrix&lhs,const ConstantMatrix<T,M,K>&rhs){
-    ConstantMatrix<T,N,K>res;
+    ConstantMatrix<T,N,K>res(zero());
     for(int i=0;i<N;i++)for(int j=0;j<M;j++)for(int k=0;k<K;k++)res[i][k]+=lhs[i][j]*rhs[j][k];
     return res;
   }

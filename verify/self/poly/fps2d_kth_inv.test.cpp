@@ -2,7 +2,6 @@
 #include "poly/fps2d_kth_inv.hpp"
 #include "random/generator.hpp"
 #include "math/modint.hpp"
-#include "io.hpp"
 using mint1=mint998;
 using mint2=modint<469762049>;
 template<typename T>

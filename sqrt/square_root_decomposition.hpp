@@ -1,12 +1,13 @@
 #pragma once
-#include "template.hpp"
+#include<vector>
+#include<cassert>
 template<typename T>
 struct SquareRootDecomposition{
 private:
-  vector<T>block,dlock;
+  std::vector<T>block,dlock;
   int n,b;
 public:
-  SquareRootDecomposition(int n_):n(n_),b(sqrt(n_)){
+  explicit SquareRootDecomposition(int n_):n(n_),b(sqrt(n_)){
     block.resize((n+b-1)/b,0);
     dlock.resize(n,0);
   }
@@ -18,17 +19,17 @@ public:
     add(i,x-dlock[i]);
   }
   T sum(int l,int r)const{
-    T ret=0;
+    T res=0;
     if(r-l<b){
-      reps(i,l,r)ret+=dlock[i];
+      for(int i=l;i<r;i++)ret+=dlock[i];
     }
     else{
       int l2=(l+b-1)/b*b;
       int r2=r/b*b;
-      reps(i,l,l2)ret+=dlock[i];
-      reps(i,r2,r)ret+=dlock[i];
+      for(int i=l;i<l2;i++)res+=dlock[i];
+      for(int i=r2;i<r;i++)res+=dlock[i];
       l=l2/b,r=r2/b;
-      reps(i,l,r)ret+=block[i];
+      for(int i=l;i<r;i++)res+=block[i];
     }
     return ret;
   }
@@ -36,7 +37,7 @@ public:
     assert(k);
     if(k>0){
       int id2=(id+b-1)/b*b;
-      reps(i,id,id2){
+      for(int i=id;i<id2;i++){
         if((k-=dlock[i])<=0)return i;
       }
       id=id2/b;
@@ -46,7 +47,7 @@ public:
       }
       if(id==block.size())return n;
       id*=b;
-      reps(i,id,id+b){
+      for(int i=id;i<id+b;i++){
         if((k-=dlock[i])<=0)return i;
       }
     }
@@ -69,7 +70,7 @@ public:
     }
     return -1;
   }
-  friend ostream &operator<<(ostream &os,const SquareRootDecomposition<T>&srd){
+  friend std::ostream &operator<<(std::ostream &os,const SquareRootDecomposition&srd){
     os<<srd.dlock;
     return os;
   }
