@@ -74,6 +74,11 @@ public:
   template<typename U,std::enable_if_t<std::unsigned_integral<U>||std::is_same_v<U,__uint128_t>,std::nullptr_t> =nullptr>
   constexpr modint(U x):v(take_mod<U>(x)){}
   static constexpr value_type mod(){return umod;}
+  static constexpr modint zero(){return raw(0);}
+  static constexpr modint one(){
+    if constexpr(m==1)return raw(0);
+    else return raw(1);
+  }
   template<typename U>
   static constexpr modint raw(U x){
     modint res;

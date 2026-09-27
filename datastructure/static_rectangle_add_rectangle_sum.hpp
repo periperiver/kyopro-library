@@ -14,11 +14,11 @@ std::vector<typename M::S>static_rectangle_add_rectangle_sum(const std::vector<s
   std::vector<I>zy;
   zy.reserve(n*2);
   for(const auto&[lx,rx,ly,ry,val]:a){
+    if(dx>lx)dx=lx;
+    if(dy>ly)dy=ly;
     assert(lx<=rx&&ly<=ry);
     zy.push_back(ly);
     zy.push_back(ry);
-    if(dx>lx)dx=lx;
-    if(dy>ly)dy=ly;
   }
   std::sort(zy.begin(),zy.end());
   zy.erase(std::unique(zy.begin(),zy.end()),zy.end());
@@ -30,8 +30,6 @@ std::vector<typename M::S>static_rectangle_add_rectangle_sum(const std::vector<s
     int r=std::lower_bound(zy.begin(),zy.end(),ry)-zy.begin();
     event.emplace_back(lx,l,r,val);
     event.emplace_back(rx,l,r,M::inverse(val));
-    if(dx>lx)dx=lx;
-    if(dy>ly)dy=ly;
   }
   std::sort(event.begin(),event.end());
   std::vector<std::tuple<I,int,int,int>>get_event;
@@ -39,6 +37,8 @@ std::vector<typename M::S>static_rectangle_add_rectangle_sum(const std::vector<s
   {
     int id=0;
     for(const auto&[lx,rx,ly,ry]:query){
+      if(dx>lx)dx=lx;
+      if(dy>ly)dy=ly;
       int l=std::lower_bound(zy.begin(),zy.end(),ly)-zy.begin();
       int r=std::lower_bound(zy.begin(),zy.end(),ry)-zy.begin();
       get_event.emplace_back(lx,l,r,id);
@@ -47,7 +47,7 @@ std::vector<typename M::S>static_rectangle_add_rectangle_sum(const std::vector<s
     }
   }
   std::sort(get_event.begin(),get_event.end());
-  BinaryIndexedTree<M>bit1(zy.size()),bit2(zy.size()),bit3(zy.size()),bit4(zy.size());
+  BinaryIndexedTree<M>bit1(zy.size(),M::e()),bit2(zy.size(),M::e()),bit3(zy.size(),M::e()),bit4(zy.size(),M::e());
   int ptr=0;
   std::vector<S>res(q,M::e());
   for(auto [lx,l,r,id]:get_event){

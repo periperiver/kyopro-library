@@ -17,6 +17,7 @@ public:
       if(j<(int)dat.size())dat[j]=M::op(dat[i],dat[j]);
     }
   }
+  BinaryIndexedTree(int n,S init):BinaryIndexedTree(std::vector<S>(n,init)){}
   inline void add(int i,S x){
     while(i<(int)dat.size()){
       dat[i]=M::op(dat[i],x);
