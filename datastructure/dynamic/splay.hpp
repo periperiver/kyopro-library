@@ -295,7 +295,6 @@ template<typename T,bool correct_parent=true>
   if constexpr(has_push_v<T>)nd->push();
   rnd->left=nd->right;
   nd->right=nil.left;
-  nil.left=nil.right=nullptr;
   if constexpr(has_update_v<T>||correct_parent){
     if(rnd->left)rnd->left->par=rnd;
     if(nd->right)nd->right->par=nd;
@@ -309,6 +308,7 @@ template<typename T,bool correct_parent=true>
       }
     }
   }
+  nil.left=nil.right=nullptr;
   return nd;
 }
 template<typename T,bool correct_parent=true>
@@ -344,7 +344,6 @@ template<typename T,bool correct_parent=true>
   if constexpr(has_push_v<T>)nd->push();
   lnd->right=nd->left;
   nd->left=nil.right;
-  nil.left=nil.right=nullptr;
   if constexpr(has_update_v<T>||correct_parent){
     if(lnd->right)lnd->right->par=lnd;
     if(nd->left)nd->left->par=nd;
@@ -358,5 +357,6 @@ template<typename T,bool correct_parent=true>
       }
     }
   }
+  nil.left=nil.right=nullptr;
   return nd;
 }

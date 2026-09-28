@@ -32,6 +32,7 @@ struct Point{
     this->y/=rhs;
     return *this;
   }
+  Point operator-()const{return Point(-x,-y);}
   friend Point operator+(const Point&lhs,const Point&rhs){return Point(lhs)+=rhs;}
   friend Point operator-(const Point&lhs,const Point&rhs){return Point(lhs)-=rhs;}
   friend Point operator*(const Point&lhs,const T&rhs){return Point(lhs)*=rhs;}
@@ -78,6 +79,8 @@ struct Point{
 };
 template<typename T>
 T cross(const Point<T>&a,const Point<T>&b){return a.x*b.y-a.y*b.x;}
+template<typename T>
+T cross(const Point<T>&a,const Point<T>&b,const Point<T>&c){return cross(b-a,c-a);}
 template<typename T>
 T dot(const Point<T>&a,const Point<T>&b){return a.x*b.x+a.y*b.y;}
 //交差する点のうち1つ

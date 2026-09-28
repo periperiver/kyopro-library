@@ -70,5 +70,6 @@ template<typename T,typename Func>
   root->left=nil.right;
   rnd->left=root->right;
   root->right=nil.left;
+  nil.left=nil.right=nullptr;
   return root;
 }
