@@ -9,7 +9,6 @@ private:
     Point<T>p;
     node(){}
     node(Point<T>p):left(nullptr),right(nullptr),ptr(nullptr),p(p){}
-    T eval(Point<T>q)const{return dot(p,q);}
     ~node(){
       if(left)delete left;
       if(right)delete right;
