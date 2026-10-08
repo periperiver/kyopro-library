@@ -55,10 +55,4 @@ public:
     g.back().emplace_back(i1,d1,n1);
     return g.back();
   }
-  inline void undo(){
-    s.pop_back();
-    g.pop_back();
-    pl.pop_back();
-    gpl.pop_back();
-  }
 };

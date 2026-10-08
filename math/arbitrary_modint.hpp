@@ -62,6 +62,10 @@ public:
     umod=m;
     if constexpr(std::numeric_limits<T>::digits<=32)br=BarrettReduction(umod);
   }
+  static void read_mod(){
+    std::cin>>umod;
+    if constexpr(std::numeric_limits<T>::digits<=32)br=BarrettReduction(umod);
+  }
   static T mod(){return umod;}
   static mint raw(T x){
     mint res;

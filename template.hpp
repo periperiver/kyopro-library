@@ -13,6 +13,10 @@ template<typename T1,typename T2>void operator++(pair<T1,T2>&a,int){a.first++,a.
 template<typename T1,typename T2>void operator--(pair<T1,T2>&a,int){a.first--,a.second--;}
 template<typename T>void operator++(vector<T>&a,int){for(auto &i:a)i++;}
 template<typename T>void operator--(vector<T>&a,int){for(auto &i:a)i--;}
+using vref=typename vector<bool>::reference;
+vref operator|=(vref a,bool b){a=a|b;return a;}
+vref operator&=(vref a,bool b){a=a&b;return a;}
+vref operator^=(vref a,bool b){a=a^b;return a;}
 #define overload3(_1,_2,_3,name,...) name
 #define rep1(i,n) for(int i=0;i<(int)(n);i++)
 #define rep2(i,l,r) for(int i=(int)(l);i<(int)(r);i++)
