@@ -20,6 +20,11 @@ template<typename T>
 std::vector<T>offline_dynamic_mst(int n,int q,std::vector<MSTEdge<T>>edge){
   static_assert(std::is_integral_v<T>);
   static const T inf=std::numeric_limits<T>::max();
+  for(const MSTEdge<T>&e:edge){
+    assert(0<=e.l&&e.l<=e.r&&e.r<=q);
+    assert(0<=e.u&&e.u<n);
+    assert(0<=e.v&&e.v<n);
+  }
   std::vector<T>ret(q);
   UnionFind uf1(n),uf2(n);
   std::vector<int>idx(n);

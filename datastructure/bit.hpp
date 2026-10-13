@@ -27,7 +27,7 @@ public:
   inline S sum(int i)const{
     S res=M::e();
     while(i>0){
-      res+=dat[i-1];
+      res=M::op(res,dat[i-1]);
       i-=i&-i;
     }
     return res;
