@@ -246,6 +246,7 @@
 "verify/self/math/binomial_power_sum.test.cpp": "2026-09-27 15:39:06 +0900",
 "verify/self/math/binomial_prefix_sum.test.cpp": "2026-09-27 15:39:06 +0900",
 "verify/self/math/count_exp_multiset.test.cpp": "2026-07-24 22:57:22 +0900",
+"verify/self/math/count_hook.test.cpp": "2026-10-16 20:47:10 +0900",
 "verify/self/math/crt.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/self/math/discrete_logarithm.test.cpp": "2026-10-08 16:47:10 +0900",
 "verify/self/math/divisor.test.cpp": "2026-07-24 22:57:22 +0900",
