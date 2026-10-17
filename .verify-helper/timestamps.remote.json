@@ -4,6 +4,7 @@
 "verify/AOJ/geo/minimum_enclosing_cycle.test.cpp": "2026-09-28 15:38:10 +0900",
 "verify/AOJ/graph/dinic.test.cpp": "2026-07-15 23:38:20 +0900",
 "verify/AOJ/graph/mct.test.cpp": "2026-10-16 20:26:17 +0900",
+"verify/AOJ/graph/mct2.test.cpp": "2026-10-17 16:48:09 +0900",
 "verify/AOJ/graph/shortest_path.test.cpp": "2026-07-24 22:57:22 +0900",
 "verify/AOJ/monoid/rangeadd_rangemin.test.cpp": "2026-08-31 11:38:17 +0900",
 "verify/AOJ/monoid/rangeadd_rangesum.test.cpp": "2026-08-31 11:38:17 +0900",
