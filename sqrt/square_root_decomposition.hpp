@@ -21,7 +21,7 @@ public:
   T sum(int l,int r)const{
     T res=0;
     if(r-l<b){
-      for(int i=l;i<r;i++)ret+=dlock[i];
+      for(int i=l;i<r;i++)res+=dlock[i];
     }
     else{
       int l2=(l+b-1)/b*b;
@@ -31,7 +31,7 @@ public:
       l=l2/b,r=r2/b;
       for(int i=l;i<r;i++)res+=block[i];
     }
-    return ret;
+    return res;
   }
   int lower_bound(int id,T k=1)const{
     assert(k);

@@ -30,14 +30,17 @@ struct Game{
     std::cerr<<"\x1b[38;2;"<<r<<";"<<g<<";"<<b<<"m";
   }
   inline int get_key(T x){return std::lower_bound(state.begin(),state.end(),x)-state.begin();}
+  template<bool no_warning=false>
   int solve(T start){
     vis.clear();
     dfs(start);
     state=std::vector<T>(vis.begin(),vis.end());
-    if(std::all_of(state.begin(),state.end(),[&](T x){return x.first==start.first;})){
-      set_col(255,255,0);
-      std::cerr<<"warning all player is same\n";
-      set_col();
+    if constexpr(!no_warning){
+      if(std::all_of(state.begin(),state.end(),[&](T x){return x.first==start.first;})){
+        set_col(255,255,0);
+        std::cerr<<"warning all player is same\n";
+        set_col();
+      }
     }
     std::vector<std::pair<int,int>>init,revinit;
     int n=state.size();
