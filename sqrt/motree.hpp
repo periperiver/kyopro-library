@@ -1,5 +1,6 @@
 #pragma once
 #include<numeric>
+#include<cmath>
 #include "graph/offline_lca.hpp"
 template<typename T,typename ADD,typename DEL,typename OUT>
 void mo_tree(Tree<T>t,std::vector<std::pair<int,int>>query,const ADD&add,const DEL&del,const OUT&out){
@@ -22,12 +23,12 @@ void mo_tree(Tree<T>t,std::vector<std::pair<int,int>>query,const ADD&add,const D
   for(auto&[u,v]:query){
     u=dfs_order[u]+1;
     v=dfs_order[v]+1;
-    if(u>v)swap(u,v);
+    if(u>v)std::swap(u,v);
   }
   std::vector<int>ord(q);
   std::iota(ord.begin(),ord.end(),0);
   std::sort(ord.begin(),ord.end(),[&](int x,int y)->bool {
-    const pair<int,int>&a=query[x],&c=query[y];
+    const std::pair<int,int>&a=query[x],&c=query[y];
     if(a.first/b!=c.first/b)return a.first<c.first;
     return ((a.first/b)&1)?a.second>c.second:a.second<c.second;
   });

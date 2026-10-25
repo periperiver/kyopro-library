@@ -233,6 +233,22 @@ struct Tree{
     res.push_back(u);
     return std::make_pair(weight,res);
   }
+  std::vector<int>path_construct(int u,int v)const{
+    assert(0<=u&&u<size());
+    assert(0<=v&&v<size());
+    std::vector<int>res;
+    auto dfs=[&](auto self,int x,int p)->bool {
+      res.push_back(x);
+      if(x==v)return true;
+      for(int i=ptr[x];i<ptr[x+1];i++)if(g[i].to!=p){
+        if(self(self,g[i].to,x))return true;
+      }
+      res.pop_back();
+      return false;
+    };
+    dfs(dfs,u,-1);
+    return res;
+  }
   int size()const{return n;}
   tree_range operator[](int i){return tree_range{g.begin()+ptr[i],g.begin()+ptr[i+1]-(r!=-1&&r!=i)};}
   const_tree_range operator[](int i)const{return const_tree_range{g.begin()+ptr[i],g.begin()+ptr[i+1]-(r!=-1&&r!=i)};}
