@@ -39,14 +39,17 @@ public:
       nd.len=nds[p].len+2;
       nds[p][c]=nds.size()-1;
       nd.par=p;
-      if(p==0)nd.suffix=1;
+      if(p==0)nd.suffix=1,nd.series=nds.size()-1;
       else{
         while(true){
           p=nds[p].suffix;
           int j=s.size()-nds[p].len-2;
           if(j>=0&&s[j]==c)break;
         }
-        nd.suffix=nds[p][c];
+        int s=nds[p][c];
+        nd.suffix=s;
+        if(nd.len+nds[nds[s].suffix].len==nds[s].len*2)nd.series=nds[s].series;
+        else nd.series=nds.size()-1;
       }
       p=nds.size()-1;
     }
