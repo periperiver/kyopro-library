@@ -4,9 +4,11 @@
 int main(){
   std::string s;
   std::cin>>s;
-  for(char&c:s)c-='a';
-  eertree<26>e(s);
-  std::cout<<e.distinct_palindrome()<<std::endl;
-  for(const auto&nd:e.nds)if(nd.idx>=2)std::cout<<nd.par->idx-1<<' '<<nd.link->idx-1<<'\n';
-  for(int i=0;i<(int)s.size();i++)std::cout<<e[i+1]->idx-1<<" \n"[i+1==(int)s.size()];
+  eertree<26>e;
+  std::vector<int>idx;
+  idx.reserve(s.size());
+  for(char c:s)idx.push_back(e.add(c-'a'));
+  std::cout<<e.size()-2<<std::endl;
+  for(int i=2;i<e.size();i++)std::cout<<e[i].par-1<<' '<<e[i].suffix-1<<'\n';
+  for(int i=0;i<(int)idx.size();i++)std::cout<<idx[i]-1<<" \n"[i+1==(int)idx.size()];
 }

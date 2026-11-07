@@ -1,53 +1,57 @@
 #pragma once
 #include<vector>
+#include<array>
 #include<string>
 #include<climits>
-template<int mx=CHAR_MAX>
+#include<cassert>
+template<int mx>
 struct eertree{
+private:
   struct node{
-    node* child[mx];
-    node *link,*par;
-    int idx,l,r;
-    node(node *link_,int idx_,int l_,int r_):link(link_),par(nullptr),idx(idx_),l(l_),r(r_){for(int i=0;i<mx;i++)child[i]=nullptr;}
+    std::array<int,mx>child;
+    int suffix,series,par;
+    int len;
+    node():suffix(-1),series(-1),par(-1),len(-1){child.fill(-1);}
+    int& operator[](int x){return child[x];}
+    const int& operator[](int x)const{return child[x];}
   };
+  std::vector<int>s;
   std::vector<node>nds;
-  std::vector<node*>belong;
-  eertree(const std::string&s):belong(s.size()+1){
-    nds.reserve(s.size()+2);
-    nds.emplace_back(nullptr,0,0,-1);
-    nds.emplace_back(&nds[0],1,0,0);
-    nds[1].par=&nds[0];
-    node *p=&nds[0];
-    for(int i=0;i<(int)s.size();i++){
-      belong[i]=p;
-      while(p!=&nds[0]){
-        int j=i-1-p->r+p->l;
-        if(j>=0&&s[i]==s[j])break;
-        p=p->link;
-      }
-      if(p->child[s[i]]){
-        p=p->child[s[i]];
-        continue;
-      }
-      int to=nds.size();
-      int l=i-1-p->r+p->l;
-      int r=i+1;
-      node*nxt=&nds.emplace_back(nullptr,nds.size(),i-1-p->r+p->l,i+1);
-      nxt->par=p;
-      p->child[s[i]]=nxt;
-      if(p==&nds[0])nxt->link=&nds[1];
-      else{
-        while(1){
-          p=p->link;
-          int j=i-1-p->r+p->l;
-          if(j>=0&&s[i]==s[j])break;
-        }
-        nxt->link=p->child[s[i]];
-      }
-      p=nxt;
-    }
-    belong[s.size()]=p;
+  int p;
+public:
+  eertree():nds(2),p(1){
+    nds[0].len=-1;
+    nds[1].suffix=0;
+    nds[1].series=1;
+    nds[1].len=0;
   }
-  node* operator[](int i){return belong[i];}
-  int distinct_palindrome()const{return nds.size()-2;}
+  int add(int c){
+    assert(0<=c&&c<mx);
+    s.push_back(c);
+    while(p>0){
+      int j=s.size()-nds[p].len-2;
+      if(j>=0&&s[j]==c)break;
+      p=nds[p].suffix;
+    }
+    if(nds[p][c]!=-1)p=nds[p][c];
+    else{
+      node&nd=nds.emplace_back();
+      nd.len=nds[p].len+2;
+      nds[p][c]=nds.size()-1;
+      nd.par=p;
+      if(p==0)nd.suffix=1;
+      else{
+        while(true){
+          p=nds[p].suffix;
+          int j=s.size()-nds[p].len-2;
+          if(j>=0&&s[j]==c)break;
+        }
+        nd.suffix=nds[p][c];
+      }
+      p=nds.size()-1;
+    }
+    return p;
+  }
+  int size()const{return nds.size();}
+  node& operator[](int x){return nds[x];}
 };
