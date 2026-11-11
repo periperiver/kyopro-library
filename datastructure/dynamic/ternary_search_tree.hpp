@@ -151,7 +151,7 @@ private:
       }while(nd&&!nd->has_value);
       return *this;
     }
-    pair<const Key&,Val&> operator*()const{
+    std::pair<const Key&,Val&> operator*()const{
       return {key,nd->value};
     }
     bool operator!=(const tst_iterator&rhs){return nd!=rhs.nd;}
