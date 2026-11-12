@@ -33,13 +33,12 @@ public:
       std::swap(bit,bit2);
     }
   }
-  int size()const{return n*(log2m+1);}
+  int size()const{return n*log2m;}
   template<typename Func>
   void get_vs(I x,I y,const Func&f)const{
     static_assert(std::is_convertible_v<Func,std::function<void(int)>>);
     int cx=std::lower_bound(xz.begin(),xz.end(),std::make_pair(x,y))-xz.begin();
     int cy=std::lower_bound(yz.begin(),yz.end(),xz[cx].second)-yz.begin();
-    f(n*log2m+cx);
     for(int i=log2m-1;i>=0;i--){
       if(cy>>i&1)cx=mat[i].zero+mat[i].get(cx);
       else cx-=mat[i].get(cx);
