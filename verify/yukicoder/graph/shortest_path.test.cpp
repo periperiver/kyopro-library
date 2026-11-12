@@ -1,6 +1,7 @@
 #define PROBLEM "https://yukicoder.me/problems/no/1775"
 #include "graph/shortest_path.hpp"
 int main(){
+  std::cin.tie(0)->sync_with_stdio(false);
   int n,m,x,y,z;
   std::cin>>n>>m>>x>>y>>z;
   x--,y--,z--;
