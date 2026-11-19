@@ -65,7 +65,7 @@ public:
     return res;
   }
   //[l,r)x[d,u)
-  int count(int l,int r,int d,int u)const{
+  int count(int l,int r,T d,T u)const{
     return count(l,r,u)-count(l,r,d);
   }
 };

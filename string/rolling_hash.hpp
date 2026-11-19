@@ -1,19 +1,22 @@
 #pragma once
 #include<vector>
+#include<cassert>
 #include "rolling_hash_base.hpp"
 struct RollingHash{
 private:
+  int n;
   std::vector<mint61>dat;
 public:
   RollingHash(){}
   template<typename T>
-  RollingHash(const T&s){
+  RollingHash(const T&s):n(s.size()){
     RollingHashBase::resize(s.size());
     dat.resize(s.size()+1);
     dat[0]=0;
     for(int i=1;i<dat.size();i++)dat[i]=dat[i-1]*RollingHashBase::base+s[i-1];
   }
   RH get(int l,int r)const{
+    assert(0<=l&&l<=r&&r<=n);
     RH res;
     res.g=RollingHashBase::power[r-l];
     res.v=dat[r]-dat[l]*res.g;

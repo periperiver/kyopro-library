@@ -1,13 +1,14 @@
 #pragma once
 #include<vector>
 #include<cassert>
+#include<cmath>
 template<typename T>
 struct SquareRootDecomposition{
 private:
   std::vector<T>block,dlock;
   int n,b;
 public:
-  explicit SquareRootDecomposition(int n_):n(n_),b(sqrt(n_)){
+  explicit SquareRootDecomposition(int n_):n(n_),b(std::sqrt(n_)){
     block.resize((n+b-1)/b,0);
     dlock.resize(n,0);
   }

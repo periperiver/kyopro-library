@@ -122,6 +122,22 @@ public:
       n/=mod;
     }
   }
+  bint(std::string s){
+    if(s.empty()){
+      neg=false;
+      return;
+    }
+    if(s[0]=='-'){
+      neg=true;
+      s=s.substr(1);
+    }
+    else neg=false;
+    dat.resize((s.size()+8)/9);
+    for(int i=0;i<(int)dat.size();i++){
+      dat[i]=std::stoi(s.substr(std::max<int>(0,s.size()-9)));
+      s.resize(max<int>(0,s.size()-9));
+    }
+  }
   bint &operator+=(const bint&rhs){
     if(neg==rhs.neg){
       add(dat,rhs.dat);

@@ -14,14 +14,17 @@ public:
   }
 public:
   void build(const auto &add,const auto &del,const auto &out){
+    build(add,add,del,del,out);
+  }
+  void build(const auto&addl,const auto&addr,const auto&dell,const auto&delr,const auto&out){
     int q=Q.size();
     std::vector<int>ord=mo_order(n,Q);
     int l=0,r=0;
     for(int i:ord){
-      if(Q[i].first<l)add(Q[i].first,l),l=Q[i].first;
-      if(r<Q[i].second)add(r,Q[i].second),r=Q[i].second;
-      if(l<Q[i].first)del(l,Q[i].first),l=Q[i].first;
-      if(Q[i].second<r)del(Q[i].second,r),r=Q[i].second;
+      if(Q[i].first<l)addl(Q[i].first,l),l=Q[i].first;
+      if(r<Q[i].second)addr(r,Q[i].second),r=Q[i].second;
+      if(l<Q[i].first)dell(l,Q[i].first),l=Q[i].first;
+      if(Q[i].second<r)delr(Q[i].second,r),r=Q[i].second;
       out(i);
     }
   }
