@@ -135,7 +135,7 @@ public:
     dat.resize((s.size()+8)/9);
     for(int i=0;i<(int)dat.size();i++){
       dat[i]=std::stoi(s.substr(std::max<int>(0,s.size()-9)));
-      s.resize(max<int>(0,s.size()-9));
+      s.resize(std::max<int>(0,s.size()-9));
     }
   }
   bint &operator+=(const bint&rhs){
