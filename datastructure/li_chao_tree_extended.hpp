@@ -2,7 +2,7 @@
 #include<vector>
 #include "math/util.hpp"
 template<typename Line,typename Func>
-struct LiChaoLinereeExtended{
+struct LiChaoTreeExtended{
 private:
   int n,log2n;
   std::vector<Line>dat;
@@ -28,7 +28,7 @@ private:
     }
   }
 public:
-  LiChaoLinereeExtended(int n_,Func f_,Line inf_):n(n_),log2n(msb(ceil_pow2(n_))),dat(ceil_pow2(n_)*2,inf_),f(f_),inf(inf_){}
+  LiChaoTreeExtended(int n_,Func f_,Line inf_):n(n_),log2n(msb(ceil_pow2(n_))),dat(ceil_pow2(n_)*2,inf_),f(f_),inf(inf_){}
   inline void add_line(const Line&x){
     add_to_node(1,x);
   }
