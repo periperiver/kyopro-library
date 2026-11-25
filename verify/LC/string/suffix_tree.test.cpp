@@ -7,6 +7,6 @@ int main(){
   for(char&c:s)c-='a';
   SuffixTree st(s);
   long long ans=0;
-  for(int i=0;i<(int)st.size();i++)ans+=st[i].range.second-st[i].range.first;
+  for(int i=0;i<(int)st.size();i++)ans+=st[i].edge_length();
   wt(ans),wt('\n');
 }

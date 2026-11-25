@@ -5,16 +5,15 @@
 #include<cstdint>
 #include<cassert>
 template<typename T,int sigma>
-struct Trie{
+struct bit_csr{
   static_assert(1<=sigma&&sigma<=64);
   using Iterator=typename std::vector<int>::iterator;
   using mask_type=std::conditional_t<(sigma<=32),std::uint32_t,std::uint64_t>;
   struct node:T{
     Iterator head;
     mask_type mask;
-    int par;
     node(){}
-    node(T x):T(std::move(x)),mask(0),par(-1){}
+    node(T x):T(std::move(x)),mask(0){}
     int operator[](int x)const{
       return mask>>x&1?head[std::popcount(mask&((mask_type(1)<<x)-1))]:-1;
     }
@@ -33,8 +32,8 @@ private:
     a=std::move(b);
   }
 public:
-  Trie(){}
-  Trie(std::vector<T>a,std::vector<std::tuple<int,int,int>>edge):nds(a.size()),child(edge.size()){
+  bit_csr(){}
+  bit_csr(std::vector<T>a,std::vector<std::tuple<int,int,int>>edge):nds(a.size()),child(edge.size()){
     int n=a.size();
     assert(std::all_of(edge.begin(),edge.end(),[&](const std::tuple<int,int,int>&x){
       const auto&[u,e,to]=x;
@@ -46,7 +45,6 @@ public:
     child.clear();
     for(const auto&[u,e,to]:edge){
       nds[u].mask|=mask_type(1)<<e;
-      nds[to].par=u;
       child.push_back(to);
     }
     int cnt=0;
