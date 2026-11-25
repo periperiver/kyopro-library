@@ -269,6 +269,7 @@
 "verify/self/poly/fps2d_kth_inv.test.cpp": "2026-11-19 14:01:30 +0900",
 "verify/self/poly/power_prod_sum.test.cpp": "2026-11-19 14:01:30 +0900",
 "verify/self/poly/vandermonde_det.test.cpp": "2026-11-19 14:01:30 +0900",
+"verify/self/string/access_suffix_tree.test.cpp": "2026-11-26 01:14:19 +0900",
 "verify/self/string/hack_rolling_hash.test.cpp": "2026-10-08 16:47:10 +0900",
 "verify/self/string/minimum_period.test.cpp": "2026-09-08 20:48:40 +0900",
 "verify/self/string/minimum_rotation.test.cpp": "2026-07-24 22:57:22 +0900",
